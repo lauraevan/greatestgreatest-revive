@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumin Games</title>
+<style>
+html, body { margin:0; padding:0; height:100%; background:#0e0e0e; color:#fff; font-family:Arial, sans-serif; }
+#lumin { width:100%; height:100%; }
+#fallback { display:none; padding:40px; text-align:center; }
+#fallback a { color:#79aadb; }
+</style>
+</head>
+<body>
+<div id="lumin"></div>
+<div id="fallback">
+    <h2>Lumin library couldn't load</h2>
+    <p>The Lumin game service may be blocked on this network. Try again later or on another connection.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js"></script>
+<script>
+    function showFallback() {
+        document.getElementById("lumin").style.display = "none";
+        document.getElementById("fallback").style.display = "block";
+    }
+    if (window.Lumin && typeof Lumin.init === "function") {
+        try {
+            Lumin.init({ container: "#lumin" });
+        } catch (e) {
+            showFallback();
+        }
+        // if nothing rendered after a while, show the fallback
+        setTimeout(function () {
+            var c = document.getElementById("lumin");
+            if (c && c.childElementCount === 0) showFallback();
+        }, 8000);
+    } else {
+        showFallback();
+    }
+</script>
+</body>
+</html>
