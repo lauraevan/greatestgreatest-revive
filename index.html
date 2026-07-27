@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://raw.githack.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://raw.githack.com">
+<link rel="dns-prefetch" href="https://gitlab.com">
+<link rel="dns-prefetch" href="https://cdn.emulatorjs.org">
+<link rel="dns-prefetch" href="https://raw.githubusercontent.com">
 <title>Home</title>
-<script>try{var _s=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_s.theme)document.documentElement.setAttribute("data-theme",_s.theme);}catch(e){}</script>
+<script>try{var _s=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_s.theme)document.documentElement.setAttribute("data-theme",_s.theme);if(_s.cardSize)document.documentElement.style.setProperty("--card-min",_s.cardSize);}catch(e){}</script>
 
 <style>
 :root {
     --bg:#0e0e0e; --panel:#1b1b1b; --panel2:#262626; --panel3:#333333;
-    --text:#ffffff; --muted:rgba(255,255,255,.6); --accent:#5986da;
+    --text:#ffffff; --muted:rgba(255,255,255,.6); --accent:#5986da; --card-min:160px;
 }
 html[data-theme="arctic"]{ --bg:#0c141d; --panel:#152230; --panel2:#1f3040; --panel3:#294056; --text:#eaf6ff; --muted:rgba(234,246,255,.6); --accent:#56b6e0; }
 html[data-theme="blossom"]{ --bg:#1b1013; --panel:#2a181e; --panel2:#3a222b; --panel3:#4a2c38; --text:#ffeef4; --muted:rgba(255,238,244,.6); --accent:#ff7eb0; }
@@ -17,12 +24,22 @@ html[data-theme="blood"]{ --bg:#150909; --panel:#251010; --panel2:#351717; --pan
 html[data-theme="sunset"]{ --bg:#191221; --panel:#281b2e; --panel2:#38263f; --panel3:#4a3252; --text:#ffeede; --muted:rgba(255,238,222,.6); --accent:#ff8a5b; }
 html[data-theme="beach"]{ --bg:#0b1a1a; --panel:#152a2a; --panel2:#1f3b3b; --panel3:#2a4e4e; --text:#eafcff; --muted:rgba(234,252,255,.6); --accent:#25b0a0; }
 html[data-theme="autumn"]{ --bg:#16100a; --panel:#261b11; --panel2:#372718; --panel3:#4a3520; --text:#fdeede; --muted:rgba(253,238,222,.6); --accent:#e08a3c; }
+html[data-theme="midnight"]{ --bg:#0a0f1e; --panel:#141b30; --panel2:#1e2842; --panel3:#293556; --text:#e6ecff; --muted:rgba(230,236,255,.6); --accent:#6c8cff; }
+html[data-theme="forest"]{ --bg:#0b160e; --panel:#152417; --panel2:#1f3423; --panel3:#2a4630; --text:#e9f7ec; --muted:rgba(233,247,236,.6); --accent:#4caf6a; }
+html[data-theme="grape"]{ --bg:#130e1c; --panel:#211830; --panel2:#2f2242; --panel3:#3e2e56; --text:#f2eaff; --muted:rgba(242,234,255,.6); --accent:#a06cff; }
+html[data-theme="ocean"]{ --bg:#08161c; --panel:#10242e; --panel2:#183440; --panel3:#214654; --text:#e5f7ff; --muted:rgba(229,247,255,.6); --accent:#3bb6d6; }
+html[data-theme="cyber"]{ --bg:#0a0a12; --panel:#141426; --panel2:#1e1e3a; --panel3:#2a2a52; --text:#eafff9; --muted:rgba(234,255,249,.6); --accent:#ff3df0; }
+html[data-theme="coffee"]{ --bg:#161009; --panel:#251c11; --panel2:#352817; --panel3:#463620; --text:#f7ecdd; --muted:rgba(247,236,221,.6); --accent:#c98b4b; }
+html[data-theme="mint"]{ --bg:#0b1613; --panel:#152420; --panel2:#1f342d; --panel3:#2a463c; --text:#e9fff6; --muted:rgba(233,255,246,.6); --accent:#3ed6a5; }
+html[data-theme="rose"]{ --bg:#1a0e12; --panel:#2a1820; --panel2:#3a222d; --panel3:#4c2d3b; --text:#ffecf1; --muted:rgba(255,236,241,.6); --accent:#ff5c8a; }
+html[data-theme="lavender"]{ --bg:#12121c; --panel:#1e1e30; --panel2:#2a2a44; --panel3:#383858; --text:#efeaff; --muted:rgba(239,234,255,.6); --accent:#b7a6ff; }
+html[data-theme="gold"]{ --bg:#161206; --panel:#26200d; --panel2:#372e13; --panel3:#4a3e1b; --text:#fdf6e3; --muted:rgba(253,246,227,.6); --accent:#e0b83c; }
 
 body { background:var(--bg); color:var(--text); font-family:Arial, sans-serif; margin:0; }
 header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; }
 h1 { margin:0; }
 #search { background:var(--panel); border:none; color:var(--text); padding:8px 12px; border-radius:8px; outline:none; width:220px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:20px; padding:20px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:20px; padding:20px; }
 .game { background:var(--panel); border-radius:12px; padding:12px; text-align:center; cursor:pointer; content-visibility:auto; contain-intrinsic-size:auto 200px; }
 .game:hover { background:var(--panel2); }
 .game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
@@ -82,6 +99,7 @@ h1 { margin:0; }
 .opt-btn:hover { background:var(--panel3); }
 .opt-btn.active { border-color:var(--accent); }
 #cloakTitle { width:100%; box-sizing:border-box; margin-top:10px; background:var(--panel2); border:none; color:var(--text); padding:10px 12px; border-radius:8px; outline:none; }
+.s-input { background:var(--panel2); border:none; color:var(--text); padding:10px 12px; border-radius:8px; outline:none; box-sizing:border-box; }
 
 /* ---- first-load loading screen ---- */
 #loader { position:fixed; inset:0; background:var(--bg); z-index:2000;
@@ -17200,6 +17218,10 @@ h1 { margin:0; }
         <img loading="lazy" decoding="async" src="icons/emulator.webp">
        Emulator (EmulatorJS)
     </div>
+    <div class="game" data-source="Original" onclick="launch('library/hl2.html')">
+        <img loading="lazy" decoding="async" src="icons/hl2-slqnt.webp">
+       Half-Life 2
+    </div>
 </div>
 
 <div id="settingsModal">
@@ -17226,6 +17248,29 @@ h1 { margin:0; }
                 <button class="cloak-preset opt-btn" data-i="4">Drive</button>
             </div>
             <input id="cloakTitle" type="text" placeholder="Custom tab title">
+        </div>
+        <div class="s-section">
+            <h3>Card size</h3>
+            <div class="s-row">
+                <button class="size-opt opt-btn" data-size="130px">Small</button>
+                <button class="size-opt opt-btn" data-size="160px">Medium</button>
+                <button class="size-opt opt-btn" data-size="200px">Large</button>
+            </div>
+        </div>
+        <div class="s-section">
+            <h3>Auto fullscreen</h3>
+            <div class="s-row">
+                <button class="fs-opt opt-btn" data-fs="off">Off</button>
+                <button class="fs-opt opt-btn" data-fs="on">On</button>
+            </div>
+        </div>
+        <div class="s-section">
+            <h3>Panic key</h3>
+            <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Press this key any time to jump to a safe site.</p>
+            <div class="s-row">
+                <input id="panicKey" class="s-input" type="text" maxlength="1" placeholder="Key" style="width:80px;flex:none;">
+                <input id="panicUrl" class="s-input" type="text" placeholder="https://classroom.google.com" style="flex:1;min-width:180px;">
+            </div>
         </div>
         <div class="s-section">
             <button id="settingsReset" class="opt-btn">Reset to default</button>
@@ -17335,6 +17380,7 @@ function launch(path) {
     playerFrame.src = path;
     player.classList.add("open");
     document.body.style.overflow = "hidden";
+    if (window.__ggSettings && window.__ggSettings.autoFullscreen) fullscreenGame();
 }
 
 function closeGame() {
@@ -17360,9 +17406,9 @@ document.addEventListener("keydown", e => {
 (function () {
     const KEY = "ggu-settings";
     const DEFAULT_TITLE = "Home";
-    const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"]];
+    const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"" };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"" };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -17373,20 +17419,30 @@ document.addEventListener("keydown", e => {
         if (s.favicon) { if (!l) { l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); } l.href = s.favicon; }
         else if (l) { l.remove(); }
     }
-    applyTheme(); applyCloak();
+    function applyCardSize(){ document.documentElement.style.setProperty("--card-min", s.cardSize || "160px"); }
+    applyTheme(); applyCloak(); applyCardSize();
+    document.addEventListener("keydown", function(e){ if(!s.panicKey||!s.panicUrl) return; var t=e.target.tagName; if(t==="INPUT"||t==="TEXTAREA") return; if(e.key===s.panicKey){ window.location.href = s.panicUrl; } });
 
     const tg = document.getElementById("themeGrid");
     tg.innerHTML = THEMES.map(t => '<button class="theme-opt" data-theme-id="' + t[0] + '"><span class="sw" style="background:' + t[2] + '"></span>' + t[1] + '</button>').join("");
     function refresh() {
         document.querySelectorAll(".theme-opt").forEach(b => b.classList.toggle("active", b.dataset.themeId === s.theme));
         document.querySelectorAll(".launch-opt").forEach(b => b.classList.toggle("active", b.dataset.mode === s.launchMode));
+        document.querySelectorAll(".size-opt").forEach(b => b.classList.toggle("active", b.dataset.size === s.cardSize));
+        document.querySelectorAll(".fs-opt").forEach(b => b.classList.toggle("active", b.dataset.fs === (s.autoFullscreen ? "on" : "off")));
         document.getElementById("cloakTitle").value = s.tabTitle || "";
+        document.getElementById("panicKey").value = s.panicKey || "";
+        document.getElementById("panicUrl").value = s.panicUrl || "";
     }
     tg.addEventListener("click", e => { const b = e.target.closest(".theme-opt"); if (!b) return; s.theme = b.dataset.themeId; save(); applyTheme(); refresh(); });
     document.querySelectorAll(".launch-opt").forEach(b => b.addEventListener("click", () => { s.launchMode = b.dataset.mode; save(); refresh(); }));
+    document.querySelectorAll(".size-opt").forEach(b => b.addEventListener("click", () => { s.cardSize = b.dataset.size; save(); applyCardSize(); refresh(); }));
+    document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
+    document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
+    document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
     document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
     document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
-    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); refresh(); });
+    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); refresh(); });
 
     const modal = document.getElementById("settingsModal");
     document.getElementById("settingsBtn").addEventListener("click", () => { refresh(); modal.classList.add("open"); });
