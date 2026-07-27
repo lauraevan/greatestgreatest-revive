@@ -127,10 +127,22 @@ h1 {
 
 /* ---- render perf: skip off-screen cards ---- */
 .game { content-visibility: auto; contain-intrinsic-size: auto 200px; }
+
+/* ---- first-load loading screen ---- */
+#loader { position:fixed; inset:0; background:#0e0e0e; z-index:2000;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    transition:opacity .45s ease; }
+#loader.hidden { opacity:0; pointer-events:none; }
+#loader .spin { width:54px; height:54px; border:5px solid #262626; border-top-color:#5986da;
+    border-radius:50%; animation:spin .9s linear infinite; }
+#loader .lt { color:#fff; font-family:Arial, sans-serif; font-size:16px; letter-spacing:.5px; }
+@keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 
 <body>
+
+<div id="loader"><div class="spin"></div><div class="lt">Loading games…</div></div>
 
 <header>
     <h1>Greatest Greatest Unblocked - Home</h1>
@@ -14708,73 +14720,653 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/zumashooter.webp">
        zumashooter
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/deal-or-no-deal.html')">
-        <img loading="lazy" decoding="async" src="icons/deal-or-no-deal.svg">
-       Deal or No Deal
+    <div class="game" data-source="now.gg" onclick="window.open('https://216.ip.nowgg.fun','_blank','noopener')">
+        <img loading="lazy" decoding="async" src="icons/nowgg.webp">
+       now.gg
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/soccer-skills.html')">
-        <img loading="lazy" decoding="async" src="icons/soccer-skills.svg">
-       Soccer Skills
+    <div class="game" data-source="selenite" onclick="launch('library/minecraft-games.html')">
+        <img loading="lazy" decoding="async" src="icons/minecraft-games.webp">
+       Minecraft Games
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/snowball-fighter.html')">
-        <img loading="lazy" decoding="async" src="icons/snowball-fighter.svg">
-       Snowball Fighter
+    <div class="game" data-source="selenite" onclick="launch('library/protektor-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/protektor-sel2.webp">
+       Protektor
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/client.html')">
-        <img loading="lazy" decoding="async" src="icons/client.svg">
-       π Client
+    <div class="game" data-source="selenite" onclick="launch('library/the-gummib-r-game.html')">
+        <img loading="lazy" decoding="async" src="icons/the-gummib-r-game.webp">
+       The Gummibär Game
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/shadow-client.html')">
-        <img loading="lazy" decoding="async" src="icons/shadow-client.svg">
-       Shadow Client
+    <div class="game" data-source="selenite" onclick="launch('library/final-ninja-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/final-ninja-sel2.webp">
+       Final Ninja
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/windows-xp.html')">
-        <img loading="lazy" decoding="async" src="icons/windows-xp.svg">
-       Windows XP
+    <div class="game" data-source="selenite" onclick="launch('library/the-sims-busting-out.html')">
+        <img loading="lazy" decoding="async" src="icons/the-sims-busting-out.webp">
+       The Sims - Busting Out
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/dragon-client.html')">
-        <img loading="lazy" decoding="async" src="icons/dragon-client.svg">
-       Dragon Client
+    <div class="game" data-source="selenite" onclick="launch('library/simcity-2000-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/simcity-2000-sel2.webp">
+       SimCity 2000
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/ayuncraft-1-5-2.html')">
-        <img loading="lazy" decoding="async" src="icons/ayuncraft-1-5-2.svg">
-       Ayuncraft 1.5.2
+    <div class="game" data-source="selenite" onclick="launch('library/simcity.html')">
+        <img loading="lazy" decoding="async" src="icons/simcity.webp">
+       SimCity
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/minecraft-infdev.html')">
-        <img loading="lazy" decoding="async" src="icons/minecraft-infdev.svg">
-       Minecraft Infdev
+    <div class="game" data-source="selenite" onclick="launch('library/donkey-kong-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/donkey-kong-sel2.webp">
+       Donkey Kong
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-advance-3.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-advance-3.webp">
+       Sonic Advance 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-advance-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-advance-2-sel2.webp">
+       Sonic Advance 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-advance-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-advance-sel2.webp">
+       Sonic Advance
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-taxi.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-taxi.webp">
+       Crazy Taxi
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-knuckles.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-knuckles.webp">
+       Sonic &amp; Knuckles
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-3-sel2.webp">
+       Sonic 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-7-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-7-sel2.webp">
+       Hobo 7
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-6-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-6-sel2.webp">
+       Hobo 6
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-5-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-5-sel2.webp">
+       Hobo 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-4-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-4-sel2.webp">
+       Hobo 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-3-sel2.webp">
+       Hobo 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/3-lines.html')">
+        <img loading="lazy" decoding="async" src="icons/3-lines.webp">
+       3 Lines
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-flasher-6.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-flasher-6.webp">
+       Crazy Flasher 6
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-flasher-5.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-flasher-5.webp">
+       Crazy Flasher 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-flasher-4.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-flasher-4.webp">
+       Crazy Flasher 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-flasher-2.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-flasher-2.webp">
+       Crazy Flasher 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-flasher-3.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-flasher-3.webp">
+       Crazy Flasher 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gta-advance.html')">
+        <img loading="lazy" decoding="async" src="icons/gta-advance.webp">
+       GTA: Advance
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gta-1.html')">
+        <img loading="lazy" decoding="async" src="icons/gta-1.webp">
+       GTA 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gta-2.html')">
+        <img loading="lazy" decoding="async" src="icons/gta-2.webp">
+       GTA 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/quake-3.html')">
+        <img loading="lazy" decoding="async" src="icons/quake-3.webp">
+       Quake 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/3d-space-cadet-pinball.html')">
+        <img loading="lazy" decoding="async" src="icons/3d-space-cadet-pinball.webp">
+       3D Space Cadet Pinball
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-2-sel2.svg">
+       Sonic 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/corporation-inc-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/corporation-inc-sel2.webp">
+       Corporation Inc
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/plants-vs-zombies.html')">
+        <img loading="lazy" decoding="async" src="icons/plants-vs-zombies.webp">
+       Plants vs. Zombies
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pyongyang-racer.html')">
+        <img loading="lazy" decoding="async" src="icons/pyongyang-racer.webp">
+       Pyongyang Racer
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/ultimate-flash-sonic-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/ultimate-flash-sonic-sel2.webp">
+       Ultimate Flash Sonic
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-2-sel2.webp">
+       Hobo 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hobo-1-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hobo-1-sel2.webp">
+       Hobo 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-auto-pets.html')">
+        <img loading="lazy" decoding="async" src="icons/super-auto-pets.webp">
+       Super Auto Pets
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sonic-1-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sonic-1-sel2.svg">
+       Sonic 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/earn-to-die-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/earn-to-die-sel2.webp">
+       Earn to Die
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/temple-of-boom.html')">
+        <img loading="lazy" decoding="async" src="icons/temple-of-boom.webp">
+       Temple of Boom
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/backrooms-2d-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/backrooms-2d-sel2.webp">
+       Backrooms 2D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/superhero-drop-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/superhero-drop-sel2.webp">
+       Superhero Drop
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/obby-jump.html')">
+        <img loading="lazy" decoding="async" src="icons/obby-jump.webp">
+       Obby, jump!
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/jakes-jingle-quest.html')">
+        <img loading="lazy" decoding="async" src="icons/jakes-jingle-quest.webp">
+       Jake's Jingle Quest
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bouncy-flappy.html')">
+        <img loading="lazy" decoding="async" src="icons/bouncy-flappy.webp">
+       Bouncy Flappy
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-black-man.html')">
+        <img loading="lazy" decoding="async" src="icons/the-black-man.webp">
+       The Black Man
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/real-flying-truck-3d.html')">
+        <img loading="lazy" decoding="async" src="icons/real-flying-truck-3d.webp">
+       Real Flying Truck 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crazy-tunnel-3d-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/crazy-tunnel-3d-sel2.webp">
+       Crazy Tunnel 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/two-ball-3d.html')">
+        <img loading="lazy" decoding="async" src="icons/two-ball-3d.webp">
+       Two Ball 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/slope-city-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-city-sel2.webp">
+       Slope City
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/shapez-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/shapez-sel2.webp">
+       Shapez
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pickcrafter.html')">
+        <img loading="lazy" decoding="async" src="icons/pickcrafter.webp">
+       Pickcrafter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sudoku-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sudoku-sel2.webp">
+       Sudoku
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rocket-bot-royale.html')">
+        <img loading="lazy" decoding="async" src="icons/rocket-bot-royale.webp">
+       Rocket Bot Royale
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/slope-3.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-3.webp">
+       Slope 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/infinitecraft.html')">
+        <img loading="lazy" decoding="async" src="icons/infinitecraft.webp">
+       InfiniteCraft
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mine-blocks.html')">
+        <img loading="lazy" decoding="async" src="icons/mine-blocks.webp">
+       Mine Blocks
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wubzzys-amazing-adventure.html')">
+        <img loading="lazy" decoding="async" src="icons/wubzzys-amazing-adventure.webp">
+       Wubzzy's Amazing Adventure
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bus-subway-runner.html')">
+        <img loading="lazy" decoding="async" src="icons/bus-subway-runner.webp">
+       Bus &amp; Subway Runner
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/drift-king.html')">
+        <img loading="lazy" decoding="async" src="icons/drift-king.webp">
+       Drift King
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pako-highway-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/pako-highway-sel2.webp">
+       Pako Highway
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/snowball-io.html')">
+        <img loading="lazy" decoding="async" src="icons/snowball-io.webp">
+       Snowball.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/balloon-run-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/balloon-run-sel2.webp">
+       Balloon Run
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gunfest.html')">
+        <img loading="lazy" decoding="async" src="icons/gunfest.webp">
+       Gunfest
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/run-3-editor.html')">
+        <img loading="lazy" decoding="async" src="icons/run-3-editor.webp">
+       Run 3 Editor
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/train-surfers.html')">
+        <img loading="lazy" decoding="async" src="icons/train-surfers.webp">
+       Train Surfers
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/fruit-cuts-3d.html')">
+        <img loading="lazy" decoding="async" src="icons/fruit-cuts-3d.webp">
+       Fruit Cuts 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/grand-shift-auto.html')">
+        <img loading="lazy" decoding="async" src="icons/grand-shift-auto.webp">
+       Grand Shift Auto
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/unfair-mario-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/unfair-mario-sel2.webp">
+       Unfair Mario
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wasm-doom.html')">
+        <img loading="lazy" decoding="async" src="icons/wasm-doom.webp">
+       WASM Doom
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/talking-tom-cat.html')">
+        <img loading="lazy" decoding="async" src="icons/talking-tom-cat.webp">
+       Talking Tom Cat
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flappy-2048.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-2048.webp">
+       Flappy 2048
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/9007199254740992-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/9007199254740992-sel2.webp">
+       9007199254740992
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/1-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/1-sel2.webp">
+       1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wheely-4-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/wheely-4-sel2.webp">
+       Wheely 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wheely-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/wheely-3-sel2.webp">
+       Wheely 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wheely-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/wheely-2-sel2.webp">
+       Wheely 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wheely-1.html')">
+        <img loading="lazy" decoding="async" src="icons/wheely-1.webp">
+       Wheely 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/glassworks.html')">
+        <img loading="lazy" decoding="async" src="icons/glassworks.webp">
+       Glassworks
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mutiny-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mutiny-sel2.webp">
+       Mutiny
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/snotput.html')">
+        <img loading="lazy" decoding="async" src="icons/snotput.webp">
+       Snotput
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/headcase.html')">
+        <img loading="lazy" decoding="async" src="icons/headcase.webp">
+       Headcase
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bubble-shooter.html')">
+        <img loading="lazy" decoding="async" src="icons/bubble-shooter.webp">
+       Bubble Shooter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/skywire-vip-extended.html')">
+        <img loading="lazy" decoding="async" src="icons/skywire-vip-extended.webp">
+       Skywire VIP (Extended)
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/plunger.html')">
+        <img loading="lazy" decoding="async" src="icons/plunger.webp">
+       Plunger
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gunbrick.html')">
+        <img loading="lazy" decoding="async" src="icons/gunbrick.webp">
+       Gunbrick
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/nitrome-must-die-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/nitrome-must-die-sel2.webp">
+       Nitrome Must Die
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/robo-run.html')">
+        <img loading="lazy" decoding="async" src="icons/robo-run.webp">
+       Robo Run
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/meteor-game.html')">
+        <img loading="lazy" decoding="async" src="icons/meteor-game.webp">
+       Meteor Game
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/skateboarding-simulator.html')">
+        <img loading="lazy" decoding="async" src="icons/skateboarding-simulator.webp">
+       Skateboarding Simulator
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crossnroad.html')">
+        <img loading="lazy" decoding="async" src="icons/crossnroad.webp">
+       CrossNRoad
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tappy-plane.html')">
+        <img loading="lazy" decoding="async" src="icons/tappy-plane.webp">
+       Tappy Plane
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/putin-on-the-ritz.html')">
+        <img loading="lazy" decoding="async" src="icons/putin-on-the-ritz.webp">
+       Putin on the Ritz
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sandboxels-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sandboxels-sel2.webp">
+       Sandboxels
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flappy-race.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-race.webp">
+       Flappy Race
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/karlson-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/karlson-sel2.webp">
+       Karlson
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/adventure.html')">
+        <img loading="lazy" decoding="async" src="icons/adventure.webp">
+       Adventure
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-heist.html')">
+        <img loading="lazy" decoding="async" src="icons/the-heist.webp">
+       The Heist
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/age-of-war-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/age-of-war-2-sel2.webp">
+       Age of War 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/star-clicker.html')">
+        <img loading="lazy" decoding="async" src="icons/star-clicker.webp">
+       Star Clicker
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/racer.html')">
+        <img loading="lazy" decoding="async" src="icons/racer.webp">
+       Racer
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/fort-dmin.html')">
+        <img loading="lazy" decoding="async" src="icons/fort-dmin.webp">
+       Fort@dmin
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flappy-dino.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-dino.webp">
+       Flappy Dino
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/connect-four.html')">
+        <img loading="lazy" decoding="async" src="icons/connect-four.webp">
+       Connect Four
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/13-days-of-hell.html')">
+        <img loading="lazy" decoding="async" src="icons/13-days-of-hell.webp">
+       13 Days of Hell
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mindustry.html')">
+        <img loading="lazy" decoding="async" src="icons/mindustry.webp">
+       Mindustry
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/house-of-hazards.html')">
+        <img loading="lazy" decoding="async" src="icons/house-of-hazards.webp">
+       House of Hazards
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/shape-shipper.html')">
+        <img loading="lazy" decoding="async" src="icons/shape-shipper.webp">
+       Shape Shipper
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rough-dino-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/rough-dino-sel2.webp">
+       Rough Dino
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-meltdown.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-meltdown.webp">
+       Geometry Meltdown
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-jump.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-jump.webp">
+       Geometry Jump
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/counter-strike-ds.html')">
+        <img loading="lazy" decoding="async" src="icons/counter-strike-ds.webp">
+       Counter Strike: DS
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/terri-fried.html')">
+        <img loading="lazy" decoding="async" src="icons/terri-fried.webp">
+       Terri-Fried
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-dash-remastered.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-dash-remastered.webp">
+       Geometry Dash Remastered
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-minions-resurrection.html')">
+        <img loading="lazy" decoding="async" src="icons/the-minions-resurrection.webp">
+       The Minions: Resurrection
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-dash-sky-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-dash-sky-sel2.webp">
+       Geometry Dash Sky
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/drift-mania-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/drift-mania-sel2.webp">
+       Drift Mania
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/driving-force-4.html')">
+        <img loading="lazy" decoding="async" src="icons/driving-force-4.webp">
+       Driving Force 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/red-ball-1.html')">
+        <img loading="lazy" decoding="async" src="icons/red-ball-1.webp">
+       Red Ball 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/recoil-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/recoil-sel2.webp">
+       Recoil
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/karlsont.html')">
+        <img loading="lazy" decoding="async" src="icons/karlsont.webp">
+       Karlson't
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/deepest-sword-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/deepest-sword-sel2.webp">
+       Deepest Sword
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tomb-of-the-mask.html')">
+        <img loading="lazy" decoding="async" src="icons/tomb-of-the-mask.webp">
+       Tomb of The Mask
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hill-climb-racing.html')">
+        <img loading="lazy" decoding="async" src="icons/hill-climb-racing.webp">
+       Hill Climb Racing
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gladihoppers-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/gladihoppers-sel2.webp">
+       Gladihoppers
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flappy-copter.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-copter.webp">
+       Flappy Copter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/kick-that-buddy.html')">
+        <img loading="lazy" decoding="async" src="icons/kick-that-buddy.webp">
+       Kick That Buddy
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/grand-truckismo.html')">
+        <img loading="lazy" decoding="async" src="icons/grand-truckismo.webp">
+       Grand Truckismo
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/turbo-racing-3.html')">
+        <img loading="lazy" decoding="async" src="icons/turbo-racing-3.webp">
+       Turbo Racing 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-binding-of-issac-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/the-binding-of-issac-sel2.webp">
+       The Binding of Issac
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gun-knight.html')">
+        <img loading="lazy" decoding="async" src="icons/gun-knight.webp">
+       Gun Knight
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-oregon-trail.html')">
+        <img loading="lazy" decoding="async" src="icons/the-oregon-trail.webp">
+       The Oregon Trail
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/windows-98.html')">
+        <img loading="lazy" decoding="async" src="icons/windows-98.webp">
+       Windows 98
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/creeper-craft.html')">
+        <img loading="lazy" decoding="async" src="icons/creeper-craft.webp">
+       Creeper Craft
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/block-zappers-3.html')">
+        <img loading="lazy" decoding="async" src="icons/block-zappers-3.webp">
+       Block Zappers 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/kerosene-client.html')">
+        <img loading="lazy" decoding="async" src="icons/kerosene-client.webp">
+       Kerosene Client
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/frogger.html')">
+        <img loading="lazy" decoding="async" src="icons/frogger.webp">
+       Frogger
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/simon.html')">
+        <img loading="lazy" decoding="async" src="icons/simon.webp">
+       Simon
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/splash-dash-racing.html')">
+        <img loading="lazy" decoding="async" src="icons/splash-dash-racing.webp">
+       Splash Dash Racing
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-mario-63.html')">
+        <img loading="lazy" decoding="async" src="icons/super-mario-63.webp">
+       Super Mario 63
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bike-champ-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bike-champ-2-sel2.webp">
+       Bike Champ 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/grand-theft-grotto-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/grand-theft-grotto-sel2.webp">
+       Grand Theft Grotto
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bike-champ-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bike-champ-sel2.webp">
+       Bike Champ
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gloom.html')">
+        <img loading="lazy" decoding="async" src="icons/gloom.webp">
+       Gloom
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/copter.html')">
+        <img loading="lazy" decoding="async" src="icons/copter.webp">
+       Copter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/minesweeper-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/minesweeper-sel2.webp">
+       Minesweeper
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/poom.html')">
-        <img loading="lazy" decoding="async" src="icons/poom.svg">
+        <img loading="lazy" decoding="async" src="icons/poom.webp">
        POOM
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/cmm-client.html')">
-        <img loading="lazy" decoding="async" src="icons/cmm-client.webp">
-       CMM Client
+    <div class="game" data-source="selenite" onclick="launch('library/solitaire-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/solitaire-sel2.webp">
+       Solitaire
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/spank-the-monkey-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/spank-the-monkey-sel2.webp">
+       Spank the Monkey
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pool-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/pool-sel2.webp">
+       Pool
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/yohoho-io.html')">
+        <img loading="lazy" decoding="async" src="icons/yohoho-io.webp">
+       Yohoho.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tube-jumpers.html')">
+        <img loading="lazy" decoding="async" src="icons/tube-jumpers.webp">
+       Tube Jumpers
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/hill-climb-racing-2.html')">
-        <img loading="lazy" decoding="async" src="icons/hill-climb-racing-2.svg">
+        <img loading="lazy" decoding="async" src="icons/hill-climb-racing-2.webp">
        Hill Climb Racing 2
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/pong.html')">
-        <img loading="lazy" decoding="async" src="icons/pong.svg">
-       Pong
+    <div class="game" data-source="selenite" onclick="launch('library/doom-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/doom-sel2.webp">
+       DOOM
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/flappy-plane.html')">
-        <img loading="lazy" decoding="async" src="icons/flappy-plane.webp">
-       Flappy Plane
+    <div class="game" data-source="selenite" onclick="launch('library/awesome-tanks.html')">
+        <img loading="lazy" decoding="async" src="icons/awesome-tanks.webp">
+       Awesome Tanks
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pong.html')">
+        <img loading="lazy" decoding="async" src="icons/pong.webp">
+       Pong
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/a-dance-of-fire-ice.html')">
         <img loading="lazy" decoding="async" src="icons/a-dance-of-fire-ice.webp">
        A Dance of Fire &amp; Ice
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/resent-client.html')">
-        <img loading="lazy" decoding="async" src="icons/resent-client.webp">
-       Resent Client
+    <div class="game" data-source="selenite" onclick="launch('library/friday-night-funkin.html')">
+        <img loading="lazy" decoding="async" src="icons/friday-night-funkin.webp">
+       Friday Night Funkin
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/gba-emulator.html')">
-        <img loading="lazy" decoding="async" src="icons/gba-emulator.webp">
-       GBA Emulator
+    <div class="game" data-source="selenite" onclick="launch('library/worlds-hardest-game-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/worlds-hardest-game-sel2.webp">
+       Worlds Hardest Game
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/celeste-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/celeste-sel2.webp">
+       Celeste
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/mario.html')">
         <img loading="lazy" decoding="async" src="icons/mario.webp">
@@ -14784,45 +15376,317 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/60s-burger-run.webp">
        60s Burger Run
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/cluster-rush.html')">
+        <img loading="lazy" decoding="async" src="icons/cluster-rush.webp">
+       Cluster Rush
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-3.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-3.webp">
+       Vex 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/adventure-capitalist.html')">
+        <img loading="lazy" decoding="async" src="icons/adventure-capitalist.webp">
+       Adventure Capitalist
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloons-tower-defense-3-sel2.webp">
+       Bloons Tower Defense 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/avalanche-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/avalanche-sel2.webp">
+       Avalanche
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/slope-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-sel2.webp">
+       Slope
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/cell-machine.html')">
+        <img loading="lazy" decoding="async" src="icons/cell-machine.webp">
+       Cell Machine
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/run-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/run-2-sel2.webp">
+       Run 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-5.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-5.webp">
+       Vex 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-4.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-4.webp">
+       Vex 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-2-sel2.webp">
+       Vex 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crossy-road.html')">
+        <img loading="lazy" decoding="async" src="icons/crossy-road.webp">
+       Crossy Road
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wall-smash-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/wall-smash-sel2.webp">
+       Wall Smash
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/death-run-3d.html')">
+        <img loading="lazy" decoding="async" src="icons/death-run-3d.webp">
+       Death Run 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gun-mayhem-2.html')">
+        <img loading="lazy" decoding="async" src="icons/gun-mayhem-2.webp">
+       Gun Mayhem 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/circloo-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/circloo-sel2.webp">
+       CircloO
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-sel2.webp">
+       Vex
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/stack-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/stack-sel2.webp">
+       Stack
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/xx142-b2-exe-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/xx142-b2-exe-sel2.webp">
+       xx142-b2.exe
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/paper-io.html')">
+        <img loading="lazy" decoding="async" src="icons/paper-io.webp">
+       paper.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/chibi-knight-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/chibi-knight-sel2.webp">
+       Chibi Knight
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/1v1-lol.html')">
+        <img loading="lazy" decoding="async" src="icons/1v1-lol.webp">
+       1v1.lol
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/dino.html')">
         <img loading="lazy" decoding="async" src="icons/dino.webp">
        Dino
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/turbowarp.html')">
-        <img loading="lazy" decoding="async" src="icons/turbowarp.webp">
-       Turbowarp
+    <div class="game" data-source="selenite" onclick="launch('library/tetris-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/tetris-sel2.webp">
+       Tetris
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-dash-scratch.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-dash-scratch.webp">
+       Geometry Dash (Scratch)
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sand-game-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sand-game-sel2.webp">
+       Sand Game
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/dante.html')">
         <img loading="lazy" decoding="async" src="icons/dante.webp">
        Dante
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/wordle-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/wordle-sel2.webp">
+       Wordle
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/offline-paradise-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/offline-paradise-sel2.webp">
+       Offline Paradise
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/2048-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/2048-sel2.webp">
+       2048
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/doodle-jump.html')">
+        <img loading="lazy" decoding="async" src="icons/doodle-jump.webp">
+       Doodle Jump
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/weave-silk.html')">
         <img loading="lazy" decoding="async" src="icons/weave-silk.webp">
        Weave Silk
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-meat-boy-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/super-meat-boy-sel2.webp">
+       Super Meat Boy
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-6.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-6.webp">
+       Vex 6
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/webgl-fluid-sim.html')">
         <img loading="lazy" decoding="async" src="icons/webgl-fluid-sim.webp">
        WebGL Fluid Sim
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/basketball-stars.html')">
+        <img loading="lazy" decoding="async" src="icons/basketball-stars.webp">
+       Basketball Stars
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/osu-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/osu-sel2.webp">
+       osu!
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/cookie-clicker.html')">
+        <img loading="lazy" decoding="async" src="icons/cookie-clicker.webp">
+       Cookie Clicker
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/superhot-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/superhot-sel2.webp">
+       Superhot
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-mario-64-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/super-mario-64-sel2.webp">
+       Super Mario 64
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gun-mayhem-redux-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/gun-mayhem-redux-sel2.webp">
+       Gun Mayhem Redux
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/i-wanna-be-thy-copy.html')">
         <img loading="lazy" decoding="async" src="icons/i-wanna-be-thy-copy.webp">
        I Wanna Be Thy Copy
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hexgl-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hexgl-sel2.webp">
+       HexGL
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/champion-island-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/champion-island-sel2.webp">
+       Champion Island
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/learn-to-fly.html')">
+        <img loading="lazy" decoding="async" src="icons/learn-to-fly.webp">
+       Learn to Fly
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/wordle-bot.html')">
         <img loading="lazy" decoding="async" src="icons/wordle-bot.webp">
        Wordle Bot
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/cut-the-rope.html')">
+        <img loading="lazy" decoding="async" src="icons/cut-the-rope.webp">
+       Cut The Rope
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/chess-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/chess-sel2.webp">
+       Chess
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flappy-bird.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-bird.webp">
+       Flappy Bird
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/lows-adventures-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/lows-adventures-2-sel2.webp">
+       Lows Adventures 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/drift-boss.html')">
+        <img loading="lazy" decoding="async" src="icons/drift-boss.webp">
+       Drift Boss
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/fireboy-watergirl-1.html')">
         <img loading="lazy" decoding="async" src="icons/fireboy-watergirl-1.webp">
        Fireboy &amp; Watergirl 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gun-mayhem.html')">
+        <img loading="lazy" decoding="async" src="icons/gun-mayhem.webp">
+       Gun Mayhem
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-4.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-4.webp">
+       Duck Life 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/achievement-unlocked.html')">
+        <img loading="lazy" decoding="async" src="icons/achievement-unlocked.webp">
+       Achievement Unlocked
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/achievement-unlocked-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/achievement-unlocked-2-sel2.webp">
+       Achievement Unlocked 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/this-is-the-only-level.html')">
+        <img loading="lazy" decoding="async" src="icons/this-is-the-only-level.webp">
+       This Is The Only Level
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/this-is-the-only-level-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/this-is-the-only-level-2-sel2.webp">
+       This Is The Only Level 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bitlife.html')">
+        <img loading="lazy" decoding="async" src="icons/bitlife.webp">
+       Bitlife
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-1-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-1-sel2.webp">
+       Duck Life 1
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-2.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-2.webp">
+       Duck Life 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-3.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-3.webp">
+       Duck Life 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/ovo-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/ovo-sel2.webp">
+       ovo
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/there-is-no-game.html')">
+        <img loading="lazy" decoding="async" src="icons/there-is-no-game.webp">
+       There Is No Game
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/universal-paperclips.html')">
         <img loading="lazy" decoding="async" src="icons/universal-paperclips.webp">
        Universal Paperclips
     </div>
-    <div class="game" data-source="selenite" onclick="launch('library/windows-11.html')">
-        <img loading="lazy" decoding="async" src="icons/windows-11.webp">
-       Windows 11
+    <div class="game" data-source="selenite" onclick="launch('library/learn-to-fly-2.html')">
+        <img loading="lazy" decoding="async" src="icons/learn-to-fly-2.webp">
+       Learn to Fly 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/worlds-hardest-game-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/worlds-hardest-game-2-sel2.webp">
+       Worlds Hardest Game 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/vex-7-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-7-sel2.webp">
+       Vex 7
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/slope-ball-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-ball-sel2.webp">
+       Slope Ball
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/slope-2.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-2.webp">
+       Slope 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/learn-to-fly-idle-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/learn-to-fly-idle-sel2.webp">
+       Learn to Fly Idle
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/red-ball-4.html')">
+        <img loading="lazy" decoding="async" src="icons/red-ball-4.webp">
+       Red Ball 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/red-ball-4-vol-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/red-ball-4-vol-3-sel2.webp">
+       Red Ball 4 Vol 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/red-ball-4-vol-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/red-ball-4-vol-2-sel2.webp">
+       Red Ball 4 Vol 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/red-ball-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/red-ball-3-sel2.webp">
+       Red Ball 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/snake-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/snake-sel2.webp">
+       Snake
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pacman-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/pacman-sel2.webp">
+       Pacman
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/color-switch-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/color-switch-sel2.webp">
+       Color Switch
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/halloween-2016.html')">
         <img loading="lazy" decoding="async" src="icons/halloween-2016.webp">
@@ -14832,29 +15696,201 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/game-maker-doodle.webp">
        Game Maker Doodle
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-impossible-game.html')">
+        <img loading="lazy" decoding="async" src="icons/the-impossible-game.webp">
+       The Impossible Game
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-freezeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-freezeria.webp">
+       Papas Freezeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-pizzeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-pizzeria.webp">
+       Papas Pizzeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/idle-breakout.html')">
+        <img loading="lazy" decoding="async" src="icons/idle-breakout.webp">
+       Idle Breakout
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/stickman-hook.html')">
+        <img loading="lazy" decoding="async" src="icons/stickman-hook.webp">
+       Stickman Hook
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/drift-hunters.html')">
+        <img loading="lazy" decoding="async" src="icons/drift-hunters.webp">
+       Drift Hunters
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rocket-league-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/rocket-league-sel2.webp">
+       Rocket League
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/little-alchemy.html')">
+        <img loading="lazy" decoding="async" src="icons/little-alchemy.webp">
+       Little Alchemy
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/retro-bowl.html')">
+        <img loading="lazy" decoding="async" src="icons/retro-bowl.webp">
+       Retro Bowl
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tunnel-rush.html')">
+        <img loading="lazy" decoding="async" src="icons/tunnel-rush.webp">
+       Tunnel Rush
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/moto-x3m.html')">
+        <img loading="lazy" decoding="async" src="icons/moto-x3m.webp">
+       Moto X3M
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/moto-x3m-winter-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/moto-x3m-winter-sel2.webp">
+       Moto X3M Winter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/moto-x3m-pool-party.html')">
+        <img loading="lazy" decoding="async" src="icons/moto-x3m-pool-party.webp">
+       Moto X3M Pool Party
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/five-nights-at-freddys-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/five-nights-at-freddys-sel2.webp">
+       Five Nights at Freddy's
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/burrito-bison-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/burrito-bison-sel2.webp">
+       Burrito Bison
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/cut-the-rope-holday.html')">
         <img loading="lazy" decoding="async" src="icons/cut-the-rope-holday.webp">
        Cut The Rope Holday
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/helix-jump-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/helix-jump-sel2.webp">
+       Helix Jump
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/clicker-heroes-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/clicker-heroes-sel2.webp">
+       Clicker Heroes
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/jetpack-joyride.html')">
+        <img loading="lazy" decoding="async" src="icons/jetpack-joyride.webp">
+       Jetpack Joyride
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/fruit-ninja.html')">
+        <img loading="lazy" decoding="async" src="icons/fruit-ninja.webp">
+       Fruit Ninja
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tron-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/tron-sel2.webp">
+       Tron
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/thirty-dollar-website.html')">
         <img loading="lazy" decoding="async" src="icons/thirty-dollar-website.webp">
        Thirty Dollar Website
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/n-gon.html')">
+        <img loading="lazy" decoding="async" src="icons/n-gon.webp">
+       n-gon
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/subway-surfers.html')">
+        <img loading="lazy" decoding="async" src="icons/subway-surfers.webp">
+       Subway Surfers
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/madalin-cars.html')">
         <img loading="lazy" decoding="async" src="icons/madalin-cars.webp">
        Madalin Cars
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/run-3.html')">
+        <img loading="lazy" decoding="async" src="icons/run-3.webp">
+       Run 3
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/dragon-ball-devolution.html')">
         <img loading="lazy" decoding="async" src="icons/dragon-ball-devolution.webp">
        Dragon Ball Devolution
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/run-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/run-sel2.webp">
+       Run
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-smash-flash.html')">
+        <img loading="lazy" decoding="async" src="icons/super-smash-flash.webp">
+       Super Smash Flash
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/stickman-climb.html')">
+        <img loading="lazy" decoding="async" src="icons/stickman-climb.webp">
+       Stickman Climb
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/getaway-shooter.html')">
         <img loading="lazy" decoding="async" src="icons/getaway-shooter.webp">
        Getaway Shooter
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-school.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-school.webp">
+       Riddle School
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-school-2.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-school-2.webp">
+       Riddle School 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-school-3.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-school-3.webp">
+       Riddle School 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-school-4-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-school-4-sel2.webp">
+       Riddle School 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-school-5-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-school-5-sel2.webp">
+       Riddle School 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-transfer-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-transfer-sel2.webp">
+       Riddle Transfer
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/riddle-transfer-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/riddle-transfer-2-sel2.webp">
+       Riddle Transfer 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/zombocalypse-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/zombocalypse-sel2.webp">
+       Zombocalypse
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-burgeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-burgeria.webp">
+       Papas Burgeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-5-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-5-sel2.webp">
+       Duck Life 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/duck-life-6.html')">
+        <img loading="lazy" decoding="async" src="icons/duck-life-6.webp">
+       Duck Life 6
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/webretro.html')">
         <img loading="lazy" decoding="async" src="icons/webretro.webp">
        webretro
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/osu-mania-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/osu-mania-sel2.webp">
+       osu!mania
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/five-nights-at-freddys-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/five-nights-at-freddys-2-sel2.webp">
+       Five Nights at Freddy's 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/five-nights-at-freddys-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/five-nights-at-freddys-3-sel2.webp">
+       Five Nights at Freddy's 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/five-nights-at-freddys-4-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/five-nights-at-freddys-4-sel2.webp">
+       Five Nights at Freddy's 4
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/temple-run-2.html')">
+        <img loading="lazy" decoding="async" src="icons/temple-run-2.webp">
+       Temple Run 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/happy-wheels.html')">
+        <img loading="lazy" decoding="async" src="icons/happy-wheels.webp">
+       Happy Wheels
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/fireboy-watergirl-2.html')">
         <img loading="lazy" decoding="async" src="icons/fireboy-watergirl-2.webp">
@@ -14868,13 +15904,85 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/fireboy-watergirl-4.webp">
        Fireboy &amp; Watergirl 4
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rise-higher-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/rise-higher-sel2.webp">
+       Rise Higher
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hextris-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hextris-sel2.webp">
+       Hextris
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sprinter-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sprinter-sel2.webp">
+       Sprinter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/amazing-rope-police-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/amazing-rope-police-sel2.webp">
+       Amazing Rope Police
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-rash-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-rash-sel2.webp">
+       Geometry Rash
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense.html')">
         <img loading="lazy" decoding="async" src="icons/bloons-tower-defense.webp">
        Bloons Tower Defense
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloons-tower-defense-2-sel2.webp">
+       Bloons Tower Defense 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense-4-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloons-tower-defense-4-sel2.webp">
+       Bloons Tower Defense 4
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense-6.html')">
         <img loading="lazy" decoding="async" src="icons/bloons-tower-defense-6.webp">
        Bloons Tower Defense 6
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bloons-tower-defense-5-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloons-tower-defense-5-sel2.webp">
+       Bloons Tower Defense 5
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/last-horizon.html')">
+        <img loading="lazy" decoding="async" src="icons/last-horizon.webp">
+       Last Horizon
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/1-on-1-soccer.html')">
+        <img loading="lazy" decoding="async" src="icons/1-on-1-soccer.webp">
+       1 on 1 Soccer
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/among-us.html')">
+        <img loading="lazy" decoding="async" src="icons/among-us.webp">
+       Among Us
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/among-us-better.html')">
+        <img loading="lazy" decoding="async" src="icons/among-us-better.webp">
+       Among Us (better)
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bad-piggies-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-piggies-sel2.webp">
+       Bad Piggies
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/sandtrix-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/sandtrix-sel2.webp">
+       Sandtrix
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/blood-tournament.html')">
+        <img loading="lazy" decoding="async" src="icons/blood-tournament.webp">
+       Blood Tournament
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/gold-digger-frvr-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/gold-digger-frvr-sel2.webp">
+       Gold Digger FRVR
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/retro-bowl-college.html')">
+        <img loading="lazy" decoding="async" src="icons/retro-bowl-college.webp">
+       Retro Bowl College
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/we-become-what-we-behold.html')">
+        <img loading="lazy" decoding="async" src="icons/we-become-what-we-behold.webp">
+       We Become What We Behold
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/nut-simulator.html')">
         <img loading="lazy" decoding="async" src="icons/nut-simulator.webp">
@@ -14884,21 +15992,157 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/pokemon.webp">
        Pokemon
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-smash-bros-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/super-smash-bros-sel2.webp">
+       Super Smash Bros
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/skibidi-1-v-100.html')">
         <img loading="lazy" decoding="async" src="icons/skibidi-1-v-100.webp">
        Skibidi 1 v 100
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/drive-mad.html')">
+        <img loading="lazy" decoding="async" src="icons/drive-mad.webp">
+       Drive Mad
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rooftop-snipers.html')">
+        <img loading="lazy" decoding="async" src="icons/rooftop-snipers.webp">
+       Rooftop Snipers
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/funny-shooter.html')">
         <img loading="lazy" decoding="async" src="icons/funny-shooter.webp">
        Funny Shooter
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/monkey-mart.html')">
+        <img loading="lazy" decoding="async" src="icons/monkey-mart.webp">
+       Monkey Mart
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/factory-balls-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/factory-balls-sel2.webp">
+       Factory Balls
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/factory-balls-forever.html')">
         <img loading="lazy" decoding="async" src="icons/factory-balls-forever.webp">
        Factory Balls Forever
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/funny-shooter-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/funny-shooter-2-sel2.webp">
+       Funny Shooter 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bad-time-simulator.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-time-simulator.webp">
+       Bad Time Simulator
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/commodore-64-clicker.html')">
         <img loading="lazy" decoding="async" src="icons/commodore-64-clicker.webp">
        Commodore 64 Clicker
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/stickman-boost.html')">
+        <img loading="lazy" decoding="async" src="icons/stickman-boost.webp">
+       Stickman Boost
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/stickman-golf-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/stickman-golf-sel2.webp">
+       Stickman Golf
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/basket-bros.html')">
+        <img loading="lazy" decoding="async" src="icons/basket-bros.webp">
+       Basket Bros
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/justfall-lol.html')">
+        <img loading="lazy" decoding="async" src="icons/justfall-lol.webp">
+       justfall.lol
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/doge-miner.html')">
+        <img loading="lazy" decoding="async" src="icons/doge-miner.webp">
+       Doge Miner
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/soccer-random.html')">
+        <img loading="lazy" decoding="async" src="icons/soccer-random.webp">
+       Soccer Random
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/basket-random.html')">
+        <img loading="lazy" decoding="async" src="icons/basket-random.webp">
+       Basket Random
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/boxing-random.html')">
+        <img loading="lazy" decoding="async" src="icons/boxing-random.webp">
+       Boxing Random
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/funny-mad-racing-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/funny-mad-racing-sel2.webp">
+       Funny Mad Racing
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/hole-io-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/hole-io-sel2.webp">
+       hole.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/time-shooter-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/time-shooter-sel2.webp">
+       Time Shooter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/time-shooter-2.html')">
+        <img loading="lazy" decoding="async" src="icons/time-shooter-2.webp">
+       Time Shooter 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/time-shooter-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/time-shooter-3-sel2.webp">
+       Time Shooter 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/townscaper-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/townscaper-sel2.webp">
+       Townscaper
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bad-ice-cream.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-ice-cream.webp">
+       Bad Ice Cream
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bad-ice-cream-2.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-ice-cream-2.webp">
+       Bad Ice Cream 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bad-ice-cream-3.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-ice-cream-3.webp">
+       Bad Ice Cream 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bob-the-robber-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/bob-the-robber-2-sel2.webp">
+       Bob the Robber 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/boxing-physics-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/boxing-physics-2-sel2.webp">
+       Boxing Physics 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/burger-and-frights-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/burger-and-frights-sel2.webp">
+       Burger and Frights
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/flippy-fish-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/flippy-fish-sel2.webp">
+       Flippy Fish
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/knife-hit-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/knife-hit-sel2.webp">
+       Knife Hit
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/lazy-jump-3d-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/lazy-jump-3d-sel2.webp">
+       Lazy Jump 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/moto-x3m-spooky-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/moto-x3m-spooky-sel2.webp">
+       Moto X3M Spooky
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/rooftop-snipers-2.html')">
+        <img loading="lazy" decoding="async" src="icons/rooftop-snipers-2.webp">
+       Rooftop Snipers 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/skibidi-toilet-attack-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/skibidi-toilet-attack-sel2.webp">
+       Skibidi Toilet Attack
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/tiny-fishing.html')">
+        <img loading="lazy" decoding="async" src="icons/tiny-fishing.webp">
+       Tiny Fishing
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/tu-95.html')">
         <img loading="lazy" decoding="async" src="icons/tu-95.webp">
@@ -14908,13 +16152,37 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/tu-46.webp">
        TU-46
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/russian-car-driver.html')">
+        <img loading="lazy" decoding="async" src="icons/russian-car-driver.webp">
+       Russian Car Driver
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/legend-of-zelda-ocarina-of-time.html')">
         <img loading="lazy" decoding="async" src="icons/legend-of-zelda-ocarina-of-time.webp">
        Legend of Zelda - Ocarina of Time
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/metroid-zero-mission.html')">
+        <img loading="lazy" decoding="async" src="icons/metroid-zero-mission.webp">
+       Metroid: Zero Mission
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/guilty-gear.html')">
         <img loading="lazy" decoding="async" src="icons/guilty-gear.webp">
        Guilty Gear
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/a-dark-room.html')">
+        <img loading="lazy" decoding="async" src="icons/a-dark-room.webp">
+       A Dark Room
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/fancy-pants-adventures-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/fancy-pants-adventures-sel2.webp">
+       Fancy Pants Adventures
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/fancy-pants-adventures-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/fancy-pants-adventures-2-sel2.webp">
+       Fancy Pants Adventures 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/line-rider.html')">
+        <img loading="lazy" decoding="async" src="icons/line-rider.webp">
+       Line Rider
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/funny-ball-game.html')">
         <img loading="lazy" decoding="async" src="icons/funny-ball-game.webp">
@@ -14944,9 +16212,37 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/pandemic.webp">
        Pandemic
     </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pandemic-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/pandemic-2-sel2.webp">
+       Pandemic 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/age-of-war-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/age-of-war-sel2.webp">
+       Age of War
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/soundboard-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/soundboard-sel2.webp">
+       Soundboard
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-impossible-quiz.html')">
+        <img loading="lazy" decoding="async" src="icons/the-impossible-quiz.webp">
+       The Impossible Quiz
+    </div>
     <div class="game" data-source="selenite" onclick="launch('library/2d-rocket-league.html')">
         <img loading="lazy" decoding="async" src="icons/2d-rocket-league.webp">
        2D Rocket League
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/pizza-tower-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/pizza-tower-sel2.webp">
+       Pizza Tower
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/monster-tracks.html')">
+        <img loading="lazy" decoding="async" src="icons/monster-tracks.webp">
+       Monster Tracks
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/totally-accurate-battle-simulator-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/totally-accurate-battle-simulator-sel2.webp">
+       Totally Accurate Battle Simulator
     </div>
     <div class="game" data-source="selenite" onclick="launch('library/csgo-case-clicker.html')">
         <img loading="lazy" decoding="async" src="icons/csgo-case-clicker.webp">
@@ -14956,9 +16252,185 @@ h1 {
         <img loading="lazy" decoding="async" src="icons/the-final-earth-2.webp">
        The Final Earth 2
     </div>
-    <div class="game" data-source="now.gg" onclick="launch('library/nowgg.html')">
-        <img loading="lazy" decoding="async" src="icons/nowgg.webp">
-       now.gg
+    <div class="game" data-source="selenite" onclick="launch('library/baldis-basics.html')">
+        <img loading="lazy" decoding="async" src="icons/baldis-basics.webp">
+       Baldi's Basics
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/cubefield-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/cubefield-sel2.webp">
+       Cubefield
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/bit-planes.html')">
+        <img loading="lazy" decoding="async" src="icons/bit-planes.webp">
+       Bit Planes
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/snow-rider-3d.html')">
+        <img loading="lazy" decoding="async" src="icons/snow-rider-3d.webp">
+       Snow Rider 3D
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/dadish-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/dadish-sel2.webp">
+       Dadish
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/dadish-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/dadish-2-sel2.webp">
+       Dadish 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/dadish-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/dadish-3-sel2.webp">
+       Dadish 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/watermelon-game-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/watermelon-game-sel2.webp">
+       Watermelon Game
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/crimson-fantasia-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/crimson-fantasia-sel2.webp">
+       Crimson Fantasia
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/geometry-dash-lite-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-dash-lite-sel2.webp">
+       Geometry Dash Lite
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/virtual-x86.html')">
+        <img loading="lazy" decoding="async" src="icons/virtual-x86.webp">
+       Virtual x86
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/idle-research.html')">
+        <img loading="lazy" decoding="async" src="icons/idle-research.webp">
+       Idle Research
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/10-minutes-till-dawn.html')">
+        <img loading="lazy" decoding="async" src="icons/10-minutes-till-dawn.webp">
+       10 Minutes Till Dawn
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/friday-night-funkin-mid-fight-masses.html')">
+        <img loading="lazy" decoding="async" src="icons/friday-night-funkin-mid-fight-masses.webp">
+       Friday Night Funkin: Mid Fight Masses
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-donuteria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-donuteria.webp">
+       Papas Donuteria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-pancakeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-pancakeria.webp">
+       Papas Pancakeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-scooperia.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-scooperia.webp">
+       Papas Scooperia
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-tacomia.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-tacomia.webp">
+       Papas Tacomia
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/territorial-io.html')">
+        <img loading="lazy" decoding="async" src="icons/territorial-io.webp">
+       Territorial.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/theme-hotel-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/theme-hotel-sel2.webp">
+       Theme Hotel
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/thumb-fighter-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/thumb-fighter-sel2.webp">
+       Thumb Fighter
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/the-enchanted-cave-2.html')">
+        <img loading="lazy" decoding="async" src="icons/the-enchanted-cave-2.webp">
+       The Enchanted Cave 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/animal-crossing-wild-world.html')">
+        <img loading="lazy" decoding="async" src="icons/animal-crossing-wild-world.webp">
+       Animal Crossing Wild World
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/banjo-kazooie-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/banjo-kazooie-sel2.webp">
+       Banjo Kazooie
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/donkey-kong-64-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/donkey-kong-64-sel2.webp">
+       Donkey Kong 64
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/doom-64-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/doom-64-sel2.webp">
+       Doom 64
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/goldeneye-007.html')">
+        <img loading="lazy" decoding="async" src="icons/goldeneye-007.webp">
+       Goldeneye 007
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/majoras-mask-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/majoras-mask-sel2.webp">
+       Majora's Mask
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mario-kart-ds-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-kart-ds-sel2.webp">
+       Mario Kart DS
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mario-party-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-party-sel2.webp">
+       Mario Party
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mario-party-2-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-party-2-sel2.webp">
+       Mario Party 2
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mario-party-3-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-party-3-sel2.webp">
+       Mario Party 3
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/mario-party-ds-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-party-ds-sel2.webp">
+       Mario Party DS
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/nintendogs-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/nintendogs-sel2.webp">
+       Nintendogs
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-bakeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-bakeria.webp">
+       Papas Bakeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-cheeseria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-cheeseria.webp">
+       Papas Cheeseria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-pastaria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-pastaria.webp">
+       Papas Pastaria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-sushiria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-sushiria.webp">
+       Papas Sushiria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/papas-wingeria.html')">
+        <img loading="lazy" decoding="async" src="icons/papas-wingeria.webp">
+       Papas Wingeria
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/paper-mario-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/paper-mario-sel2.webp">
+       Paper Mario
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/star-fox-64-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/star-fox-64-sel2.webp">
+       Star Fox 64
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/super-mario-64-ds-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/super-mario-64-ds-sel2.webp">
+       Super Mario 64 DS
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/state-io.html')">
+        <img loading="lazy" decoding="async" src="icons/state-io.webp">
+       state.io
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/draw-climber.html')">
+        <img loading="lazy" decoding="async" src="icons/draw-climber.webp">
+       Draw Climber
+    </div>
+    <div class="game" data-source="selenite" onclick="launch('library/polytrack-sel2.html')">
+        <img loading="lazy" decoding="async" src="icons/polytrack-sel2.webp">
+       Polytrack
     </div>
 </div>
 
@@ -15037,6 +16509,18 @@ document.addEventListener("click", e => {
     if (!filterWrap.contains(e.target)) { filterWrap.classList.remove("open"); filterBtn.setAttribute("aria-expanded", "false"); }
 });
 updateAllBtn();
+
+/* ---- hide loading screen once the grid is sorted and painted ---- */
+function hideLoader() {
+    const l = document.getElementById("loader");
+    if (l && !l.classList.contains("hidden")) {
+        l.classList.add("hidden");
+        setTimeout(() => l.remove(), 600);
+    }
+}
+window.addEventListener("load", hideLoader);
+if (document.readyState === "complete") hideLoader();
+setTimeout(hideLoader, 4000);
 
 /* ---- GAME LAUNCHER (plays in an iframe on the site) ---- */
 let currentGamePath = null;
