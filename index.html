@@ -58,6 +58,49 @@ h1 {
     object-fit:cover;
     border-radius:8px;
 }
+
+/* ---- in-site game player ---- */
+#player {
+    position:fixed;
+    inset:0;
+    background:#0e0e0e;
+    display:none;
+    flex-direction:column;
+    z-index:1000;
+}
+#player.open { display:flex; }
+#playerBar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:8px 14px;
+    background:#1b1b1b;
+}
+#playerTitle {
+    font-size:15px;
+    font-weight:bold;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+#playerBar .btns { display:flex; gap:8px; flex-shrink:0; }
+#playerBar button {
+    background:#262626;
+    border:none;
+    color:white;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+#playerBar button:hover { background:#333; }
+#playerFrame {
+    border:0;
+    flex:1;
+    width:100%;
+    background:#000;
+}
 </style>
 </head>
 
@@ -4145,6 +4188,542 @@ h1 {
         <img src="icons/yoked.webp">
        Yoked
     </div>
+    <div class="game" onclick="launch('library/la-madriguera.html')">
+        <img src="icons/la-madriguera.webp">
+       La Madriguera
+    </div>
+    <div class="game" onclick="launch('library/fnf-vs-shucks-v2.html')">
+        <img src="icons/fnf-vs-shucks-v2.webp">
+       FNF vs Shucks V2
+    </div>
+    <div class="game" onclick="launch('library/totally-accurate-battle-simulator.html')">
+        <img src="icons/totally-accurate-battle-simulator.webp">
+       Totally Accurate Battle Simulator
+    </div>
+    <div class="game" onclick="launch('library/just-shapes-beats-n2.html')">
+        <img src="icons/just-shapes-beats-n2.webp">
+       Just Shapes &amp; Beats
+    </div>
+    <div class="game" onclick="launch('library/animal-crossing.html')">
+        <img src="icons/animal-crossing.webp">
+       Animal Crossing
+    </div>
+    <div class="game" onclick="launch('library/minecraft-1-12-1.html')">
+        <img src="icons/minecraft-1-12-1.webp">
+       Minecraft 1.12.1
+    </div>
+    <div class="game" onclick="launch('library/cheeseroll.html')">
+        <img src="icons/cheeseroll.webp">
+       CheeseRoll
+    </div>
+    <div class="game" onclick="launch('library/cleggy-car.html')">
+        <img src="icons/cleggy-car.webp">
+       Cleggy Car
+    </div>
+    <div class="game" onclick="launch('library/hobo-2-prison-brawl.html')">
+        <img src="icons/hobo-2-prison-brawl.webp">
+       Hobo 2: Prison Brawl
+    </div>
+    <div class="game" onclick="launch('library/hobo-3-wanted.html')">
+        <img src="icons/hobo-3-wanted.webp">
+       Hobo 3: Wanted
+    </div>
+    <div class="game" onclick="launch('library/hobo-4-total-war.html')">
+        <img src="icons/hobo-4-total-war.webp">
+       Hobo 4: Total War
+    </div>
+    <div class="game" onclick="launch('library/hobo-5-space-brawls.html')">
+        <img src="icons/hobo-5-space-brawls.webp">
+       Hobo 5: Space Brawls
+    </div>
+    <div class="game" onclick="launch('library/scary-shawarma.html')">
+        <img src="icons/scary-shawarma.webp">
+       Scary Shawarma
+    </div>
+    <div class="game" onclick="launch('library/command-conquer-n2.html')">
+        <img src="icons/command-conquer-n2.webp">
+       Command &amp; Conquer
+    </div>
+    <div class="game" onclick="launch('library/brawl-simulator.html')">
+        <img src="icons/brawl-simulator.webp">
+       Brawl Simulator
+    </div>
+    <div class="game" onclick="launch('library/the-worlds-hardest-game-2.html')">
+        <img src="icons/the-worlds-hardest-game-2.webp">
+       The World's Hardest Game 2
+    </div>
+    <div class="game" onclick="launch('library/lumines-ii.html')">
+        <img src="icons/lumines-ii.webp">
+       Lumines II
+    </div>
+    <div class="game" onclick="launch('library/madness-combat-project-nexus.html')">
+        <img src="icons/madness-combat-project-nexus.webp">
+       Madness Combat: Project Nexus
+    </div>
+    <div class="game" onclick="launch('library/fireboy-and-watergirl-forest-temple.html')">
+        <img src="icons/fireboy-and-watergirl-forest-temple.webp">
+       Fireboy and Watergirl: Forest Temple
+    </div>
+    <div class="game" onclick="launch('library/earn-to-die.html')">
+        <img src="icons/earn-to-die.webp">
+       Earn to Die
+    </div>
+    <div class="game" onclick="launch('library/earn-to-die-2.html')">
+        <img src="icons/earn-to-die-2.webp">
+       Earn to Die 2
+    </div>
+    <div class="game" onclick="launch('library/tung-sahur-horror.html')">
+        <img src="icons/tung-sahur-horror.webp">
+       Tung Sahur Horror
+    </div>
+    <div class="game" onclick="launch('library/horror-tale.html')">
+        <img src="icons/horror-tale.webp">
+       Horror Tale
+    </div>
+    <div class="game" onclick="launch('library/bloons-tower-defense-1.html')">
+        <img src="icons/bloons-tower-defense-1.webp">
+       Bloons Tower Defense 1
+    </div>
+    <div class="game" onclick="launch('library/bloons-tower-defense-2.html')">
+        <img src="icons/bloons-tower-defense-2.webp">
+       Bloons Tower Defense 2
+    </div>
+    <div class="game" onclick="launch('library/bloons-tower-defense-3.html')">
+        <img src="icons/bloons-tower-defense-3.webp">
+       Bloons Tower Defense 3
+    </div>
+    <div class="game" onclick="launch('library/bloons-tower-defense-4.html')">
+        <img src="icons/bloons-tower-defense-4.webp">
+       Bloons Tower Defense 4
+    </div>
+    <div class="game" onclick="launch('library/bloons-tower-defense-5.html')">
+        <img src="icons/bloons-tower-defense-5.webp">
+       Bloons Tower Defense 5
+    </div>
+    <div class="game" onclick="launch('library/baby-sniper-in-vietnam.html')">
+        <img src="icons/baby-sniper-in-vietnam.webp">
+       Baby Sniper In Vietnam
+    </div>
+    <div class="game" onclick="launch('library/the-binding-of-isaac-rebirth.html')">
+        <img src="icons/the-binding-of-isaac-rebirth.webp">
+       The Binding of Isaac: Rebirth
+    </div>
+    <div class="game" onclick="launch('library/littlest-pet-shop-city-friends.html')">
+        <img src="icons/littlest-pet-shop-city-friends.webp">
+       Littlest Pet Shop City Friends
+    </div>
+    <div class="game" onclick="launch('library/dad-n-me.html')">
+        <img src="icons/dad-n-me.webp">
+       Dad 'n Me
+    </div>
+    <div class="game" onclick="launch('library/five-nights-at-candys-1.html')">
+        <img src="icons/five-nights-at-candys-1.webp">
+       Five Nights at Candy's 1
+    </div>
+    <div class="game" onclick="launch('library/deltarune-chapters-3-4.html')">
+        <img src="icons/deltarune-chapters-3-4.webp">
+       Deltarune Chapters 3 &amp; 4
+    </div>
+    <div class="game" onclick="launch('library/earthbound.html')">
+        <img src="icons/earthbound.webp">
+       Earthbound
+    </div>
+    <div class="game" onclick="launch('library/hamtaro-ham-ham-heartbreak.html')">
+        <img src="icons/hamtaro-ham-ham-heartbreak.webp">
+       Hamtaro: Ham-Ham Heartbreak
+    </div>
+    <div class="game" onclick="launch('library/super-monkey-ball.html')">
+        <img src="icons/super-monkey-ball.webp">
+       Super Monkey Ball
+    </div>
+    <div class="game" onclick="launch('library/fear-hunger-n2.html')">
+        <img src="icons/fear-hunger-n2.webp">
+       Fear &amp; Hunger
+    </div>
+    <div class="game" onclick="launch('library/beeswarm-simulator-html-version.html')">
+        <img src="icons/beeswarm-simulator-html-version.webp">
+       Beeswarm Simulator (html version)
+    </div>
+    <div class="game" onclick="launch('library/the-man-from-the-window.html')">
+        <img src="icons/the-man-from-the-window.webp">
+       The Man FROM The Window
+    </div>
+    <div class="game" onclick="launch('library/kirby-soft-wet-n2.html')">
+        <img src="icons/kirby-soft-wet-n2.webp">
+       Kirby Soft &amp; Wet
+    </div>
+    <div class="game" onclick="launch('library/dungeons-degenerate-gamblers.html')">
+        <img src="icons/dungeons-degenerate-gamblers.webp">
+       Dungeons &amp; Degenerate Gamblers
+    </div>
+    <div class="game" onclick="launch('library/minesweeper-classic.html')">
+        <img src="icons/minesweeper-classic.webp">
+       Minesweeper Classic
+    </div>
+    <div class="game" onclick="launch('library/eat-the-rich.html')">
+        <img src="icons/eat-the-rich.webp">
+       Eat The Rich
+    </div>
+    <div class="game" onclick="launch('library/grand-thef-auto-vice-city.html')">
+        <img src="icons/grand-thef-auto-vice-city.webp">
+       Grand Thef Auto Vice City
+    </div>
+    <div class="game" onclick="launch('library/heretic.html')">
+        <img src="icons/heretic.webp">
+       Heretic
+    </div>
+    <div class="game" onclick="launch('library/fnf-rewrite.html')">
+        <img src="icons/fnf-rewrite.webp">
+       FNF Rewrite
+    </div>
+    <div class="game" onclick="launch('library/daggerfall.html')">
+        <img src="icons/daggerfall.webp">
+       Daggerfall
+    </div>
+    <div class="game" onclick="launch('library/call-of-duty-world-at-war.html')">
+        <img src="icons/call-of-duty-world-at-war.webp">
+       Call of Duty: World at War
+    </div>
+    <div class="game" onclick="launch('library/call-of-duty-4-modern-warfare.html')">
+        <img src="icons/call-of-duty-4-modern-warfare.webp">
+       Call of Duty 4: Modern Warfare
+    </div>
+    <div class="game" onclick="launch('library/kart-bros.html')">
+        <img src="icons/kart-bros.webp">
+       Kart Bros
+    </div>
+    <div class="game" onclick="launch('library/ace-attorny.html')">
+        <img src="icons/ace-attorny.webp">
+       Ace Attorny
+    </div>
+    <div class="game" onclick="launch('library/fnf-agoti.html')">
+        <img src="icons/fnf-agoti.webp">
+       FNF Agoti
+    </div>
+    <div class="game" onclick="launch('library/fnf-black-betrayal.html')">
+        <img src="icons/fnf-black-betrayal.webp">
+       FNF Black Betrayal
+    </div>
+    <div class="game" onclick="launch('library/fnf-b-side.html')">
+        <img src="icons/fnf-b-side.webp">
+       FNF B-Side
+    </div>
+    <div class="game" onclick="launch('library/fnf-camellia.html')">
+        <img src="icons/fnf-camellia.webp">
+       FNF Camellia
+    </div>
+    <div class="game" onclick="launch('library/fnf-impostor-v4.html')">
+        <img src="icons/fnf-impostor-v4.webp">
+       FNF Impostor V4
+    </div>
+    <div class="game" onclick="launch('library/fnf-indie-cross.html')">
+        <img src="icons/fnf-indie-cross.webp">
+       FNF Indie Cross
+    </div>
+    <div class="game" onclick="launch('library/fnf-kapi.html')">
+        <img src="icons/fnf-kapi.webp">
+       FNF Kapi
+    </div>
+    <div class="game" onclick="launch('library/fnf-mario-madness.html')">
+        <img src="icons/fnf-mario-madness.webp">
+       FNF Mario Madness
+    </div>
+    <div class="game" onclick="launch('library/fnf-pibby-apocalypse.html')">
+        <img src="icons/fnf-pibby-apocalypse.webp">
+       FNF Pibby Apocalypse
+    </div>
+    <div class="game" onclick="launch('library/fnf-shaggy-x-matt.html')">
+        <img src="icons/fnf-shaggy-x-matt.webp">
+       FNF Shaggy X Matt
+    </div>
+    <div class="game" onclick="launch('library/fnf-sonic-exe.html')">
+        <img src="icons/fnf-sonic-exe.webp">
+       FNF Sonic.exe
+    </div>
+    <div class="game" onclick="launch('library/fnf-garcello.html')">
+        <img src="icons/fnf-garcello.webp">
+       FNF Garcello
+    </div>
+    <div class="game" onclick="launch('library/fnf-hit-single.html')">
+        <img src="icons/fnf-hit-single.webp">
+       FNF Hit Single
+    </div>
+    <div class="game" onclick="launch('library/achillies-2.html')">
+        <img src="icons/achillies-2.webp">
+       Achillies 2
+    </div>
+    <div class="game" onclick="launch('library/russian-counter-strike.html')">
+        <img src="icons/russian-counter-strike.webp">
+       Russian Counter Strike
+    </div>
+    <div class="game" onclick="launch('library/lego-batman-2.html')">
+        <img src="icons/lego-batman-2.webp">
+       Lego Batman 2
+    </div>
+    <div class="game" onclick="launch('library/lego-starwars-complete-saga.html')">
+        <img src="icons/lego-starwars-complete-saga.webp">
+       Lego Starwars Complete Saga
+    </div>
+    <div class="game" onclick="launch('library/madness-interactive.html')">
+        <img src="icons/madness-interactive.webp">
+       Madness Interactive
+    </div>
+    <div class="game" onclick="launch('library/tony-hawks-pro-skater.html')">
+        <img src="icons/tony-hawks-pro-skater.webp">
+       Tony Hawks Pro Skater
+    </div>
+    <div class="game" onclick="launch('library/resident-evil-3.html')">
+        <img src="icons/resident-evil-3.webp">
+       Resident Evil 3
+    </div>
+    <div class="game" onclick="launch('library/scribblenauts.html')">
+        <img src="icons/scribblenauts.webp">
+       Scribblenauts
+    </div>
+    <div class="game" onclick="launch('library/strange-rope-police.html')">
+        <img src="icons/strange-rope-police.webp">
+       Strange Rope Police
+    </div>
+    <div class="game" onclick="launch('library/street-fighter-iii.html')">
+        <img src="icons/street-fighter-iii.webp">
+       Street Fighter III
+    </div>
+    <div class="game" onclick="launch('library/super-liquid-soccer.html')">
+        <img src="icons/super-liquid-soccer.webp">
+       Super Liquid Soccer
+    </div>
+    <div class="game" onclick="launch('library/tempoverdose.html')">
+        <img src="icons/tempoverdose.webp">
+       Tempoverdose
+    </div>
+    <div class="game" onclick="launch('library/wolfenstein-3d.html')">
+        <img src="icons/wolfenstein-3d.webp">
+       Wolfenstein 3D
+    </div>
+    <div class="game" onclick="launch('library/zombotron-reboot.html')">
+        <img src="icons/zombotron-reboot.webp">
+       Zombotron Reboot
+    </div>
+    <div class="game" onclick="launch('library/mortal-kombat-4.html')">
+        <img src="icons/mortal-kombat-4.webp">
+       Mortal Kombat 4
+    </div>
+    <div class="game" onclick="launch('library/big-shot-boxing.html')">
+        <img src="icons/big-shot-boxing.webp">
+       Big Shot Boxing
+    </div>
+    <div class="game" onclick="launch('library/assessment-examination.html')">
+        <img src="icons/assessment-examination.webp">
+       Assessment Examination
+    </div>
+    <div class="game" onclick="launch('library/douche-bag-life.html')">
+        <img src="icons/douche-bag-life.webp">
+       Douche Bag Life
+    </div>
+    <div class="game" onclick="launch('library/donkey-kong.html')">
+        <img src="icons/donkey-kong.webp">
+       Donkey Kong
+    </div>
+    <div class="game" onclick="launch('library/apple-worm.html')">
+        <img src="icons/apple-worm.webp">
+       Apple Worm
+    </div>
+    <div class="game" onclick="launch('library/chess-n2.html')">
+        <img src="icons/chess-n2.webp">
+       Chess
+    </div>
+    <div class="game" onclick="launch('library/doki-doki-literature-club.html')">
+        <img src="icons/doki-doki-literature-club.webp">
+       Doki Doki Literature Club
+    </div>
+    <div class="game" onclick="launch('library/toca-boca-world.html')">
+        <img src="icons/toca-boca-world.webp">
+       Toca-Boca-World
+    </div>
+    <div class="game" onclick="launch('library/sonic-the-hedgehog-3.html')">
+        <img src="icons/sonic-the-hedgehog-3.webp">
+       Sonic the Hedgehog 3
+    </div>
+    <div class="game" onclick="launch('library/sonic-the-hedgehog-2.html')">
+        <img src="icons/sonic-the-hedgehog-2.webp">
+       Sonic the Hedgehog 2
+    </div>
+    <div class="game" onclick="launch('library/fnaf-pizza-sim.html')">
+        <img src="icons/fnaf-pizza-sim.webp">
+       FNAF: Pizza Sim
+    </div>
+    <div class="game" onclick="launch('library/smashy-kart.html')">
+        <img src="icons/smashy-kart.webp">
+       Smashy Kart
+    </div>
+    <div class="game" onclick="launch('library/deepest-sword.html')">
+        <img src="icons/deepest-sword.webp">
+       Deepest Sword
+    </div>
+    <div class="game" onclick="launch('library/tomodachi-life.html')">
+        <img src="icons/tomodachi-life.webp">
+       Tomodachi Life
+    </div>
+    <div class="game" onclick="launch('library/fnaf-sister-location.html')">
+        <img src="icons/fnaf-sister-location.webp">
+       FNAF: Sister Location
+    </div>
+    <div class="game" onclick="launch('library/rocket-league.html')">
+        <img src="icons/rocket-league.webp">
+       Rocket League
+    </div>
+    <div class="game" onclick="launch('library/street-fighter-ii.html')">
+        <img src="icons/street-fighter-ii.webp">
+       Street Fighter II
+    </div>
+    <div class="game" onclick="launch('library/steal-a-brainrot-online.html')">
+        <img src="icons/steal-a-brainrot-online.webp">
+       Steal a Brainrot Online
+    </div>
+    <div class="game" onclick="launch('library/among-us-real.html')">
+        <img src="icons/among-us-real.webp">
+       Among Us (real)
+    </div>
+    <div class="game" onclick="launch('library/clash-royale.html')">
+        <img src="icons/clash-royale.webp">
+       Clash Royale
+    </div>
+    <div class="game" onclick="launch('library/binding-of-issac-wotl.html')">
+        <img src="icons/binding-of-issac-wotl.webp">
+       Binding of Issac WOTL
+    </div>
+    <div class="game" onclick="launch('library/triva-crack.html')">
+        <img src="icons/triva-crack.webp">
+       Triva Crack
+    </div>
+    <div class="game" onclick="launch('library/highway-racers-2.html')">
+        <img src="icons/highway-racers-2.webp">
+       Highway Racers 2
+    </div>
+    <div class="game" onclick="launch('library/slender-n2.html')">
+        <img src="icons/slender-n2.webp">
+       Slender
+    </div>
+    <div class="game" onclick="launch('library/super-falling-fred.html')">
+        <img src="icons/super-falling-fred.webp">
+       Super Falling Fred
+    </div>
+    <div class="game" onclick="launch('library/impossible-quiz-2.html')">
+        <img src="icons/impossible-quiz-2.webp">
+       Impossible Quiz 2
+    </div>
+    <div class="game" onclick="launch('library/stake-mines.html')">
+        <img src="icons/stake-mines.webp">
+       Stake Mines
+    </div>
+    <div class="game" onclick="launch('library/theyre-coming.html')">
+        <img src="icons/theyre-coming.webp">
+       They're Coming
+    </div>
+    <div class="game" onclick="launch('library/twitch-tetris.html')">
+        <img src="icons/twitch-tetris.webp">
+       Twitch Tetris
+    </div>
+    <div class="game" onclick="launch('library/ultimate-car-driving-game.html')">
+        <img src="icons/ultimate-car-driving-game.webp">
+       Ultimate Car Driving Game
+    </div>
+    <div class="game" onclick="launch('library/apple-shooter.html')">
+        <img src="icons/apple-shooter.webp">
+       Apple Shooter
+    </div>
+    <div class="game" onclick="launch('library/hextrix.html')">
+        <img src="icons/hextrix.webp">
+       Hextrix
+    </div>
+    <div class="game" onclick="launch('library/jelly-truck.html')">
+        <img src="icons/jelly-truck.webp">
+       Jelly Truck
+    </div>
+    <div class="game" onclick="launch('library/hole-io.html')">
+        <img src="icons/hole-io.webp">
+       Hole.io
+    </div>
+    <div class="game" onclick="launch('library/wrassling.html')">
+        <img src="icons/wrassling.webp">
+       Wrassling
+    </div>
+    <div class="game" onclick="launch('library/hillclimb-racing.html')">
+        <img src="icons/hillclimb-racing.webp">
+       Hillclimb Racing
+    </div>
+    <div class="game" onclick="launch('library/boxing-live-2.html')">
+        <img src="icons/boxing-live-2.webp">
+       Boxing Live 2
+    </div>
+    <div class="game" onclick="launch('library/wheelie-bike-2.html')">
+        <img src="icons/wheelie-bike-2.webp">
+       Wheelie Bike 2
+    </div>
+    <div class="game" onclick="launch('library/impossible-quiz.html')">
+        <img src="icons/impossible-quiz.webp">
+       Impossible Quiz
+    </div>
+    <div class="game" onclick="launch('library/stacktris.html')">
+        <img src="icons/stacktris.webp">
+       Stacktris
+    </div>
+    <div class="game" onclick="launch('library/happy-room.html')">
+        <img src="icons/happy-room.webp">
+       Happy Room
+    </div>
+    <div class="game" onclick="launch('library/zombocalypse-2.html')">
+        <img src="icons/zombocalypse-2.webp">
+       Zombocalypse 2
+    </div>
+    <div class="game" onclick="launch('library/club-penguin.html')">
+        <img src="icons/club-penguin.webp">
+       Club Penguin
+    </div>
+    <div class="game" onclick="launch('library/thorns-and-balloons.html')">
+        <img src="icons/thorns-and-balloons.webp">
+       Thorns and Balloons
+    </div>
+    <div class="game" onclick="launch('library/cod-nazi-zombies-portable.html')">
+        <img src="icons/cod-nazi-zombies-portable.webp">
+       COD Nazi Zombies Portable
+    </div>
+    <div class="game" onclick="launch('library/sand-game.html')">
+        <img src="icons/sand-game.webp">
+       Sand Game
+    </div>
+    <div class="game" onclick="launch('library/chrome-dino.html')">
+        <img src="icons/chrome-dino.webp">
+       Chrome Dino
+    </div>
+    <div class="game" onclick="launch('library/dodge-ball.html')">
+        <img src="icons/dodge-ball.webp">
+       Dodge Ball
+    </div>
+    <div class="game" onclick="launch('library/age-of-war-2.html')">
+        <img src="icons/age-of-war-2.webp">
+       Age of War 2
+    </div>
+    <div class="game" onclick="launch('library/sprinter.html')">
+        <img src="icons/sprinter.webp">
+       Sprinter
+    </div>
+    <div class="game" onclick="launch('library/short-life.html')">
+        <img src="icons/short-life.webp">
+       Short Life
+    </div>
+</div>
+
+<div id="player">
+    <div id="playerBar">
+        <span id="playerTitle"></span>
+        <span class="btns">
+            <button onclick="fullscreenGame()">⛶ Fullscreen</button>
+            <button onclick="openGameTab()">↗ New Tab</button>
+            <button onclick="closeGame()">✕ Close</button>
+        </span>
+    </div>
+    <iframe id="playerFrame" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>
 </div>
 
 <script>
@@ -4168,25 +4747,39 @@ document.getElementById("search").addEventListener("input", e => {
     });
 });
 
-/* ---- GAME LAUNCHER ---- */
-async function launch(path) {
-    const win = window.open("about:blank");
-    if (!win) {
-        alert("Popup blocked");
-        return;
-    }
+/* ---- GAME LAUNCHER (plays in an iframe on the site) ---- */
+let currentGamePath = null;
+const player = document.getElementById("player");
+const playerFrame = document.getElementById("playerFrame");
+const playerTitle = document.getElementById("playerTitle");
 
-    try {
-        const res = await fetch(path);
-        const html = await res.text();
-
-        win.document.open();
-        win.document.write(html);
-        win.document.close();
-    } catch {
-        win.document.write("<h1>Failed to load game</h1>");
-    }
+function launch(path) {
+    currentGamePath = path;
+    const card = games.find(g => (g.getAttribute("onclick") || "").includes("'" + path + "'"));
+    playerTitle.textContent = card ? card.textContent.trim() : "";
+    playerFrame.src = path;
+    player.classList.add("open");
+    document.body.style.overflow = "hidden";
 }
+
+function closeGame() {
+    player.classList.remove("open");
+    playerFrame.src = "about:blank";
+    document.body.style.overflow = "";
+    currentGamePath = null;
+}
+
+function fullscreenGame() {
+    (playerFrame.requestFullscreen || playerFrame.webkitRequestFullscreen || (() => {})).call(playerFrame);
+}
+
+function openGameTab() {
+    if (currentGamePath) window.open(currentGamePath, "_blank");
+}
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && player.classList.contains("open")) closeGame();
+});
 </script>
 
 </body>
