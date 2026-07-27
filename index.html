@@ -112,17 +112,19 @@ h1 { margin:0; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
 /* ---- prank block splash ---- */
-#fakeBlock { position:fixed; inset:0; z-index:3000; background:#fff; color:#5a5a5a; font-family:Arial, Helvetica, sans-serif; overflow:auto; }
-#fbInner { max-width:640px; margin:0 auto; padding:0 20px 60px; }
-#fbBanner { position:relative; height:170px; background:#f1f1f2; margin:0 -20px 26px; overflow:hidden; }
-#fbBanner .logo { position:absolute; left:34px; top:26px; font-weight:800; font-size:30px; letter-spacing:3px; color:#0b0b0b; z-index:2; }
-#fbBanner .bar { position:absolute; bottom:0; left:0; right:0; height:11px; background:#e21b22; }
+#fakeBlock { position:fixed; inset:0; z-index:3000; background:#fff; color:#6d6e71; font-family:Arial, Helvetica, sans-serif; overflow:auto; }
+#fbInner { max-width:625px; margin:0 auto; padding:0 0 60px; }
+#fbBanner { position:relative; width:100%; height:205px; background:#f0f0f1; overflow:hidden; margin:0 0 28px; }
+#fbBanner .logo { position:absolute; left:46px; top:38px; z-index:3; display:flex; align-items:center; font-weight:800; font-size:31px; letter-spacing:2px; color:#0a0a0a; }
+#fbBanner .logo .mk { display:inline-block; width:22px; height:22px; margin:0 1px; background-image:radial-gradient(circle, #e21b22 2px, transparent 2.4px); background-size:7.5px 7.5px; }
 #fbBanner i { position:absolute; display:block; }
-#fbTitle { font-size:34px; font-weight:800; line-height:1.15; color:#6d6e71; margin:0 0 26px; }
-#fbTitle .o { cursor:default; }
-#fbBlocked { font-size:19px; font-weight:800; color:#6d6e71; margin:0 0 18px; }
-#fakeBlock p { font-size:16px; line-height:1.5; margin:0 0 20px; }
-#fbMeta { margin:0 0 20px; }
+#fbBanner .dots { background-image:radial-gradient(circle, #cfcfd2 1.4px, transparent 1.7px); background-size:11px 11px; }
+#fbBanner .redbar { position:absolute; left:0; right:0; bottom:0; height:12px; background:#e21b22; }
+#fbTitle { font-size:34px; font-weight:800; line-height:1.15; color:#6d6e71; margin:0 0 24px; padding:0 4px; }
+#fbBypass { padding:10px; margin:-10px; cursor:default; }
+#fbBlocked { font-size:19px; font-weight:800; color:#6d6e71; margin:0 0 18px; padding:0 4px; }
+#fakeBlock p { font-size:16px; line-height:1.5; margin:0 0 20px; padding:0 4px; }
+#fbMeta { margin:0 0 20px; padding:0 4px; }
 #fbMeta div { display:flex; gap:16px; margin:5px 0; font-size:16px; }
 #fbMeta .k { color:#9a9a9a; width:82px; }
 #fakeBlock a { color:#1a4fd6; }
@@ -138,17 +140,19 @@ h1 { margin:0; }
 <div id="fakeBlock">
     <div id="fbInner">
         <div id="fbBanner">
-            <div class="logo">FORTINET</div>
-            <i style="width:46px;height:118px;background:#b9bcc0;left:44%;top:0;"></i>
-            <i style="width:16px;height:150px;background:#3a3a3a;left:41%;top:22px;"></i>
-            <i style="width:70px;height:70px;background:#2bb3c0;left:41%;top:96px;"></i>
-            <i style="width:58px;height:130px;background:#2f6fb0;right:64px;top:20px;"></i>
-            <i style="width:14px;height:120px;background:#3a3a3a;right:44px;top:60px;"></i>
-            <i style="width:80px;height:10px;background:#e21b22;right:78px;top:12px;"></i>
-            <i style="width:80px;height:10px;background:#e21b22;left:18px;top:74px;"></i>
-            <div class="bar"></div>
+            <div class="logo">F<span class="mk"></span>RTINET</div>
+            <i style="left:300px;top:4px;width:46px;height:120px;background:#b7babe;"></i>
+            <i style="left:285px;top:66px;width:15px;height:150px;background:#38383a;"></i>
+            <i style="left:250px;top:78px;width:50px;height:96px;background:#ffffff;"></i>
+            <i style="left:300px;top:120px;width:70px;height:66px;background:#29b0bd;"></i>
+            <i style="left:14px;top:74px;width:80px;height:13px;background:#e21b22;"></i>
+            <i class="dots" style="left:392px;top:74px;width:66px;height:104px;"></i>
+            <i style="left:500px;top:12px;width:60px;height:134px;background:#2e6cae;"></i>
+            <i style="left:576px;top:54px;width:15px;height:132px;background:#38383a;"></i>
+            <i style="left:470px;top:8px;width:82px;height:13px;background:#e21b22;"></i>
+            <div class="redbar"></div>
         </div>
-        <div id="fbTitle">F<span class="o" onclick="document.getElementById('fakeBlock').style.display='none'">o</span>rtiGuard Intrusion Prevention - Access Blocked</div>
+        <div id="fbTitle">F<span id="fbBypass" onclick="document.getElementById('fakeBlock').style.display='none'">o</span>rtiGuard Intrusion Prevention - Access Blocked</div>
         <div id="fbBlocked">Web Page Blocked</div>
         <p>You have tried to access a web page that is in violation of your Internet usage policy.</p>
         <div id="fbMeta">
@@ -158,7 +162,7 @@ h1 { margin:0; }
         <p>To have the rating of this web page re-evaluated <a href="#" onclick="return false">please click here</a>.</p>
     </div>
 </div>
-<script>try{var _fb=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_fb.fakeBlock===false)document.getElementById("fakeBlock").style.display="none";}catch(e){}</script>
+<script>try{var _fb=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_fb.fakeBlock===false)document.getElementById("fakeBlock").style.display="none";}catch(e){}(function(){var o=document.getElementById("fbBypass");if(o){var h=function(ev){ev&&ev.preventDefault();document.getElementById("fakeBlock").style.display="none";};o.addEventListener("click",h);o.addEventListener("touchstart",h,{passive:false});}})();</script>
 
 <div id="loader"><div class="spin"></div><div class="lt">Loading games…</div></div>
 
