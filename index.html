@@ -100,6 +100,15 @@ h1 { margin:0; }
 .opt-btn.active { border-color:var(--accent); }
 #cloakTitle { width:100%; box-sizing:border-box; margin-top:10px; background:var(--panel2); border:none; color:var(--text); padding:10px 12px; border-radius:8px; outline:none; }
 .s-input { background:var(--panel2); border:none; color:var(--text); padding:10px 12px; border-radius:8px; outline:none; box-sizing:border-box; }
+.s-tabs { display:flex; gap:2px; margin:14px 0 6px; border-bottom:1px solid var(--panel2); }
+.s-tab { background:transparent; border:none; color:var(--muted); padding:10px 16px; cursor:pointer; font-size:14px; font-weight:bold; border-bottom:2px solid transparent; margin-bottom:-1px; }
+.s-tab:hover { color:var(--text); }
+.s-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+.s-pane[hidden] { display:none; }
+.s-stats div { display:flex; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--panel2); font-size:15px; }
+.s-stats div:last-child { border-bottom:none; }
+.s-stats .k { color:var(--muted); }
+.s-stats span:last-child { font-weight:bold; }
 
 /* ---- first-load loading screen ---- */
 #loader { position:fixed; inset:0; background:var(--bg); z-index:2000;
@@ -111,23 +120,6 @@ h1 { margin:0; }
 #loader .lt { color:var(--text); font-family:Arial, sans-serif; font-size:16px; letter-spacing:.5px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ---- prank block splash ---- */
-#fakeBlock { position:fixed; inset:0; z-index:3000; background:#fff; color:#6d6e71; font-family:Arial, Helvetica, sans-serif; overflow:auto; }
-#fbInner { max-width:625px; margin:0 auto; padding:0 0 60px; }
-#fbBanner { position:relative; width:100%; height:205px; background:#f0f0f1; overflow:hidden; margin:0 0 28px; }
-#fbBanner .logo { position:absolute; left:46px; top:38px; z-index:3; display:flex; align-items:center; font-weight:800; font-size:31px; letter-spacing:2px; color:#0a0a0a; }
-#fbBanner .logo .mk { display:inline-block; width:22px; height:22px; margin:0 1px; background-image:radial-gradient(circle, #e21b22 2px, transparent 2.4px); background-size:7.5px 7.5px; }
-#fbBanner i { position:absolute; display:block; }
-#fbBanner .dots { background-image:radial-gradient(circle, #cfcfd2 1.4px, transparent 1.7px); background-size:11px 11px; }
-#fbBanner .redbar { position:absolute; left:0; right:0; bottom:0; height:12px; background:#e21b22; }
-#fbTitle { font-size:34px; font-weight:800; line-height:1.15; color:#6d6e71; margin:0 0 24px; padding:0 4px; }
-#fbBypass { padding:10px; margin:-10px; cursor:default; }
-#fbBlocked { font-size:19px; font-weight:800; color:#6d6e71; margin:0 0 18px; padding:0 4px; }
-#fakeBlock p { font-size:16px; line-height:1.5; margin:0 0 20px; padding:0 4px; }
-#fbMeta { margin:0 0 20px; padding:0 4px; }
-#fbMeta div { display:flex; gap:16px; margin:5px 0; font-size:16px; }
-#fbMeta .k { color:#9a9a9a; width:82px; }
-#fakeBlock a { color:#1a4fd6; }
 /* ---- site effects ---- */
 #fx { position:fixed; inset:0; z-index:500; pointer-events:none; }
 </style>
@@ -136,33 +128,6 @@ h1 { margin:0; }
 <body>
 
 <canvas id="fx"></canvas>
-
-<div id="fakeBlock">
-    <div id="fbInner">
-        <div id="fbBanner">
-            <div class="logo">F<span class="mk"></span>RTINET</div>
-            <i style="left:300px;top:4px;width:46px;height:120px;background:#b7babe;"></i>
-            <i style="left:285px;top:66px;width:15px;height:150px;background:#38383a;"></i>
-            <i style="left:250px;top:78px;width:50px;height:96px;background:#ffffff;"></i>
-            <i style="left:300px;top:120px;width:70px;height:66px;background:#29b0bd;"></i>
-            <i style="left:14px;top:74px;width:80px;height:13px;background:#e21b22;"></i>
-            <i class="dots" style="left:392px;top:74px;width:66px;height:104px;"></i>
-            <i style="left:500px;top:12px;width:60px;height:134px;background:#2e6cae;"></i>
-            <i style="left:576px;top:54px;width:15px;height:132px;background:#38383a;"></i>
-            <i style="left:470px;top:8px;width:82px;height:13px;background:#e21b22;"></i>
-            <div class="redbar"></div>
-        </div>
-        <div id="fbTitle">F<span id="fbBypass" onclick="document.getElementById('fakeBlock').style.display='none'">o</span>rtiGuard Intrusion Prevention - Access Blocked</div>
-        <div id="fbBlocked">Web Page Blocked</div>
-        <p>You have tried to access a web page that is in violation of your Internet usage policy.</p>
-        <div id="fbMeta">
-            <div><span class="k">Category</span><span>Dynamic DNS</span></div>
-            <div><span class="k">URL</span><span>http://www.duckdns.org/</span></div>
-        </div>
-        <p>To have the rating of this web page re-evaluated <a href="#" onclick="return false">please click here</a>.</p>
-    </div>
-</div>
-<script>try{var _fb=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_fb.fakeBlock===false)document.getElementById("fakeBlock").style.display="none";}catch(e){}(function(){var o=document.getElementById("fbBypass");if(o){var h=function(ev){ev&&ev.preventDefault();document.getElementById("fakeBlock").style.display="none";};o.addEventListener("click",h);o.addEventListener("touchstart",h,{passive:false});}})();</script>
 
 <div id="loader"><div class="spin"></div><div class="lt">Loading games…</div></div>
 
@@ -17664,71 +17629,85 @@ h1 { margin:0; }
 <div id="settingsModal">
     <div id="settingsCard">
         <div class="s-head"><h2>Settings</h2><button id="settingsClose" aria-label="Close">✕</button></div>
-        <div class="s-section">
-            <h3>Theme</h3>
-            <div id="themeGrid"></div>
+        <div class="s-tabs">
+            <button class="s-tab active" data-tab="appearance">Appearance</button>
+            <button class="s-tab" data-tab="stealth">Stealth</button>
+            <button class="s-tab" data-tab="misc">Misc</button>
         </div>
-        <div class="s-section">
-            <h3>Game launch</h3>
-            <div class="s-row">
-                <button class="launch-opt opt-btn" data-mode="iframe">In the site</button>
-                <button class="launch-opt opt-btn" data-mode="newtab">New tab</button>
+        <div class="s-pane" data-pane="appearance">
+            <div class="s-section">
+                <h3>Theme</h3>
+                <div id="themeGrid"></div>
+            </div>
+            <div class="s-section">
+                <h3>Card size</h3>
+                <div class="s-row">
+                    <button class="size-opt opt-btn" data-size="130px">Small</button>
+                    <button class="size-opt opt-btn" data-size="160px">Medium</button>
+                    <button class="size-opt opt-btn" data-size="200px">Large</button>
+                </div>
+            </div>
+            <div class="s-section">
+                <h3>Site effect</h3>
+                <div class="s-row">
+                    <button class="fx-opt opt-btn" data-fx="none">None</button>
+                    <button class="fx-opt opt-btn" data-fx="snow">Snow</button>
+                    <button class="fx-opt opt-btn" data-fx="rain">Rain</button>
+                    <button class="fx-opt opt-btn" data-fx="petals">Petals</button>
+                    <button class="fx-opt opt-btn" data-fx="stars">Stars</button>
+                    <button class="fx-opt opt-btn" data-fx="bubbles">Bubbles</button>
+                </div>
+            </div>
+            <div class="s-section">
+                <h3>Auto fullscreen</h3>
+                <div class="s-row">
+                    <button class="fs-opt opt-btn" data-fs="off">Off</button>
+                    <button class="fs-opt opt-btn" data-fs="on">On</button>
+                </div>
             </div>
         </div>
-        <div class="s-section">
-            <h3>Tab cloak</h3>
-            <div class="s-row cloak-presets">
-                <button class="cloak-preset opt-btn" data-i="0">Default</button>
-                <button class="cloak-preset opt-btn" data-i="1">Google</button>
-                <button class="cloak-preset opt-btn" data-i="2">Classroom</button>
-                <button class="cloak-preset opt-btn" data-i="3">Docs</button>
-                <button class="cloak-preset opt-btn" data-i="4">Drive</button>
+        <div class="s-pane" data-pane="stealth" hidden>
+            <div class="s-section">
+                <h3>Game launch</h3>
+                <div class="s-row">
+                    <button class="launch-opt opt-btn" data-mode="iframe">In the site</button>
+                    <button class="launch-opt opt-btn" data-mode="newtab">New tab</button>
+                </div>
             </div>
-            <input id="cloakTitle" type="text" placeholder="Custom tab title">
-        </div>
-        <div class="s-section">
-            <h3>Card size</h3>
-            <div class="s-row">
-                <button class="size-opt opt-btn" data-size="130px">Small</button>
-                <button class="size-opt opt-btn" data-size="160px">Medium</button>
-                <button class="size-opt opt-btn" data-size="200px">Large</button>
+            <div class="s-section">
+                <h3>Tab cloak</h3>
+                <div class="s-row cloak-presets">
+                    <button class="cloak-preset opt-btn" data-i="0">Default</button>
+                    <button class="cloak-preset opt-btn" data-i="1">Google</button>
+                    <button class="cloak-preset opt-btn" data-i="2">Classroom</button>
+                    <button class="cloak-preset opt-btn" data-i="3">Docs</button>
+                    <button class="cloak-preset opt-btn" data-i="4">Drive</button>
+                </div>
+                <input id="cloakTitle" type="text" placeholder="Custom tab title">
             </div>
-        </div>
-        <div class="s-section">
-            <h3>Auto fullscreen</h3>
-            <div class="s-row">
-                <button class="fs-opt opt-btn" data-fs="off">Off</button>
-                <button class="fs-opt opt-btn" data-fs="on">On</button>
-            </div>
-        </div>
-        <div class="s-section">
-            <h3>Panic key</h3>
-            <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Press this key any time to jump to a safe site.</p>
-            <div class="s-row">
-                <input id="panicKey" class="s-input" type="text" maxlength="1" placeholder="Key" style="width:80px;flex:none;">
-                <input id="panicUrl" class="s-input" type="text" placeholder="https://classroom.google.com" style="flex:1;min-width:180px;">
+            <div class="s-section">
+                <h3>Panic key</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Press this key any time to jump to a safe site.</p>
+                <div class="s-row">
+                    <input id="panicKey" class="s-input" type="text" maxlength="1" placeholder="Key" style="width:80px;flex:none;">
+                    <input id="panicUrl" class="s-input" type="text" placeholder="https://classroom.google.com" style="flex:1;min-width:180px;">
+                </div>
             </div>
         </div>
-        <div class="s-section">
-            <h3>Fake block page (prank)</h3>
-            <div class="s-row">
-                <button class="fb-opt opt-btn" data-fb="on">On</button>
-                <button class="fb-opt opt-btn" data-fb="off">Off</button>
+        <div class="s-pane" data-pane="misc" hidden>
+            <div class="s-section">
+                <h3>System details</h3>
+                <div class="s-stats">
+                    <div><span class="k">Runtime</span><span id="statRuntime">0s</span></div>
+                    <div><span class="k">Games</span><span id="statGames">—</span></div>
+                    <div><span class="k">Site visitors</span><span id="statVisitors">…</span></div>
+                    <div><span class="k">Your visits</span><span id="statMyVisits">—</span></div>
+                </div>
             </div>
-        </div>
-        <div class="s-section">
-            <h3>Site effect</h3>
-            <div class="s-row">
-                <button class="fx-opt opt-btn" data-fx="none">None</button>
-                <button class="fx-opt opt-btn" data-fx="snow">Snow</button>
-                <button class="fx-opt opt-btn" data-fx="rain">Rain</button>
-                <button class="fx-opt opt-btn" data-fx="petals">Petals</button>
-                <button class="fx-opt opt-btn" data-fx="stars">Stars</button>
-                <button class="fx-opt opt-btn" data-fx="bubbles">Bubbles</button>
+            <div class="s-section">
+                <h3>Reset</h3>
+                <button id="settingsReset" class="opt-btn">Reset all settings</button>
             </div>
-        </div>
-        <div class="s-section">
-            <button id="settingsReset" class="opt-btn">Reset to default</button>
         </div>
     </div>
 </div>
@@ -17863,7 +17842,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", fakeBlock:true, effect:"none" };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none" };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -17922,7 +17901,6 @@ document.addEventListener("keydown", e => {
         document.getElementById("cloakTitle").value = s.tabTitle || "";
         document.getElementById("panicKey").value = s.panicKey || "";
         document.getElementById("panicUrl").value = s.panicUrl || "";
-        document.querySelectorAll(".fb-opt").forEach(b => b.classList.toggle("active", b.dataset.fb === (s.fakeBlock === false ? "off" : "on")));
         document.querySelectorAll(".fx-opt").forEach(b => b.classList.toggle("active", b.dataset.fx === (s.effect || "none")));
     }
     tg.addEventListener("click", e => { const b = e.target.closest(".theme-opt"); if (!b) return; s.theme = b.dataset.themeId; save(); applyTheme(); refresh(); });
@@ -17931,11 +17909,33 @@ document.addEventListener("keydown", e => {
     document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
     document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
     document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
-    document.querySelectorAll(".fb-opt").forEach(b => b.addEventListener("click", () => { s.fakeBlock = b.dataset.fb === "on"; save(); refresh(); }));
     document.querySelectorAll(".fx-opt").forEach(b => b.addEventListener("click", () => { s.effect = b.dataset.fx; save(); applyEffect(); refresh(); }));
     document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
     document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
     document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); refresh(); });
+
+    /* ---- settings tabs ---- */
+    document.querySelectorAll(".s-tab").forEach(tab => tab.addEventListener("click", () => {
+        document.querySelectorAll(".s-tab").forEach(t => t.classList.toggle("active", t === tab));
+        document.querySelectorAll(".s-pane").forEach(pane => { pane.hidden = pane.dataset.pane !== tab.dataset.tab; });
+    }));
+    /* ---- misc system details ---- */
+    document.getElementById("statGames").textContent = document.querySelectorAll("#gameGrid .game").length.toLocaleString();
+    const myVisits = (+(localStorage.getItem("ggu-visits") || 0)) + 1;
+    localStorage.setItem("ggu-visits", myVisits);
+    document.getElementById("statMyVisits").textContent = myVisits.toLocaleString();
+    const t0 = Date.now();
+    function fmtDur(ms){ let s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor(s%3600/60); s = s%60; return (h ? h+"h " : "") + (h||m ? m+"m " : "") + s+"s"; }
+    setInterval(() => { const el = document.getElementById("statRuntime"); if (el) el.textContent = fmtDur(Date.now() - t0); }, 1000);
+    (function(){
+        const el = document.getElementById("statVisitors");
+        const dev = () => { el.textContent = myVisits.toLocaleString() + " (this device)"; };
+        fetch("https://api.counterapi.dev/v1/gguunblocked/visits/up")
+            .then(r => r.json())
+            .then(d => { const n = d.count ?? d.value ?? (d.data && d.data.count); if (typeof n === "number") el.textContent = n.toLocaleString(); else return Promise.reject(); })
+            .catch(() => fetch("https://api.countapi.xyz/hit/gguunblocked/visits").then(r => r.json()).then(d => { if (typeof d.value === "number") el.textContent = d.value.toLocaleString(); else return Promise.reject(); }))
+            .catch(dev);
+    })();
 
     const modal = document.getElementById("settingsModal");
     document.getElementById("settingsBtn").addEventListener("click", () => { refresh(); modal.classList.add("open"); });
