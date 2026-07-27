@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emulator</title>
+<style>
+    html, body { margin:0; height:100%; background:#0e0e0e; color:#fff; font-family:Arial, sans-serif; }
+    #setup { max-width:520px; margin:0 auto; padding:48px 22px; }
+    #setup h1 { font-size:26px; margin:0 0 6px; }
+    #setup p { color:#bbb; margin:0 0 18px; line-height:1.5; }
+    label { display:block; margin-top:16px; font-size:13px; color:#9aa; text-transform:uppercase; letter-spacing:.5px; }
+    select, input[type=file] { font-size:15px; padding:11px; border-radius:8px; border:none; margin-top:8px; width:100%; box-sizing:border-box; background:#1b1b1b; color:#fff; }
+    #start { background:#5986da; color:#fff; font-weight:bold; cursor:pointer; margin-top:22px; font-size:16px; padding:13px; border-radius:8px; border:none; width:100%; }
+    #start:hover { background:#6f9ae4; }
+    .hint { color:#777; font-size:12px; margin-top:22px; line-height:1.6; }
+    #game { width:100%; height:100%; }
+</style>
+</head>
+<body>
+    <div id="setup">
+        <h1>🎮 Emulator</h1>
+        <p>Pick a console, choose a ROM file from your device, and press Start.</p>
+        <label for="core">Console</label>
+        <select id="core"></select>
+        <label for="rom">ROM file</label>
+        <input type="file" id="rom">
+        <button id="start">Start</button>
+        <div class="hint">Powered by EmulatorJS. Your ROM stays on your device &mdash; nothing is uploaded. Controls, save states and settings are inside the emulator menu once it loads.</div>
+    </div>
+    <div id="game" style="display:none;"></div>
+
+    <script>
+        const cores = [
+            ["Nintendo Entertainment System (NES)", "nes"],
+            ["Super Nintendo (SNES)", "snes"],
+            ["Game Boy / Game Boy Color", "gb"],
+            ["Game Boy Advance (GBA)", "gba"],
+            ["Nintendo 64 (N64)", "n64"],
+            ["Nintendo DS", "nds"],
+            ["Sega Genesis / Mega Drive", "segaMD"],
+            ["Sega Master System", "segaMS"],
+            ["Sega Game Gear", "segaGG"],
+            ["Sega Saturn", "segaSaturn"],
+            ["PlayStation (PS1)", "psx"],
+            ["Atari 2600", "atari2600"],
+            ["Atari 7800", "atari7800"],
+            ["Arcade (MAME 2003)", "mame2003"],
+        ];
+        const sel = document.getElementById("core");
+        sel.innerHTML = cores.map(c => '<option value="' + c[1] + '">' + c[0] + '</option>').join("");
+
+        document.getElementById("start").addEventListener("click", () => {
+            const file = document.getElementById("rom").files[0];
+            if (!file) { alert("Please choose a ROM file first."); return; }
+            document.getElementById("setup").style.display = "none";
+            const g = document.getElementById("game");
+            g.style.display = "block";
+
+            window.EJS_player = "#game";
+            window.EJS_core = sel.value;
+            window.EJS_gameUrl = URL.createObjectURL(file);
+            window.EJS_gameName = file.name.replace(/\.[^.]+$/, "");
+            window.EJS_startOnLoaded = true;
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+
+            const script = document.createElement("script");
+            script.src = "https://cdn.emulatorjs.org/stable/data/loader.js";
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>

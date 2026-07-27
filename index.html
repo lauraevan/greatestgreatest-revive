@@ -3,139 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <title>Home</title>
+<script>try{var _s=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_s.theme)document.documentElement.setAttribute("data-theme",_s.theme);}catch(e){}</script>
 
 <style>
-body {
-    background:#0e0e0e;
-    color:white;
-    font-family:Arial, sans-serif;
-    margin:0;
+:root {
+    --bg:#0e0e0e; --panel:#1b1b1b; --panel2:#262626; --panel3:#333333;
+    --text:#ffffff; --muted:rgba(255,255,255,.6); --accent:#5986da;
 }
+html[data-theme="arctic"]{ --bg:#0c141d; --panel:#152230; --panel2:#1f3040; --panel3:#294056; --text:#eaf6ff; --muted:rgba(234,246,255,.6); --accent:#56b6e0; }
+html[data-theme="blossom"]{ --bg:#1b1013; --panel:#2a181e; --panel2:#3a222b; --panel3:#4a2c38; --text:#ffeef4; --muted:rgba(255,238,244,.6); --accent:#ff7eb0; }
+html[data-theme="monochrome"]{ --bg:#121212; --panel:#1e1e1e; --panel2:#2a2a2a; --panel3:#363636; --text:#f0f0f0; --muted:rgba(240,240,240,.6); --accent:#9e9e9e; }
+html[data-theme="blood"]{ --bg:#150909; --panel:#251010; --panel2:#351717; --panel3:#471f1f; --text:#ffe6e6; --muted:rgba(255,230,230,.6); --accent:#d63030; }
+html[data-theme="sunset"]{ --bg:#191221; --panel:#281b2e; --panel2:#38263f; --panel3:#4a3252; --text:#ffeede; --muted:rgba(255,238,222,.6); --accent:#ff8a5b; }
+html[data-theme="beach"]{ --bg:#0b1a1a; --panel:#152a2a; --panel2:#1f3b3b; --panel3:#2a4e4e; --text:#eafcff; --muted:rgba(234,252,255,.6); --accent:#25b0a0; }
+html[data-theme="autumn"]{ --bg:#16100a; --panel:#261b11; --panel2:#372718; --panel3:#4a3520; --text:#fdeede; --muted:rgba(253,238,222,.6); --accent:#e08a3c; }
 
-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:16px 20px;
-}
-
-h1 {
-    margin:0;
-}
-
-#search {
-    background:#1b1b1b;
-    border:none;
-    color:white;
-    padding:8px 12px;
-    border-radius:8px;
-    outline:none;
-    width:220px;
-}
-
-.grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(160px,1fr));
-    gap:20px;
-    padding:20px;
-}
-
-.game {
-    background:#1b1b1b;
-    border-radius:12px;
-    padding:12px;
-    text-align:center;
-    cursor:pointer;
-}
-
-.game:hover {
-    background:#262626;
-}
-
-.game img {
-    width:100%;
-    height:120px;
-    object-fit:cover;
-    border-radius:8px;
-}
+body { background:var(--bg); color:var(--text); font-family:Arial, sans-serif; margin:0; }
+header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; }
+h1 { margin:0; }
+#search { background:var(--panel); border:none; color:var(--text); padding:8px 12px; border-radius:8px; outline:none; width:220px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:20px; padding:20px; }
+.game { background:var(--panel); border-radius:12px; padding:12px; text-align:center; cursor:pointer; content-visibility:auto; contain-intrinsic-size:auto 200px; }
+.game:hover { background:var(--panel2); }
+.game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
 
 /* ---- in-site game player ---- */
-#player {
-    position:fixed;
-    inset:0;
-    background:#0e0e0e;
-    display:none;
-    flex-direction:column;
-    z-index:1000;
-}
+#player { position:fixed; inset:0; background:var(--bg); display:none; flex-direction:column; z-index:1000; }
 #player.open { display:flex; }
-#playerBar {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:8px 14px;
-    background:#1b1b1b;
-}
-#playerTitle {
-    font-size:15px;
-    font-weight:bold;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
+#playerBar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 14px; background:var(--panel); }
+#playerTitle { font-size:15px; font-weight:bold; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 #playerBar .btns { display:flex; gap:8px; flex-shrink:0; }
-#playerBar button {
-    background:#262626;
-    border:none;
-    color:white;
-    padding:8px 14px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:14px;
-}
-#playerBar button:hover { background:#333; }
-#playerFrame {
-    border:0;
-    flex:1;
-    width:100%;
-    background:#000;
-}
+#playerBar button { background:var(--panel2); border:none; color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; }
+#playerBar button:hover { background:var(--panel3); }
+#playerFrame { border:0; flex:1; width:100%; background:#000; }
 
-/* ---- source filter ---- */
+/* ---- header controls: filter + settings ---- */
 .controls { display:flex; align-items:center; gap:10px; position:relative; }
 #filterWrap { position:relative; }
-#filterBtn {
-    background:#1b1b1b; border:none; border-radius:8px; cursor:pointer;
+#filterBtn, #settingsBtn {
+    background:var(--panel); border:none; border-radius:8px; cursor:pointer;
     width:42px; height:38px; padding:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    display:flex; align-items:center; justify-content:center; color:var(--text);
 }
-#filterBtn:hover { background:#262626; }
-#filterBtn span { display:block; width:20px; height:2px; background:#fff; border-radius:2px; }
+#filterBtn { flex-direction:column; gap:4px; }
+#filterBtn:hover, #settingsBtn:hover { background:var(--panel2); }
+#filterBtn span { display:block; width:20px; height:2px; background:var(--text); border-radius:2px; }
+#settingsBtn { font-size:20px; line-height:1; }
 #filterPanel {
     display:none; position:absolute; right:0; top:46px; z-index:1100;
-    background:#1b1b1b; border-radius:10px; padding:12px;
+    background:var(--panel); border-radius:10px; padding:12px;
     box-shadow:0 8px 24px rgba(0,0,0,0.5); min-width:230px; max-height:70vh; overflow:auto;
 }
 #filterWrap.open #filterPanel { display:block; }
 .fp-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; font-weight:bold; }
-.fp-head button { background:#262626; border:none; color:#fff; padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px; }
-.fp-head button:hover { background:#333; }
+.fp-head button { background:var(--panel2); border:none; color:var(--text); padding:5px 10px; border-radius:6px; cursor:pointer; font-size:12px; }
+.fp-head button:hover { background:var(--panel3); }
 #filterList label { display:flex; align-items:center; gap:8px; padding:6px 4px; border-radius:6px; cursor:pointer; }
-#filterList label:hover { background:#262626; }
-#filterList input { width:16px; height:16px; accent-color:#5986da; }
+#filterList label:hover { background:var(--panel2); }
+#filterList input { width:16px; height:16px; accent-color:var(--accent); }
 
-/* ---- render perf: skip off-screen cards ---- */
-.game { content-visibility: auto; contain-intrinsic-size: auto 200px; }
+/* ---- settings modal ---- */
+#settingsModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:1500; align-items:center; justify-content:center; padding:20px; }
+#settingsModal.open { display:flex; }
+#settingsCard { background:var(--panel); color:var(--text); border-radius:14px; width:min(560px,100%); max-height:85vh; overflow:auto; padding:22px; box-shadow:0 12px 40px rgba(0,0,0,.6); }
+.s-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.s-head h2 { margin:0; font-size:22px; }
+#settingsClose { background:var(--panel2); border:none; color:var(--text); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:15px; }
+#settingsClose:hover { background:var(--panel3); }
+.s-section { margin:18px 0; }
+.s-section h3 { margin:0 0 10px; font-size:13px; color:var(--muted); font-weight:bold; text-transform:uppercase; letter-spacing:.5px; }
+#themeGrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; }
+.theme-opt { display:flex; align-items:center; gap:10px; background:var(--panel2); border:2px solid transparent; color:var(--text); padding:10px 12px; border-radius:10px; cursor:pointer; font-size:14px; text-align:left; }
+.theme-opt:hover { background:var(--panel3); }
+.theme-opt.active { border-color:var(--accent); }
+.theme-opt .sw { width:18px; height:18px; border-radius:50%; flex-shrink:0; border:1px solid rgba(255,255,255,.25); }
+.s-row { display:flex; gap:10px; flex-wrap:wrap; }
+.opt-btn { background:var(--panel2); border:2px solid transparent; color:var(--text); padding:10px 16px; border-radius:10px; cursor:pointer; font-size:14px; }
+.opt-btn:hover { background:var(--panel3); }
+.opt-btn.active { border-color:var(--accent); }
+#cloakTitle { width:100%; box-sizing:border-box; margin-top:10px; background:var(--panel2); border:none; color:var(--text); padding:10px 12px; border-radius:8px; outline:none; }
 
 /* ---- first-load loading screen ---- */
-#loader { position:fixed; inset:0; background:#0e0e0e; z-index:2000;
+#loader { position:fixed; inset:0; background:var(--bg); z-index:2000;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
     transition:opacity .45s ease; }
 #loader.hidden { opacity:0; pointer-events:none; }
-#loader .spin { width:54px; height:54px; border:5px solid #262626; border-top-color:#5986da;
+#loader .spin { width:54px; height:54px; border:5px solid var(--panel2); border-top-color:var(--accent);
     border-radius:50%; animation:spin .9s linear infinite; }
-#loader .lt { color:#fff; font-family:Arial, sans-serif; font-size:16px; letter-spacing:.5px; }
+#loader .lt { color:var(--text); font-family:Arial, sans-serif; font-size:16px; letter-spacing:.5px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
@@ -160,6 +115,7 @@ h1 {
                 <div id="filterList"></div>
             </div>
         </div>
+        <button id="settingsBtn" type="button" aria-label="Settings" title="Settings">⚙</button>
     </div>
 </header>
 
@@ -17240,6 +17196,41 @@ h1 {
         <img loading="lazy" decoding="async" src="https://cdn.jsdelivr.net/gh/IAmNotTechnoblade/strongdogxp@master/img/blumgi%20paintball.jpg">
        blumgi paintball
     </div>
+    <div class="game" data-source="Original" onclick="launch('library/emulator.html')">
+        <img loading="lazy" decoding="async" src="icons/emulator.webp">
+       Emulator (EmulatorJS)
+    </div>
+</div>
+
+<div id="settingsModal">
+    <div id="settingsCard">
+        <div class="s-head"><h2>Settings</h2><button id="settingsClose" aria-label="Close">✕</button></div>
+        <div class="s-section">
+            <h3>Theme</h3>
+            <div id="themeGrid"></div>
+        </div>
+        <div class="s-section">
+            <h3>Game launch</h3>
+            <div class="s-row">
+                <button class="launch-opt opt-btn" data-mode="iframe">In the site</button>
+                <button class="launch-opt opt-btn" data-mode="newtab">New tab</button>
+            </div>
+        </div>
+        <div class="s-section">
+            <h3>Tab cloak</h3>
+            <div class="s-row cloak-presets">
+                <button class="cloak-preset opt-btn" data-i="0">Default</button>
+                <button class="cloak-preset opt-btn" data-i="1">Google</button>
+                <button class="cloak-preset opt-btn" data-i="2">Classroom</button>
+                <button class="cloak-preset opt-btn" data-i="3">Docs</button>
+                <button class="cloak-preset opt-btn" data-i="4">Drive</button>
+            </div>
+            <input id="cloakTitle" type="text" placeholder="Custom tab title">
+        </div>
+        <div class="s-section">
+            <button id="settingsReset" class="opt-btn">Reset to default</button>
+        </div>
+    </div>
 </div>
 
 <div id="player">
@@ -17337,6 +17328,7 @@ const playerFrame = document.getElementById("playerFrame");
 const playerTitle = document.getElementById("playerTitle");
 
 function launch(path) {
+    if (window.__ggSettings && window.__ggSettings.launchMode === "newtab") { window.open(path, "_blank", "noopener"); return; }
     currentGamePath = path;
     const card = games.find(g => (g.getAttribute("onclick") || "").includes("'" + path + "'"));
     playerTitle.textContent = card ? card.textContent.trim() : "";
@@ -17363,6 +17355,47 @@ function openGameTab() {
 document.addEventListener("keydown", e => {
     if (e.key === "Escape" && player.classList.contains("open")) closeGame();
 });
+
+/* ---- SETTINGS (themes / launch mode / tab cloak) ---- */
+(function () {
+    const KEY = "ggu-settings";
+    const DEFAULT_TITLE = "Home";
+    const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"]];
+    const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"" };
+    let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
+    window.__ggSettings = s;
+    function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
+    function applyTheme() { document.documentElement.setAttribute("data-theme", s.theme); }
+    function applyCloak() {
+        document.title = s.tabTitle || DEFAULT_TITLE;
+        let l = document.querySelector("link[rel~='icon']");
+        if (s.favicon) { if (!l) { l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); } l.href = s.favicon; }
+        else if (l) { l.remove(); }
+    }
+    applyTheme(); applyCloak();
+
+    const tg = document.getElementById("themeGrid");
+    tg.innerHTML = THEMES.map(t => '<button class="theme-opt" data-theme-id="' + t[0] + '"><span class="sw" style="background:' + t[2] + '"></span>' + t[1] + '</button>').join("");
+    function refresh() {
+        document.querySelectorAll(".theme-opt").forEach(b => b.classList.toggle("active", b.dataset.themeId === s.theme));
+        document.querySelectorAll(".launch-opt").forEach(b => b.classList.toggle("active", b.dataset.mode === s.launchMode));
+        document.getElementById("cloakTitle").value = s.tabTitle || "";
+    }
+    tg.addEventListener("click", e => { const b = e.target.closest(".theme-opt"); if (!b) return; s.theme = b.dataset.themeId; save(); applyTheme(); refresh(); });
+    document.querySelectorAll(".launch-opt").forEach(b => b.addEventListener("click", () => { s.launchMode = b.dataset.mode; save(); refresh(); }));
+    document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
+    document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
+    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); refresh(); });
+
+    const modal = document.getElementById("settingsModal");
+    document.getElementById("settingsBtn").addEventListener("click", () => { refresh(); modal.classList.add("open"); });
+    document.getElementById("settingsClose").addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("open"); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") modal.classList.remove("open"); });
+    refresh();
+})();
+
 </script>
 
 </body>
