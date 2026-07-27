@@ -110,10 +110,55 @@ h1 { margin:0; }
     border-radius:50%; animation:spin .9s linear infinite; }
 #loader .lt { color:var(--text); font-family:Arial, sans-serif; font-size:16px; letter-spacing:.5px; }
 @keyframes spin { to { transform:rotate(360deg); } }
+
+/* ---- prank block splash ---- */
+#fakeBlock { position:fixed; inset:0; z-index:3000; background:#fff; color:#5a5a5a; font-family:Arial, Helvetica, sans-serif; overflow:auto; }
+#fbInner { max-width:640px; margin:0 auto; padding:0 20px 60px; }
+#fbBanner { position:relative; height:170px; background:#f1f1f2; margin:0 -20px 26px; overflow:hidden; }
+#fbBanner .logo { position:absolute; left:34px; top:26px; font-weight:800; font-size:30px; letter-spacing:3px; color:#0b0b0b; z-index:2; }
+#fbBanner .bar { position:absolute; bottom:0; left:0; right:0; height:11px; background:#e21b22; }
+#fbBanner i { position:absolute; display:block; }
+#fbTitle { font-size:34px; font-weight:800; line-height:1.15; color:#6d6e71; margin:0 0 26px; }
+#fbTitle .o { cursor:default; }
+#fbBlocked { font-size:19px; font-weight:800; color:#6d6e71; margin:0 0 18px; }
+#fakeBlock p { font-size:16px; line-height:1.5; margin:0 0 20px; }
+#fbMeta { margin:0 0 20px; }
+#fbMeta div { display:flex; gap:16px; margin:5px 0; font-size:16px; }
+#fbMeta .k { color:#9a9a9a; width:82px; }
+#fakeBlock a { color:#1a4fd6; }
+/* ---- site effects ---- */
+#fx { position:fixed; inset:0; z-index:500; pointer-events:none; }
 </style>
 </head>
 
 <body>
+
+<canvas id="fx"></canvas>
+
+<div id="fakeBlock">
+    <div id="fbInner">
+        <div id="fbBanner">
+            <div class="logo">FORTINET</div>
+            <i style="width:46px;height:118px;background:#b9bcc0;left:44%;top:0;"></i>
+            <i style="width:16px;height:150px;background:#3a3a3a;left:41%;top:22px;"></i>
+            <i style="width:70px;height:70px;background:#2bb3c0;left:41%;top:96px;"></i>
+            <i style="width:58px;height:130px;background:#2f6fb0;right:64px;top:20px;"></i>
+            <i style="width:14px;height:120px;background:#3a3a3a;right:44px;top:60px;"></i>
+            <i style="width:80px;height:10px;background:#e21b22;right:78px;top:12px;"></i>
+            <i style="width:80px;height:10px;background:#e21b22;left:18px;top:74px;"></i>
+            <div class="bar"></div>
+        </div>
+        <div id="fbTitle">F<span class="o" onclick="document.getElementById('fakeBlock').style.display='none'">o</span>rtiGuard Intrusion Prevention - Access Blocked</div>
+        <div id="fbBlocked">Web Page Blocked</div>
+        <p>You have tried to access a web page that is in violation of your Internet usage policy.</p>
+        <div id="fbMeta">
+            <div><span class="k">Category</span><span>Dynamic DNS</span></div>
+            <div><span class="k">URL</span><span>http://www.duckdns.org/</span></div>
+        </div>
+        <p>To have the rating of this web page re-evaluated <a href="#" onclick="return false">please click here</a>.</p>
+    </div>
+</div>
+<script>try{var _fb=JSON.parse(localStorage.getItem("ggu-settings")||"{}");if(_fb.fakeBlock===false)document.getElementById("fakeBlock").style.display="none";}catch(e){}</script>
 
 <div id="loader"><div class="spin"></div><div class="lt">Loading games…</div></div>
 
@@ -17222,6 +17267,394 @@ h1 { margin:0; }
         <img loading="lazy" decoding="async" src="icons/hl2-slqnt.webp">
        Half-Life 2
     </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/drive-mad-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/drive-mad-sd2.webp">
+       drive mad
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/retro-bowl-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/retro-bowl-sd2.webp">
+       retro bowl
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/1v1-lol-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/1v1-lol-sd2.webp">
+       1v1.lol
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/ovo-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/ovo-sd2.webp">
+       ovo
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/idle-breakout-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/idle-breakout-sd2.webp">
+       idle breakout
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/paper-io-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/paper-io-sd2.webp">
+       paper.io
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/big-ice-tower-tiny-square-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/big-ice-tower-tiny-square-sd2.webp">
+       big ice tower tiny square
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/among-us-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/among-us-sd2.webp">
+       among us
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bob-the-robber-2-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/bob-the-robber-2-sd2.webp">
+       bob the robber 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/tiny-fishing-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/tiny-fishing-sd2.webp">
+       tiny fishing
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/asteroids-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/asteroids-sd2.webp">
+       asteroids
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bloxorz-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloxorz-sd2.webp">
+       bloxorz
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bounceback-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/bounceback-sd2.webp">
+       bounceback
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/breaklock-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/breaklock-sd2.webp">
+       breaklock
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/connect-4-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/connect-4-sd2.webp">
+       connect 4
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/chess-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/chess-sd2.webp">
+       chess
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/cookie-clicker-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/cookie-clicker-sd2.webp">
+       cookie clicker
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/cubefield-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/cubefield-sd2.webp">
+       cubefield
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/flappy-2048-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-2048-sd2.webp">
+       flappy 2048
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/flappy-bird-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/flappy-bird-sd2.webp">
+       flappy Bird
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/fruit-ninja-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/fruit-ninja-sd2.webp">
+       Fruit Ninja
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/geometry-dash.html')">
+        <img loading="lazy" decoding="async" src="icons/geometry-dash.webp">
+       geometry Dash
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/getting-over-it-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/getting-over-it-sd2.webp">
+       getting over it
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/hextris-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/hextris-sd2.webp">
+       hextris
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/mario-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/mario-sd2.webp">
+       mario
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/just-one-boss.html')">
+        <img loading="lazy" decoding="async" src="icons/just-one-boss.webp">
+       just one boss
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/space-company.html')">
+        <img loading="lazy" decoding="async" src="icons/space-company.webp">
+       space company
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/stack-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/stack-sd2.webp">
+       stack
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/tetris-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/tetris-sd2.webp">
+       tetris
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/xx142-b2exe.html')">
+        <img loading="lazy" decoding="async" src="icons/xx142-b2exe.webp">
+       xx142-b2exe
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/slither-io.html')">
+        <img loading="lazy" decoding="async" src="icons/slither-io.webp">
+       slither.io
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/terraria-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/terraria-sd2.webp">
+       terraria
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/10-minutes-till-dawn-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/10-minutes-till-dawn-sd2.webp">
+       10 minutes till dawn
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/achievementunlocked-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/achievementunlocked-sd2.webp">
+       achievementunlocked
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/ages-of-conflict.html')">
+        <img loading="lazy" decoding="async" src="icons/ages-of-conflict.webp">
+       ages of conflict
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/alien-hominid-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/alien-hominid-sd2.webp">
+       alien hominid
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/avalanche-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/avalanche-sd2.webp">
+       avalanche
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/backrooms-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/backrooms-sd2.webp">
+       backrooms
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bad-icecream-2.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-icecream-2.webp">
+       bad icecream 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bad-icecream.html')">
+        <img loading="lazy" decoding="async" src="icons/bad-icecream.webp">
+       bad icecream
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/baldis-basics-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/baldis-basics-sd2.webp">
+       baldis basics
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/ballistic-chickens-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/ballistic-chickens-sd2.webp">
+       ballistic chickens
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/basketball-stars-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/basketball-stars-sd2.webp">
+       basketball stars
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bloonstd-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloonstd-sd2.webp">
+       bloonstd
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bloonstd-2.html')">
+        <img loading="lazy" decoding="async" src="icons/bloonstd-2.webp">
+       bloonstd 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/bloonstd-4.html')">
+        <img loading="lazy" decoding="async" src="icons/bloonstd-4.webp">
+       bloonstd 4
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/btts-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/btts-sd2.webp">
+       btts
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/cluster-rush-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/cluster-rush-sd2.webp">
+       cluster rush
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/coreball-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/coreball-sd2.webp">
+       coreball
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/crossyroad-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/crossyroad-sd2.webp">
+       crossyroad
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/csgo-clicker.html')">
+        <img loading="lazy" decoding="async" src="icons/csgo-clicker.webp">
+       csgo clicker
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/cut-the-rope-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/cut-the-rope-sd2.webp">
+       cut the rope
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/dogeminer-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/dogeminer-sd2.webp">
+       dogeminer
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/doodle-jump-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/doodle-jump-sd2.webp">
+       doodle jump
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/drift-king-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/drift-king-sd2.webp">
+       drift king
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/eggy-car.html')">
+        <img loading="lazy" decoding="async" src="icons/eggy-car.webp">
+       eggy car
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/evolution-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/evolution-sd2.webp">
+       evolution
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/fnaf-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/fnaf-sd2.webp">
+       fnaf
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/fnaf-2.html')">
+        <img loading="lazy" decoding="async" src="icons/fnaf-2.webp">
+       fnaf 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/fnaf-3.html')">
+        <img loading="lazy" decoding="async" src="icons/fnaf-3.webp">
+       fnaf 3
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/fnaf-4.html')">
+        <img loading="lazy" decoding="async" src="icons/fnaf-4.webp">
+       fnaf 4
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/funny-shooter-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/funny-shooter-sd2.webp">
+       funny shooter
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/impossible-quiz-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/impossible-quiz-sd2.webp">
+       impossible quiz
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/interactive-buddy.html')">
+        <img loading="lazy" decoding="async" src="icons/interactive-buddy.webp">
+       interactive buddy
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/jetpack-joyride-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/jetpack-joyride-sd2.webp">
+       jetpack joyride
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/kitten-cannon.html')">
+        <img loading="lazy" decoding="async" src="icons/kitten-cannon.webp">
+       kitten cannon
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/learn-to-fly-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/learn-to-fly-sd2.webp">
+       learn to fly
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/learn-to-fly-2-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/learn-to-fly-2-sd2.webp">
+       learn to fly 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/motox3m-spooky.html')">
+        <img loading="lazy" decoding="async" src="icons/motox3m-spooky.webp">
+       motox3m spooky
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/motox3m-pool-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/motox3m-pool-sd2.webp">
+       motox3m pool
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/motox3m-winter.html')">
+        <img loading="lazy" decoding="async" src="icons/motox3m-winter.webp">
+       motox3m winter
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/motox3m-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/motox3m-sd2.webp">
+       motox3m
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/motox3m-2.html')">
+        <img loading="lazy" decoding="async" src="icons/motox3m-2.webp">
+       motox3m 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/pacman-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/pacman-sd2.webp">
+       pacman
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/papery-planes-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/papery-planes-sd2.webp">
+       papery planes
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/pokemon-fire-red.html')">
+        <img loading="lazy" decoding="async" src="icons/pokemon-fire-red.webp">
+       pokemon fire red
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/pong-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/pong-sd2.webp">
+       pong
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/racer-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/racer-sd2.webp">
+       racer
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/rooftop-snipers-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/rooftop-snipers-sd2.webp">
+       rooftop snipers
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/slope-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/slope-sd2.webp">
+       slope
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/space-invaders-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/space-invaders-sd2.webp">
+       space invaders
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/station-meltdown.html')">
+        <img loading="lazy" decoding="async" src="icons/station-meltdown.webp">
+       station meltdown
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/super-hot.html')">
+        <img loading="lazy" decoding="async" src="icons/super-hot.webp">
+       super hot
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/temple-run-2-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/temple-run-2-sd2.webp">
+       temple run 2
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/tunnel-rush-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/tunnel-rush-sd2.webp">
+       tunnel rush
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/vex-3-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-3-sd2.webp">
+       vex 3
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/vex-4-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-4-sd2.webp">
+       vex 4
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/vex-5-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-5-sd2.webp">
+       vex 5
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/vex-6-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-6-sd2.webp">
+       vex 6
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/vex-7-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/vex-7-sd2.webp">
+       vex 7
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/wall-smash-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/wall-smash-sd2.webp">
+       wall smash
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/water-works.html')">
+        <img loading="lazy" decoding="async" src="icons/water-works.webp">
+       water works
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/weave-silk-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/weave-silk-sd2.webp">
+       weave silk
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/web-retro.html')">
+        <img loading="lazy" decoding="async" src="icons/web-retro.webp">
+       web retro
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/worlds-hardest-game-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/worlds-hardest-game-sd2.webp">
+       worlds hardest game
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/wordle-sd2.html')">
+        <img loading="lazy" decoding="async" src="icons/wordle-sd2.webp">
+       wordle
+    </div>
+    <div class="game" data-source="Strongdog XP" onclick="launch('library/pixel-speedrun.html')">
+        <img loading="lazy" decoding="async" src="icons/pixel-speedrun.webp">
+       pixel speedrun
+    </div>
 </div>
 
 <div id="settingsModal">
@@ -17270,6 +17703,24 @@ h1 { margin:0; }
             <div class="s-row">
                 <input id="panicKey" class="s-input" type="text" maxlength="1" placeholder="Key" style="width:80px;flex:none;">
                 <input id="panicUrl" class="s-input" type="text" placeholder="https://classroom.google.com" style="flex:1;min-width:180px;">
+            </div>
+        </div>
+        <div class="s-section">
+            <h3>Fake block page (prank)</h3>
+            <div class="s-row">
+                <button class="fb-opt opt-btn" data-fb="on">On</button>
+                <button class="fb-opt opt-btn" data-fb="off">Off</button>
+            </div>
+        </div>
+        <div class="s-section">
+            <h3>Site effect</h3>
+            <div class="s-row">
+                <button class="fx-opt opt-btn" data-fx="none">None</button>
+                <button class="fx-opt opt-btn" data-fx="snow">Snow</button>
+                <button class="fx-opt opt-btn" data-fx="rain">Rain</button>
+                <button class="fx-opt opt-btn" data-fx="petals">Petals</button>
+                <button class="fx-opt opt-btn" data-fx="stars">Stars</button>
+                <button class="fx-opt opt-btn" data-fx="bubbles">Bubbles</button>
             </div>
         </div>
         <div class="s-section">
@@ -17408,7 +17859,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"" };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", fakeBlock:true, effect:"none" };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -17420,7 +17871,41 @@ document.addEventListener("keydown", e => {
         else if (l) { l.remove(); }
     }
     function applyCardSize(){ document.documentElement.style.setProperty("--card-min", s.cardSize || "160px"); }
-    applyTheme(); applyCloak(); applyCardSize();
+    /* ---- site effects engine ---- */
+    const fxCanvas = document.getElementById("fx"), fxCtx = fxCanvas.getContext("2d");
+    let fxP = [], fxRAF = null, fxType = "none";
+    function fxSize(){ fxCanvas.width = innerWidth; fxCanvas.height = innerHeight; }
+    window.addEventListener("resize", fxSize); fxSize();
+    function rnd(a, b){ return a + Math.random() * (b - a); }
+    function fxMake(t){
+        const W = fxCanvas.width, H = fxCanvas.height;
+        if (t === "snow") return { x:rnd(0,W), y:rnd(-H,H), r:rnd(1.5,4), vy:rnd(.4,1.3), sw:rnd(.3,1), ph:rnd(0,6.28) };
+        if (t === "rain") return { x:rnd(0,W), y:rnd(-H,0), len:rnd(8,18), vy:rnd(7,12) };
+        if (t === "petals") return { x:rnd(0,W), y:rnd(-H,H), r:rnd(3,6), vy:rnd(.6,1.4), sw:rnd(.6,1.6), ph:rnd(0,6.28), rot:rnd(0,6.28), vr:rnd(-.05,.05) };
+        if (t === "stars") return { x:rnd(0,W), y:rnd(0,H), r:rnd(.6,1.8), ph:rnd(0,6.28), tw:rnd(.02,.06) };
+        return { x:rnd(0,W), y:rnd(0,H*1.5), r:rnd(3,9), vy:rnd(.5,1.4), sw:rnd(.4,1), ph:rnd(0,6.28) };
+    }
+    function fxInit(t){
+        fxType = t; fxP = [];
+        if (t === "none") { if (fxRAF) { cancelAnimationFrame(fxRAF); fxRAF = null; } fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height); return; }
+        const n = t === "stars" ? 120 : t === "rain" ? 150 : 95;
+        for (let i = 0; i < n; i++) fxP.push(fxMake(t));
+        if (!fxRAF) fxLoop();
+    }
+    function fxLoop(){
+        const W = fxCanvas.width, H = fxCanvas.height, t = fxType;
+        fxCtx.clearRect(0, 0, W, H);
+        for (const p of fxP) {
+            if (t === "snow") { p.ph += .02; p.x += Math.sin(p.ph)*p.sw; p.y += p.vy; if (p.y > H) { p.y = -5; p.x = rnd(0,W); } fxCtx.fillStyle = "rgba(255,255,255,.85)"; fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r,0,6.28); fxCtx.fill(); }
+            else if (t === "rain") { p.y += p.vy; p.x += 1.5; if (p.y > H) { p.y = -p.len; p.x = rnd(0,W); } fxCtx.strokeStyle = "rgba(140,190,255,.6)"; fxCtx.lineWidth = 1.4; fxCtx.beginPath(); fxCtx.moveTo(p.x,p.y); fxCtx.lineTo(p.x-2,p.y+p.len); fxCtx.stroke(); }
+            else if (t === "petals") { p.ph += .03; p.rot += p.vr; p.x += Math.sin(p.ph)*p.sw; p.y += p.vy; if (p.y > H) { p.y = -5; p.x = rnd(0,W); } fxCtx.save(); fxCtx.translate(p.x,p.y); fxCtx.rotate(p.rot); fxCtx.fillStyle = "rgba(255,170,205,.85)"; fxCtx.beginPath(); fxCtx.ellipse(0,0,p.r,p.r*.55,0,0,6.28); fxCtx.fill(); fxCtx.restore(); }
+            else if (t === "stars") { p.ph += p.tw; const a = .35 + Math.abs(Math.sin(p.ph))*.65; fxCtx.fillStyle = "rgba(255,255,240," + a + ")"; fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r,0,6.28); fxCtx.fill(); }
+            else { p.ph += .02; p.x += Math.sin(p.ph)*p.sw; p.y -= p.vy; if (p.y < -12) { p.y = H+12; p.x = rnd(0,W); } fxCtx.strokeStyle = "rgba(255,255,255,.5)"; fxCtx.lineWidth = 1.2; fxCtx.beginPath(); fxCtx.arc(p.x,p.y,p.r,0,6.28); fxCtx.stroke(); }
+        }
+        fxRAF = requestAnimationFrame(fxLoop);
+    }
+    function applyEffect(){ fxInit(s.effect || "none"); }
+    applyTheme(); applyCloak(); applyCardSize(); applyEffect();
     document.addEventListener("keydown", function(e){ if(!s.panicKey||!s.panicUrl) return; var t=e.target.tagName; if(t==="INPUT"||t==="TEXTAREA") return; if(e.key===s.panicKey){ window.location.href = s.panicUrl; } });
 
     const tg = document.getElementById("themeGrid");
@@ -17433,6 +17918,8 @@ document.addEventListener("keydown", e => {
         document.getElementById("cloakTitle").value = s.tabTitle || "";
         document.getElementById("panicKey").value = s.panicKey || "";
         document.getElementById("panicUrl").value = s.panicUrl || "";
+        document.querySelectorAll(".fb-opt").forEach(b => b.classList.toggle("active", b.dataset.fb === (s.fakeBlock === false ? "off" : "on")));
+        document.querySelectorAll(".fx-opt").forEach(b => b.classList.toggle("active", b.dataset.fx === (s.effect || "none")));
     }
     tg.addEventListener("click", e => { const b = e.target.closest(".theme-opt"); if (!b) return; s.theme = b.dataset.themeId; save(); applyTheme(); refresh(); });
     document.querySelectorAll(".launch-opt").forEach(b => b.addEventListener("click", () => { s.launchMode = b.dataset.mode; save(); refresh(); }));
@@ -17440,9 +17927,11 @@ document.addEventListener("keydown", e => {
     document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
     document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
     document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
+    document.querySelectorAll(".fb-opt").forEach(b => b.addEventListener("click", () => { s.fakeBlock = b.dataset.fb === "on"; save(); refresh(); }));
+    document.querySelectorAll(".fx-opt").forEach(b => b.addEventListener("click", () => { s.effect = b.dataset.fx; save(); applyEffect(); refresh(); }));
     document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
     document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
-    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); refresh(); });
+    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); refresh(); });
 
     const modal = document.getElementById("settingsModal");
     document.getElementById("settingsBtn").addEventListener("click", () => { refresh(); modal.classList.add("open"); });
