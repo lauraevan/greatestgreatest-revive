@@ -89,6 +89,7 @@ h1 { margin:0; }
     background:rgba(18,18,18,.92); color:#fff; font-size:13px; line-height:1.35; padding:8px 12px; border-radius:9px;
     border:1px solid var(--accent); text-align:center; }
 #padNote[hidden] { display:none; }
+html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { display:none !important; }
 
 /* ---- header controls: filter + settings ---- */
 .controls { display:flex; align-items:center; gap:10px; position:relative; }
@@ -229,6 +230,14 @@ h1 { margin:0; }
                 <div class="s-row">
                     <button class="fs-opt opt-btn" data-fs="off">Off</button>
                     <button class="fs-opt opt-btn" data-fs="on">On</button>
+                </div>
+            </div>
+            <div class="s-section">
+                <h3>On-screen keyboard (touch controls)</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Shows a ⌨ button in games so you can move with taps on mobile. Turn off if it gets in the way.</p>
+                <div class="s-row">
+                    <button class="tc-opt opt-btn" data-tc="on">On</button>
+                    <button class="tc-opt opt-btn" data-tc="off">Off</button>
                 </div>
             </div>
         </div>
@@ -611,7 +620,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none" };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:true };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -657,7 +666,8 @@ document.addEventListener("keydown", e => {
         fxRAF = requestAnimationFrame(fxLoop);
     }
     function applyEffect(){ fxInit(s.effect || "none"); }
-    applyTheme(); applyCloak(); applyCardSize(); applyEffect();
+    function applyTouchControls(){ document.documentElement.classList.toggle("no-touch", s.touchControls === false); }
+    applyTheme(); applyCloak(); applyCardSize(); applyEffect(); applyTouchControls();
     document.addEventListener("keydown", function(e){ if(!s.panicKey||!s.panicUrl) return; var t=e.target.tagName; if(t==="INPUT"||t==="TEXTAREA") return; if(e.key===s.panicKey){ window.location.href = s.panicUrl; } });
 
     const tg = document.getElementById("themeGrid");
@@ -667,6 +677,7 @@ document.addEventListener("keydown", e => {
         document.querySelectorAll(".launch-opt").forEach(b => b.classList.toggle("active", b.dataset.mode === s.launchMode));
         document.querySelectorAll(".size-opt").forEach(b => b.classList.toggle("active", b.dataset.size === s.cardSize));
         document.querySelectorAll(".fs-opt").forEach(b => b.classList.toggle("active", b.dataset.fs === (s.autoFullscreen ? "on" : "off")));
+        document.querySelectorAll(".tc-opt").forEach(b => b.classList.toggle("active", b.dataset.tc === (s.touchControls === false ? "off" : "on")));
         document.getElementById("cloakTitle").value = s.tabTitle || "";
         document.getElementById("panicKey").value = s.panicKey || "";
         document.getElementById("panicUrl").value = s.panicUrl || "";
@@ -676,12 +687,13 @@ document.addEventListener("keydown", e => {
     document.querySelectorAll(".launch-opt").forEach(b => b.addEventListener("click", () => { s.launchMode = b.dataset.mode; save(); refresh(); }));
     document.querySelectorAll(".size-opt").forEach(b => b.addEventListener("click", () => { s.cardSize = b.dataset.size; save(); applyCardSize(); refresh(); }));
     document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
+    document.querySelectorAll(".tc-opt").forEach(b => b.addEventListener("click", () => { s.touchControls = b.dataset.tc === "on"; save(); applyTouchControls(); refresh(); }));
     document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
     document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
     document.querySelectorAll(".fx-opt").forEach(b => b.addEventListener("click", () => { s.effect = b.dataset.fx; save(); applyEffect(); refresh(); }));
     document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
     document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
-    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); refresh(); });
+    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); applyTouchControls(); refresh(); });
 
     /* ---- settings tabs ---- */
     document.querySelectorAll(".s-tab").forEach(tab => tab.addEventListener("click", () => {
