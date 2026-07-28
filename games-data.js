@@ -3,6 +3,7 @@
  * [source, launch path, icon path, display name, opens directly?]
  */
 window.GAME_DATA = [
+    ["chicken","library/chicken/learntofly.html","icons/learntofly.webp","Learn to Fly"],
     ["Original","library/SubmitGames.html","icons/form.png","[[REQUEST A GAME]]"],
     ["Original","library/Eag188.html","icons/1.8.8.png","Eaglercraft 1.8.8"],
     ["Original","library/Eag1122.html","icons/1.12.png","Eaglercraft 1.12.2"],
