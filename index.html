@@ -53,7 +53,7 @@ h1 { margin:0; }
 .game:hover { background:var(--panel2); box-shadow:0 0 0 2px var(--accent); }
 .game:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
 .game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
-.game-thumb { width:100%; height:120px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:800; letter-spacing:1px; color:rgba(255,255,255,.92); }
+.game-thumb { width:100%; height:120px; border-radius:8px; box-sizing:border-box; padding:8px; display:flex; align-items:center; justify-content:center; text-align:center; background:#1c1c1c; color:#fff; font-family:monospace; font-weight:700; font-size:15px; line-height:1.2; overflow:hidden; overflow-wrap:anywhere; }
 .game-name { display:block; margin-top:8px; overflow-wrap:anywhere; }
 #catalogStatus { min-height:20px; padding:0 20px 18px; color:var(--muted); text-align:center; font-size:14px; }
 #catalogSentinel { height:1px; }
@@ -347,14 +347,10 @@ function createGameCard(game, position) {
         thumb.decoding = "async";
         thumb.loading = position < 12 ? "eager" : "lazy";
     } else {
-        // no thumbnail: draw a clean initials tile, hue derived from the name
+        // no thumbnail: plain name tile, matching the Ultimate Game Stash style
         thumb = document.createElement("div");
         thumb.className = "game-thumb";
-        const w = game[3].replace(/[^\w ]/g, " ").trim().split(/\s+/);
-        thumb.textContent = (((w[0] || "").charAt(0) + (w[1] || "").charAt(0)) || game[3].charAt(0)).toUpperCase();
-        let h = 0;
-        for (let i = 0; i < game[3].length; i++) h = (h * 31 + game[3].charCodeAt(i)) % 360;
-        thumb.style.background = "linear-gradient(135deg, hsl(" + h + ",42%,26%), hsl(" + ((h + 40) % 360) + ",52%,42%))";
+        thumb.textContent = game[3];
     }
 
     const name = document.createElement("span");
@@ -432,10 +428,17 @@ filterList.innerHTML = sources.map(s =>
 const searchInput = document.getElementById("search");
 function applyFilters() {
     const query = searchInput.value.trim().toLocaleLowerCase();
-    resetCatalog(catalog.filter(game =>
+    const games = catalog.filter(game =>
         selected.has(game[0]) &&
         (!query || game[3].toLocaleLowerCase().includes(query))
-    ));
+    );
+    // When Strongdog XP is the ONLY source shown, let its no-image games sit
+    // alphabetically among the rest; as soon as another source is checked they
+    // fall back to the bottom (the default catalog order).
+    if (selected.size === 1 && selected.has("Strongdog XP")) {
+        games.sort((a, b) => a[3].localeCompare(b[3], undefined, { sensitivity: "base" }));
+    }
+    resetCatalog(games);
 }
 let filterFrame = 0;
 searchInput.addEventListener("input", () => {
