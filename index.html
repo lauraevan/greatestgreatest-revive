@@ -39,6 +39,7 @@ h1 { margin:0; }
 .game:hover { background:var(--panel2); box-shadow:0 0 0 2px var(--accent); }
 .game:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
 .game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
+.game-thumb { width:100%; height:120px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:800; letter-spacing:1px; color:rgba(255,255,255,.92); }
 .game-name { display:block; margin-top:8px; overflow-wrap:anywhere; }
 #catalogStatus { min-height:20px; padding:0 20px 18px; color:var(--muted); text-align:center; font-size:14px; }
 #catalogSentinel { height:1px; }
@@ -282,16 +283,28 @@ function createGameCard(game, position) {
     if (game[4]) card.dataset.direct = "true";
     card.setAttribute("aria-label", game[3]);
 
-    const image = document.createElement("img");
-    image.src = game[2];
-    image.alt = "";
-    image.decoding = "async";
-    image.loading = position < 12 ? "eager" : "lazy";
+    let thumb;
+    if (game[2]) {
+        thumb = document.createElement("img");
+        thumb.src = game[2];
+        thumb.alt = "";
+        thumb.decoding = "async";
+        thumb.loading = position < 12 ? "eager" : "lazy";
+    } else {
+        // no thumbnail: draw a clean initials tile, hue derived from the name
+        thumb = document.createElement("div");
+        thumb.className = "game-thumb";
+        const w = game[3].replace(/[^\w ]/g, " ").trim().split(/\s+/);
+        thumb.textContent = (((w[0] || "").charAt(0) + (w[1] || "").charAt(0)) || game[3].charAt(0)).toUpperCase();
+        let h = 0;
+        for (let i = 0; i < game[3].length; i++) h = (h * 31 + game[3].charCodeAt(i)) % 360;
+        thumb.style.background = "linear-gradient(135deg, hsl(" + h + ",42%,26%), hsl(" + ((h + 40) % 360) + ",52%,42%))";
+    }
 
     const name = document.createElement("span");
     name.className = "game-name";
     name.textContent = game[3];
-    card.append(image, name);
+    card.append(thumb, name);
     return card;
 }
 
@@ -349,7 +362,7 @@ grid.addEventListener("pointerover", e => prefetchGame(e.target.closest(".game")
 grid.addEventListener("pointerdown", e => prefetchGame(e.target.closest(".game")), { passive: true });
 
 /* ---- SEARCH + SOURCE FILTER ---- */
-const SOURCE_ORDER = ["Original", "chicken", "BestSpark", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
+const SOURCE_ORDER = ["Original", "chicken", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
 const counts = {};
 catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
 const sources = SOURCE_ORDER.filter(s => counts[s]).concat(Object.keys(counts).filter(s => !SOURCE_ORDER.includes(s)).sort());
