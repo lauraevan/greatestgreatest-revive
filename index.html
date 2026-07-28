@@ -49,23 +49,11 @@ header { display:flex; align-items:center; justify-content:space-between; paddin
 h1 { margin:0; }
 #search { background:var(--panel); border:none; color:var(--text); padding:8px 12px; border-radius:8px; outline:none; width:220px; }
 .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:20px; padding:20px; }
-.game { position:relative; background:var(--panel); border:0; border-radius:12px; padding:12px; color:var(--text); font:inherit; text-align:center; cursor:pointer; min-width:0; content-visibility:auto; contain-intrinsic-size:auto 200px; box-shadow:0 0 0 0 transparent; transition:box-shadow .15s ease, background .15s ease; }
+.game { background:var(--panel); border:0; border-radius:12px; padding:12px; color:var(--text); font:inherit; text-align:center; cursor:pointer; min-width:0; content-visibility:auto; contain-intrinsic-size:auto 200px; box-shadow:0 0 0 0 transparent; transition:box-shadow .15s ease, background .15s ease; }
 .game:hover { background:var(--panel2); box-shadow:0 0 0 2px var(--accent); }
 .game:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
 .game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
 .game-thumb { width:100%; height:120px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:800; letter-spacing:1px; color:rgba(255,255,255,.92); }
-/* ---- favorite star ---- */
-.fav-star { position:absolute; top:7px; right:9px; z-index:2; font-size:20px; line-height:1; color:rgba(255,255,255,.42); text-shadow:0 1px 3px rgba(0,0,0,.65); transition:color .12s, transform .12s; }
-.fav-star:hover { color:#ffcb45; transform:scale(1.18); }
-.game.faved .fav-star { color:#ffcb45; }
-/* ---- recently played / favorites rows ---- */
-.row-title { margin:14px 20px 2px; font-size:16px; }
-.row-grid { display:flex; gap:16px; overflow-x:auto; overflow-y:hidden; padding:8px 20px 12px; scrollbar-width:thin; }
-.row-grid .game { flex:0 0 148px; }
-#recentRow[hidden], #favRow[hidden] { display:none; }
-/* ---- random button ---- */
-#randomBtn { background:var(--panel); border:none; border-radius:8px; cursor:pointer; width:42px; height:38px; padding:0; color:var(--text); font-size:18px; line-height:1; }
-#randomBtn:hover { background:var(--panel2); }
 .game-name { display:block; margin-top:8px; overflow-wrap:anywhere; }
 #catalogStatus { min-height:20px; padding:0 20px 18px; color:var(--muted); text-align:center; font-size:14px; }
 #catalogSentinel { height:1px; }
@@ -191,19 +179,9 @@ h1 { margin:0; }
                 <div id="filterList"></div>
             </div>
         </div>
-        <button id="randomBtn" type="button" aria-label="Random game" title="Play a random game">🎲</button>
         <button id="settingsBtn" type="button" aria-label="Settings" title="Settings">⚙</button>
     </div>
 </header>
-
-<section id="recentRow" hidden>
-    <h2 class="row-title">🕘 Recently played</h2>
-    <div class="row-grid" id="recentGrid"></div>
-</section>
-<section id="favRow" hidden>
-    <h2 class="row-title">⭐ Favorites</h2>
-    <div class="row-grid" id="favGrid"></div>
-</section>
 
 <div class="grid" id="gameGrid">
 </div>
@@ -374,14 +352,7 @@ function createGameCard(game, position) {
     const name = document.createElement("span");
     name.className = "game-name";
     name.textContent = game[3];
-
-    const star = document.createElement("span");
-    star.className = "fav-star";
-    star.textContent = "★";
-    star.title = "Favorite";
-    if (typeof favs !== "undefined" && favs.has(game[1])) card.classList.add("faved");
-
-    card.append(thumb, name, star);
+    card.append(thumb, name);
     return card;
 }
 
@@ -417,14 +388,11 @@ function resetCatalog(games) {
     updateCatalogStatus();
 }
 
-function handleCardClick(e) {
-    const star = e.target.closest(".fav-star");
-    if (star) { e.stopPropagation(); toggleFav(star.closest(".game")); return; }
+grid.addEventListener("click", e => {
     const card = e.target.closest(".game");
-    if (!card) return;
+    if (!card || !grid.contains(card)) return;
     launch(card.dataset.path, card.dataset.name, card.dataset.direct === "true");
-}
-grid.addEventListener("click", handleCardClick);
+});
 
 /* ---- prefetch a game's loader the instant you hover/touch it, so it opens faster ---- */
 const prefetched = new Set();
@@ -460,7 +428,6 @@ function applyFilters() {
         selected.has(game[0]) &&
         (!query || game[3].toLocaleLowerCase().includes(query))
     ));
-    updateRowVisibility();
 }
 let filterFrame = 0;
 searchInput.addEventListener("input", () => {
@@ -494,64 +461,6 @@ document.addEventListener("click", e => {
 });
 updateAllBtn();
 
-/* ---- FAVORITES + RECENTLY PLAYED + RANDOM ---- */
-const byPath = new Map(catalog.map(g => [g[1], g]));
-const recentSection = document.getElementById("recentRow");
-const favSection = document.getElementById("favRow");
-const recentGrid = document.getElementById("recentGrid");
-const favGrid = document.getElementById("favGrid");
-
-let favs, recent;
-try { favs = new Set(JSON.parse(localStorage.getItem("ggu-favorites") || "[]")); } catch (e) { favs = new Set(); }
-try { recent = JSON.parse(localStorage.getItem("ggu-recent") || "[]"); if (!Array.isArray(recent)) recent = []; } catch (e) { recent = []; }
-
-function rowsAllowed() { return searchInput.value.trim() === ""; }
-function cardsFrom(paths) {
-    const frag = document.createDocumentFragment();
-    paths.forEach(p => { const g = byPath.get(p); if (g) frag.appendChild(createGameCard(g, 0)); });
-    return frag;
-}
-function renderRecentRow() {
-    recentGrid.replaceChildren(cardsFrom(recent));
-    recentSection.hidden = !rowsAllowed() || recentGrid.children.length === 0;
-}
-function renderFavRow() {
-    favGrid.replaceChildren(cardsFrom([...favs].reverse()));
-    favSection.hidden = !rowsAllowed() || favGrid.children.length === 0;
-}
-function updateRowVisibility() {
-    recentSection.hidden = !rowsAllowed() || recentGrid.children.length === 0;
-    favSection.hidden = !rowsAllowed() || favGrid.children.length === 0;
-}
-function toggleFav(card) {
-    if (!card) return;
-    const path = card.dataset.path;
-    const on = !favs.has(path);
-    if (on) favs.add(path); else favs.delete(path);
-    try { localStorage.setItem("ggu-favorites", JSON.stringify([...favs])); } catch (e) {}
-    document.querySelectorAll(".game").forEach(c => { if (c.dataset.path === path) c.classList.toggle("faved", on); });
-    renderFavRow();
-}
-function recordRecent(path) {
-    recent = recent.filter(p => p !== path);
-    recent.unshift(path);
-    if (recent.length > 24) recent.length = 24;
-    try { localStorage.setItem("ggu-recent", JSON.stringify(recent)); } catch (e) {}
-}
-[recentGrid, favGrid].forEach(g => {
-    g.addEventListener("click", handleCardClick);
-    g.addEventListener("pointerover", e => prefetchGame(e.target.closest(".game")), { passive: true });
-});
-const randomBtn = document.getElementById("randomBtn");
-if (randomBtn) randomBtn.addEventListener("click", () => {
-    const pool = catalog.filter(g => selected.has(g[0]));
-    if (!pool.length) return;
-    const g = pool[Math.floor(Math.random() * pool.length)];
-    launch(g[1], g[3], !!g[4]);
-});
-renderRecentRow();
-renderFavRow();
-
 const catalogObserver = new IntersectionObserver(entries => {
     if (entries.some(entry => entry.isIntersecting)) renderMoreGames();
 }, { rootMargin: "800px 0px" });
@@ -576,8 +485,6 @@ const playerFrame = document.getElementById("playerFrame");
 const playerTitle = document.getElementById("playerTitle");
 
 function launch(path, title = "", opensDirectly = false) {
-    recordRecent(path);
-    renderRecentRow();
     if (opensDirectly || (window.__ggSettings && window.__ggSettings.launchMode === "newtab")) {
         window.open(path, "_blank", "noopener");
         return;
