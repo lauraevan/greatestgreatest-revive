@@ -322,7 +322,10 @@ let renderedGames = 0;
 catalog.sort((a, b) => {
         const au = a[0] === UGS ? 1 : 0;
         const bu = b[0] === UGS ? 1 : 0;
-        if (au !== bu) return au - bu;
+        if (au !== bu) return au - bu;              // Ultimate Game Stash stays pinned to the very bottom
+        const ai = a[2] ? 0 : 1;                    // games without a cover image drop to the bottom
+        const bi = b[2] ? 0 : 1;
+        if (ai !== bi) return ai - bi;
         return a[3].localeCompare(b[3], undefined, { sensitivity: "base" });
     });
 
