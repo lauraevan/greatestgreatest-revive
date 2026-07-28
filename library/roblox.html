@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox — now.gg</title>
+<style>
+  :root { --bg:#0e0e0e; --panel:#1b1b1b; --panel2:#262626; --text:#fff; --muted:rgba(255,255,255,.6); --accent:#5986da; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font-family:Arial, Helvetica, sans-serif; }
+  .wrap { min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px; gap:18px; }
+  .logo { font-size:40px; font-weight:800; letter-spacing:.5px; }
+  .logo span { color:var(--accent); }
+  p { color:var(--muted); margin:0; max-width:440px; line-height:1.5; }
+  .play { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#fff; text-decoration:none;
+          font-size:20px; font-weight:700; padding:16px 34px; border-radius:12px; border:0; cursor:pointer; }
+  .play:hover { filter:brightness(1.08); }
+  .alts { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:4px; }
+  .alt { background:var(--panel2); color:var(--text); text-decoration:none; font-size:14px; padding:10px 16px; border-radius:9px; }
+  .alt:hover { background:#333; }
+  .note { font-size:12px; color:var(--muted); max-width:420px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Roblox <span>· now.gg</span></div>
+  <p>Roblox streams from the cloud, so it opens in a new tab. Click play — if one link is blocked, try another until it boots.</p>
+  <a class="play" id="play" href="https://216.ip.nowgg.fun/apps/roblox-corporation/5349/roblox.html" target="_blank" rel="noopener">▶ Play Roblox</a>
+  <div class="alts">
+    <a class="alt" href="https://216.ip.nowgg.fun/apps/roblox-corporation/5349/roblox.html" target="_blank" rel="noopener">216 proxy</a>
+    <a class="alt" href="https://now.gg/apps/roblox-corporation/5349/roblox.html" target="_blank" rel="noopener">official now.gg</a>
+    <a class="alt" href="https://216.ip.nowgg.fun" target="_blank" rel="noopener">now.gg home</a>
+  </div>
+  <div class="note">now.gg is the official Roblox mobile cloud. Sign in with your Roblox account on the page that opens.</div>
+</div>
+<script>
+  // focus the play button so Enter launches it right away
+  window.addEventListener("load", function () {
+    var b = document.getElementById("play");
+    if (b) b.focus();
+  });
+</script>
+</body>
+</html>

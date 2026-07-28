@@ -333,8 +333,23 @@ grid.addEventListener("click", e => {
     launch(card.dataset.path, card.dataset.name, card.dataset.direct === "true");
 });
 
+/* ---- prefetch a game's loader the instant you hover/touch it, so it opens faster ---- */
+const prefetched = new Set();
+function prefetchGame(card) {
+    if (!card) return;
+    const path = card.dataset.path;
+    if (!path || prefetched.has(path) || /^https?:/i.test(path)) return;   // local loader pages only
+    prefetched.add(path);
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.href = path;
+    document.head.appendChild(link);
+}
+grid.addEventListener("pointerover", e => prefetchGame(e.target.closest(".game")), { passive: true });
+grid.addEventListener("pointerdown", e => prefetchGame(e.target.closest(".game")), { passive: true });
+
 /* ---- SEARCH + SOURCE FILTER ---- */
-const SOURCE_ORDER = ["Original", "chicken", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
+const SOURCE_ORDER = ["Original", "chicken", "BestSpark", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
 const counts = {};
 catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
 const sources = SOURCE_ORDER.filter(s => counts[s]).concat(Object.keys(counts).filter(s => !SOURCE_ORDER.includes(s)).sort());
