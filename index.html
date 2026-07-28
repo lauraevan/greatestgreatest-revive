@@ -90,6 +90,19 @@ h1 { margin:0; }
     border:1px solid var(--accent); text-align:center; }
 #padNote[hidden] { display:none; }
 html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { display:none !important; }
+/* ---- developer tools ---- */
+#devTools { position:fixed; inset:0; z-index:1600; background:var(--bg); display:flex; flex-direction:column; }
+#devTools[hidden] { display:none; }
+.dev-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 16px; background:var(--panel); }
+.dev-actions { display:flex; gap:8px; }
+.dev-head button { background:var(--panel2); border:none; color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; }
+.dev-head button:hover { background:var(--panel3); }
+.dev-url { padding:8px 16px; background:var(--panel2); color:var(--accent); font-family:monospace; font-size:12px; word-break:break-all; }
+.dev-tabs { display:flex; gap:2px; padding:8px 16px 0; background:var(--panel); }
+.dev-tab { background:transparent; border:none; color:var(--muted); padding:8px 14px; cursor:pointer; font-size:13px; font-weight:bold; border-bottom:2px solid transparent; }
+.dev-tab.active { color:var(--text); border-bottom-color:var(--accent); }
+.dev-pane { flex:1; margin:0; padding:14px 16px; overflow:auto; background:var(--bg); color:var(--text); font-family:monospace; font-size:12px; line-height:1.45; white-space:pre-wrap; word-break:break-word; }
+.dev-pane[hidden] { display:none; }
 
 /* ---- header controls: filter + settings ---- */
 .controls { display:flex; align-items:center; gap:10px; position:relative; }
@@ -280,11 +293,33 @@ html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { displ
                 </div>
             </div>
             <div class="s-section">
+                <h3>Developer tools</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Inspect the current game's rendered HTML and the raw response it returns.</p>
+                <button id="devToolsBtn" class="opt-btn">Open developer tools</button>
+            </div>
+            <div class="s-section">
                 <h3>Reset</h3>
                 <button id="settingsReset" class="opt-btn">Reset all settings</button>
             </div>
         </div>
     </div>
+</div>
+
+<div id="devTools" hidden>
+    <div class="dev-head">
+        <strong>Developer Tools</strong>
+        <span class="dev-actions">
+            <button id="devRefreshBtn" type="button">↻ Refresh</button>
+            <button id="devCloseBtn" type="button">✕ Close</button>
+        </span>
+    </div>
+    <div class="dev-url" id="devUrl"></div>
+    <div class="dev-tabs">
+        <button class="dev-tab active" type="button" data-dev="dom">Rendered HTML</button>
+        <button class="dev-tab" type="button" data-dev="raw">Raw response</button>
+    </div>
+    <pre class="dev-pane" id="devDom"></pre>
+    <pre class="dev-pane" id="devRaw" hidden></pre>
 </div>
 
 <div id="player">
@@ -610,8 +645,64 @@ function openGameTab() {
     try { if (localStorage.getItem("ggu-pad") === "1") setPad(true); } catch (e) {}
 })();
 
+/* ---- DEVELOPER TOOLS: inspect the current game's rendered HTML + raw response ---- */
+(function () {
+    const dt = document.getElementById("devTools");
+    const urlEl = document.getElementById("devUrl");
+    const domEl = document.getElementById("devDom");
+    const rawEl = document.getElementById("devRaw");
+    function deepestFrame() {
+        let win = playerFrame.contentWindow;
+        try { while (win && win.frames.length && win.frames[0].document) win = win.frames[0]; } catch (e) {}
+        return win;
+    }
+    async function refresh() {
+        const path = currentGamePath;
+        if (!path) {
+            urlEl.textContent = "No game open — launch a game first, then open Developer Tools.";
+            domEl.textContent = ""; rawEl.textContent = "";
+            return;
+        }
+        urlEl.textContent = path;
+        try {
+            domEl.textContent = deepestFrame().document.documentElement.outerHTML;
+        } catch (e) {
+            domEl.textContent = "(This game is loaded from another domain, so the browser won't let the page read its rendered HTML.)";
+        }
+        rawEl.textContent = "Loading…";
+        try {
+            const res = await fetch(path, { cache: "no-store" });
+            const text = await res.text();
+            rawEl.textContent = "HTTP " + res.status + " " + res.statusText +
+                "\ncontent-type: " + (res.headers.get("content-type") || "(unknown)") +
+                "\nlength: " + text.length.toLocaleString() + " bytes\n\n" + text;
+        } catch (e) {
+            rawEl.textContent = "Couldn't fetch the raw response (the game's server may block cross-site requests):\n" + e.message;
+        }
+    }
+    function openDev() {
+        const modal = document.getElementById("settingsModal");
+        if (modal) modal.classList.remove("open");
+        dt.hidden = false;
+        refresh();
+    }
+    function closeDev() { dt.hidden = true; }
+    document.getElementById("devToolsBtn").addEventListener("click", openDev);
+    document.getElementById("devRefreshBtn").addEventListener("click", refresh);
+    document.getElementById("devCloseBtn").addEventListener("click", closeDev);
+    dt.querySelectorAll(".dev-tab").forEach(tab => tab.addEventListener("click", () => {
+        dt.querySelectorAll(".dev-tab").forEach(t => t.classList.toggle("active", t === tab));
+        domEl.hidden = tab.dataset.dev !== "dom";
+        rawEl.hidden = tab.dataset.dev !== "raw";
+    }));
+    window.__devOpen = () => !dt.hidden;
+    window.__devClose = closeDev;
+})();
+
 document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && player.classList.contains("open")) closeGame();
+    if (e.key !== "Escape") return;
+    if (window.__devOpen && window.__devOpen()) { window.__devClose(); return; }
+    if (player.classList.contains("open")) closeGame();
 });
 
 /* ---- SETTINGS (themes / launch mode / tab cloak) ---- */
@@ -620,7 +711,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:true };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:false };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
