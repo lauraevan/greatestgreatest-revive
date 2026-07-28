@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn to Fly</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#000; overflow:hidden; }
+  #stage { position:fixed; inset:0; }
+  #stage > * { width:100% !important; height:100% !important; }
+  #msg { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+         color:#9aa0a6; font:16px/1.4 Arial, sans-serif; text-align:center; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@latest/ruffle.js"></script>
+</head>
+<body>
+<div id="msg">Loading Learn to Fly…</div>
+<div id="stage"></div>
+<script>
+  window.RufflePlayer = window.RufflePlayer || {};
+  function boot() {
+    if (!window.RufflePlayer || !window.RufflePlayer.newest) { setTimeout(boot, 120); return; }
+    var msg = document.getElementById("msg");
+    if (msg) msg.remove();
+    var ruffle = window.RufflePlayer.newest();
+    var player = ruffle.createPlayer();
+    var stage = document.getElementById("stage");
+    player.style.width = "100%";
+    player.style.height = "100%";
+    stage.appendChild(player);
+    Promise.resolve(player.load("learntofly.swf")).catch(function () {
+      document.body.insertAdjacentHTML("beforeend",
+        '<div id="msg">Couldn’t start the game. Try reopening it.</div>');
+    });
+  }
+  window.addEventListener("load", boot);
+</script>
+</body>
+</html>
