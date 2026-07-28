@@ -85,6 +85,10 @@ h1 { margin:0; }
     touch-action:none; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; }
 .pk.wide { width:118px; height:48px; font-size:16px; }
 .pk:active, .pk.pressed { background:var(--accent); }
+#padNote { position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:7; max-width:min(92%,540px);
+    background:rgba(18,18,18,.92); color:#fff; font-size:13px; line-height:1.35; padding:8px 12px; border-radius:9px;
+    border:1px solid var(--accent); text-align:center; }
+#padNote[hidden] { display:none; }
 
 /* ---- header controls: filter + settings ---- */
 .controls { display:flex; align-items:center; gap:10px; position:relative; }
@@ -300,6 +304,7 @@ h1 { margin:0; }
             </div>
         </div>
     </div>
+    <div id="padNote" hidden>⚠ On-screen keys can't reach this game — it's loaded from another site. Try a Strongdog game.</div>
 </div>
 
 <script src="games-data.js"></script>
@@ -525,14 +530,24 @@ function openGameTab() {
         e:     [{ key: "e", code: "KeyE", kc: 69 }],
         enter: [{ key: "Enter", code: "Enter", kc: 13 }]
     };
+    function mkEv(win, type, s) {
+        const ev = new win.KeyboardEvent(type, { key: s.key, code: s.code, bubbles: true, cancelable: true });
+        try { Object.defineProperty(ev, "keyCode", { get: () => s.kc, configurable: true }); } catch (e) {}
+        try { Object.defineProperty(ev, "which", { get: () => s.kc, configurable: true }); } catch (e) {}
+        return ev;
+    }
+    // dispatch into every reachable (same-origin) frame — the game is often nested
+    // inside a loader iframe, so we recurse. Cross-origin frames throw and are skipped.
     function toWin(win, type, s) {
         try {
-            const ev = new win.KeyboardEvent(type, { key: s.key, code: s.code, bubbles: true, cancelable: true });
-            Object.defineProperty(ev, "keyCode", { get: () => s.kc });
-            Object.defineProperty(ev, "which", { get: () => s.kc });
-            win.document.dispatchEvent(ev);
-        } catch (e) {}
-        try { for (let i = 0; i < win.frames.length; i++) toWin(win.frames[i], type, s); } catch (e) {}
+            const d = win.document;
+            const ae = d.activeElement;
+            const target = (ae && ae !== d.body && ae !== d.documentElement) ? ae : d;
+            target.dispatchEvent(mkEv(win, type, s));   // bubbles up to document + window
+        } catch (e) { return; }
+        let frames = 0;
+        try { frames = win.frames.length; } catch (e) { frames = 0; }
+        for (let i = 0; i < frames; i++) { try { toWin(win.frames[i], type, s); } catch (e) {} }
     }
     function send(type, specs) {
         const w = playerFrame.contentWindow;
@@ -547,15 +562,36 @@ function openGameTab() {
         btn.addEventListener("pointerup", up);
         btn.addEventListener("pointerleave", up);
         btn.addEventListener("pointercancel", up);
+        btn.addEventListener("contextmenu", e => e.preventDefault());
     });
     const gamepad = document.getElementById("gamepad");
     const padToggle = document.getElementById("padToggle");
+    const padNote = document.getElementById("padNote");
+    // only warns when the game frame ITSELF is cross-origin (definitely unreachable);
+    // never shows a false warning on a controllable game
+    function frameBlocked(win) {
+        let n = 0;
+        try { n = win.frames.length; } catch (e) { return true; }
+        for (let i = 0; i < n; i++) {
+            try { void win.frames[i].document; } catch (e) { return true; }   // a nested game on another domain
+            if (frameBlocked(win.frames[i])) return true;
+        }
+        return false;
+    }
+    function canControl() {
+        let w;
+        try { w = playerFrame.contentWindow; void w.document; } catch (e) { return false; }
+        return !frameBlocked(w);
+    }
+    function refreshNote() { if (padNote) padNote.hidden = gamepad.hidden || canControl(); }
     function setPad(on) {
         gamepad.hidden = !on;
         padToggle.classList.toggle("on", on);
         try { localStorage.setItem("ggu-pad", on ? "1" : "0"); } catch (e) {}
+        refreshNote();
     }
     padToggle.addEventListener("click", () => setPad(gamepad.hidden));
+    playerFrame.addEventListener("load", refreshNote);
     try { if (localStorage.getItem("ggu-pad") === "1") setPad(true); } catch (e) {}
 })();
 
