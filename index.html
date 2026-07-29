@@ -352,12 +352,14 @@ html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { displ
 </div>
 
 <script src="games-data.js"></script>
+<script src="custom-games.js"></script>
 <script>
 /* ---- LAZY GAME CATALOG (Ultimate Game Stash pinned to the bottom) ---- */
 const grid = document.getElementById("gameGrid");
 const catalogStatus = document.getElementById("catalogStatus");
 const catalogSentinel = document.getElementById("catalogSentinel");
 const catalog = Array.isArray(window.GAME_DATA) ? window.GAME_DATA.slice() : [];
+if (Array.isArray(window.CUSTOM_GAMES)) window.CUSTOM_GAMES.forEach(g => { if (Array.isArray(g) && g.length >= 4) catalog.push(g); });
 const UGS = "Ultimate Game Stash";
 const PAGE_SIZE = 160;
 let visibleGames = catalog;
