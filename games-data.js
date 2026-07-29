@@ -7,6 +7,7 @@ window.GAME_DATA = [
     ["Original", "https://bestspark-shaw.vercel.app/", "icons/hollow-knight.webp", "Hollow Knight"],
     ["Original","library/SubmitGames.html","icons/form.png","[[REQUEST A GAME]]"],
     ["Original","library/Eag188.html","icons/1.8.8.png","Eaglercraft 1.8.8"],
+    ["Original","https://lauraevan.github.io/Eaglercraftx-1.21.9-src/docs/index.html","icons/1.8.8.png","Eaglercraft 1.8.8 retextured"],
     ["Original","library/Eag1122.html","icons/1.12.png","Eaglercraft 1.12.2"],
     ["Original","library/brainrotFixed.html","icons/brainrot.jpg","Steal Brainrot Duel"],
     ["Original","library/BasketBro.html","icons/basketbro.png","Basket Bros"],
