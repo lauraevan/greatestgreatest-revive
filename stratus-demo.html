@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stratus API — Interactive Cloud Gaming Demo</title>
+<meta name="description" content="Interactive demo of the Stratus API: create a cloud gaming session, watch the queue, negotiate WebRTC, and stream a game — with a no-key simulation mode." />
+<style>
+  :root {
+    --bg: #0a0c14;
+    --bg-2: #10131f;
+    --panel: #151929;
+    --panel-2: #1b2036;
+    --border: #262c44;
+    --text: #e6e9f5;
+    --muted: #8a92b2;
+    --accent: #6c8cff;
+    --accent-2: #46e0c0;
+    --danger: #ff6b7a;
+    --warn: #ffcf6b;
+    --ok: #46e0a0;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(108,140,255,0.18), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(70,224,192,0.12), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.hero { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+  .logo {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center; font-weight: 800; font-size: 22px; color: #0a0c14;
+    box-shadow: 0 8px 30px rgba(108,140,255,0.35);
+  }
+  h1 { font-size: 26px; margin: 0; letter-spacing: -0.02em; }
+  .tag { color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px;
+  }
+  .subline { color: var(--muted); font-size: 14px; margin: 6px 0 26px; }
+  .subline code { font-family: var(--mono); color: var(--accent-2); font-size: 13px; }
+
+  .grid { display: grid; grid-template-columns: 380px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: linear-gradient(180deg, var(--panel), var(--bg-2));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 14px; font-weight: 700; }
+
+  label.field { display: block; margin-bottom: 12px; }
+  label.field span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  input[type=text], input[type=password], select {
+    width: 100%; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+    font-size: 14px; font-family: var(--sans); outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,140,255,0.18); }
+  .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .hint code { font-family: var(--mono); color: var(--accent-2); }
+
+  .toggle { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border);
+            border-radius: 10px; background: var(--bg); margin-bottom: 14px; cursor: pointer; }
+  .toggle input { width: 18px; height: 18px; accent-color: var(--accent-2); }
+  .toggle .t-body { flex: 1; }
+  .toggle .t-title { font-size: 13px; font-weight: 600; }
+  .toggle .t-desc { font-size: 11px; color: var(--muted); }
+
+  .btn-row { display: flex; gap: 10px; }
+  button {
+    font-family: var(--sans); font-weight: 600; font-size: 14px;
+    border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px;
+    background: var(--panel-2); color: var(--text); cursor: pointer; transition: transform .05s, filter .15s;
+    flex: 1;
+  }
+  button:hover:not(:disabled) { filter: brightness(1.15); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.primary { background: linear-gradient(135deg, var(--accent), #5a7bff); border-color: transparent; color: #fff; }
+  button.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+
+  /* Stage */
+  .stage { position: relative; aspect-ratio: 16 / 9; width: 100%; background: #05060b;
+           border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .stage canvas, .stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .stage .overlay { position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+                    background: radial-gradient(circle at 50% 40%, rgba(108,140,255,0.10), rgba(5,6,11,0.9)); }
+  .stage .overlay .big { font-size: 18px; font-weight: 700; }
+  .stage .overlay .small { color: var(--muted); font-size: 13px; margin-top: 6px; max-width: 320px; }
+  .stage .spinner { width: 42px; height: 42px; border-radius: 50%; margin: 0 auto 14px;
+                    border: 3px solid rgba(255,255,255,0.15); border-top-color: var(--accent-2); animation: spin 0.9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .stage .hud { position: absolute; left: 10px; top: 10px; display: flex; gap: 8px; z-index: 3; }
+  .stage .hud .chip { font-family: var(--mono); font-size: 11px; background: rgba(5,6,11,0.7);
+                      border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; backdrop-filter: blur(4px); }
+  .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--danger);
+              margin-right: 5px; animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.35; } }
+
+  /* Steps + quota */
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 640px) { .row2 { grid-template-columns: 1fr; } }
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; color: var(--muted); }
+  .steps li .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border);
+                   display: grid; place-items: center; font-size: 11px; flex-shrink: 0; }
+  .steps li.active { color: var(--text); }
+  .steps li.active .dot { border-color: var(--accent-2); color: var(--accent-2); }
+  .steps li.done { color: var(--text); }
+  .steps li.done .dot { background: var(--ok); border-color: var(--ok); color: #05060b; }
+  .steps li.done .dot::after { content: "✓"; }
+  .steps li.done .dot .n { display: none; }
+
+  .quota-bar { margin-bottom: 10px; }
+  .quota-bar .qh { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .quota-bar .qh .qk { color: var(--muted); text-transform: capitalize; }
+  .quota-bar .qh .qv { font-family: var(--mono); font-size: 11px; }
+  .track { height: 6px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+  .track > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .4s; }
+  .sess-time { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .sess-time b { color: var(--text); }
+
+  /* Log */
+  .log { font-family: var(--mono); font-size: 12px; background: #05060b; border: 1px solid var(--border);
+         border-radius: 12px; padding: 12px; height: 260px; overflow-y: auto; margin-top: 16px; }
+  .log .line { padding: 2px 0; display: flex; gap: 8px; white-space: pre-wrap; word-break: break-word; }
+  .log .ts { color: #4a5170; flex-shrink: 0; }
+  .log .req { color: var(--accent); }
+  .log .res { color: var(--accent-2); }
+  .log .ws  { color: var(--warn); }
+  .log .ev  { color: var(--text); }
+  .log .err { color: var(--danger); }
+  .log .ok  { color: var(--ok); }
+  .log .dim { color: var(--muted); }
+
+  /* Reference */
+  .ref { margin-top: 24px; }
+  .endpoint { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; background: var(--panel); }
+  .endpoint .m { font-family: var(--mono); font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 5px; margin-right: 8px; }
+  .m.post { background: rgba(108,140,255,0.15); color: var(--accent); }
+  .m.get  { background: rgba(70,224,160,0.15); color: var(--ok); }
+  .m.ws   { background: rgba(255,207,107,0.15); color: var(--warn); }
+  .endpoint .path { font-family: var(--mono); font-size: 13px; }
+  .endpoint .d { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  .endpoint pre { font-family: var(--mono); font-size: 11.5px; background: #05060b; border: 1px solid var(--border);
+                  border-radius: 8px; padding: 10px; overflow-x: auto; margin: 8px 0 0; color: var(--accent-2); }
+  footer { color: var(--muted); font-size: 12px; margin-top: 30px; text-align: center; }
+  .disclaimer { font-size: 12px; color: var(--muted); background: rgba(255,207,107,0.06);
+                border: 1px solid rgba(255,207,107,0.25); border-radius: 10px; padding: 10px 12px; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="logo">S</div>
+    <div style="flex:1; min-width:220px;">
+      <h1>Stratus API — Cloud Gaming Demo</h1>
+      <div class="tag">Provision a session · watch the queue · negotiate WebRTC · stream a game</div>
+    </div>
+    <span class="pill">API base: <code style="font-family:var(--mono);color:var(--accent-2)">api.stratus.lol</code></span>
+  </header>
+  <p class="subline">
+    A live, interactive walkthrough of the <a href="https://github.com/x8rr/stratus-api" target="_blank" rel="noopener">Stratus API</a> —
+    the service that adds 180+ cloud games to any website. This page runs the real session lifecycle:
+    <code>createSession → getQueue → startGame → signal(WebRTC) → pingSession → quitSession</code>.
+    No API key? Leave <b>Simulation mode</b> on to watch the whole flow with a rendered stream.
+  </p>
+
+  <div class="grid">
+    <!-- Controls -->
+    <section class="card">
+      <h2>Session Config</h2>
+
+      <label class="toggle" for="simToggle">
+        <input type="checkbox" id="simToggle" checked />
+        <span class="t-body">
+          <span class="t-title">Simulation mode</span>
+          <span class="t-desc">Replays the full API flow locally — no key or network needed.</span>
+        </span>
+      </label>
+
+      <label class="field">
+        <span>API key <span style="opacity:.6">(x-api-key)</span></span>
+        <input type="password" id="apiKey" placeholder="sk_live_…" autocomplete="off" disabled />
+        <div class="hint">Only used in Live mode. Sent as <code>x-api-key</code> directly to Stratus.</div>
+      </label>
+
+      <label class="field">
+        <span>Game key</span>
+        <select id="gameKey">
+          <option value="fortnite">fortnite</option>
+          <option value="minecraft">minecraft</option>
+          <option value="roblox">roblox</option>
+          <option value="gta-v">gta-v</option>
+          <option value="rocket-league">rocket-league</option>
+          <option value="among-us">among-us</option>
+          <option value="cs2">cs2</option>
+          <option value="valorant">valorant</option>
+        </select>
+        <div class="hint">Sent as <code>game_key</code> to <code>createSession</code>. Full list lives in the API's <code>cloud.json</code>.</div>
+      </label>
+
+      <label class="field">
+        <span>API base URL</span>
+        <input type="text" id="baseUrl" value="https://api.stratus.lol" disabled />
+      </label>
+
+      <div class="btn-row">
+        <button class="primary" id="playBtn">▶ Create session &amp; play</button>
+        <button class="danger" id="stopBtn" disabled>■ Quit</button>
+      </div>
+
+      <div class="disclaimer" id="modeNote">
+        <b>Simulation mode is ON.</b> Events, queue, WebRTC handshake and quota below are generated locally so you can
+        see exactly what a real integration looks like. Turn it off and paste a Stratus key to run against the live API.
+      </div>
+    </section>
+
+    <!-- Stage + telemetry -->
+    <section>
+      <div class="stage" id="stage">
+        <div class="hud" id="hud" style="display:none">
+          <span class="chip"><span class="live-dot"></span>LIVE</span>
+          <span class="chip" id="hudGame">—</span>
+          <span class="chip" id="hudUuid">—</span>
+        </div>
+        <video id="video" autoplay playsinline muted style="display:none"></video>
+        <canvas id="canvas" style="display:none"></canvas>
+        <div class="overlay" id="overlay">
+          <div>
+            <div class="spinner" id="spinner" style="display:none"></div>
+            <div class="big" id="stageBig">Ready to launch</div>
+            <div class="small" id="stageSmall">Pick a game and press “Create session &amp; play”.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="card">
+          <h2>Session lifecycle</h2>
+          <ul class="steps" id="steps">
+            <li data-step="createSession"><span class="dot"><span class="n">1</span></span> createSession</li>
+            <li data-step="account"><span class="dot"><span class="n">2</span></span> account provisioned</li>
+            <li data-step="queue"><span class="dot"><span class="n">3</span></span> queue</li>
+            <li data-step="startGame"><span class="dot"><span class="n">4</span></span> startGame</li>
+            <li data-step="signal"><span class="dot"><span class="n">5</span></span> WebRTC signaling</li>
+            <li data-step="streaming"><span class="dot"><span class="n">6</span></span> streaming</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Ping / quota</h2>
+          <div id="quotaBox">
+            <div class="quota-bar" data-q="minute"><div class="qh"><span class="qk">minute</span><span class="qv">–</span></div><div class="track"><i></i></div></div>
+            <div class="quota-bar" data-q="hour"><div class="qh"><span class="qk">hour</span><span class="qv">–</span></div><div class="track"><i></i></div></div>
+            <div class="quota-bar" data-q="day"><div class="qh"><span class="qk">day</span><span class="qv">–</span></div><div class="track"><i></i></div></div>
+            <div class="quota-bar" data-q="month"><div class="qh"><span class="qk">month</span><span class="qv">–</span></div><div class="track"><i></i></div></div>
+          </div>
+          <div class="sess-time" id="sessTime">session time: <b>0s</b> / 900s</div>
+        </div>
+      </div>
+
+      <div class="log" id="log"></div>
+    </section>
+  </div>
+
+  <!-- Reference -->
+  <section class="ref">
+    <h2 style="font-size:15px; letter-spacing:0.02em; color:var(--text); margin-bottom:12px;">Endpoint reference</h2>
+
+    <div class="endpoint">
+      <div><span class="m post">POST</span><span class="path">/cloud/v1/createSession</span></div>
+      <div class="d">Provisions an account and requests the game. Streams NDJSON lifecycle events.</div>
+      <pre>// body: { "game_key": "fortnite" }   header: x-api-key: sk_live_…
+{"status":"creating_account"}
+{"status":"account_ready"}
+{"status":"requesting_game"}
+{"status":"queue","uuid":"…","queue_pos":4}
+{"status":"finished_queue","uuid":"…","fetch_this_within_30s_or_terminate":"/cloud/v1/startGame"}</pre>
+    </div>
+
+    <div class="endpoint">
+      <div><span class="m get">GET</span><span class="path">/cloud/v1/getQueue?uuid=…</span></div>
+      <div class="d">Polls queue position (min every 3s). Call within 60s or the session is abandoned.</div>
+      <pre>{"status":"queue","queue_pos":2}
+// → {"status":"finished_queue","uuid":"…","fetch_this_within_30s_or_terminate":"/cloud/v1/startGame"}</pre>
+    </div>
+
+    <div class="endpoint">
+      <div><span class="m post">POST</span><span class="path">/cloud/v1/startGame</span></div>
+      <div class="d">Activates the session; returns WebRTC ICE servers and the signaling socket. Call within 30s of <code style="font-family:var(--mono)">finished_queue</code>.</div>
+      <pre>// body: { "uuid": "…" }
+{
+  "ice_servers": [{ "urls": "stun:stun.l.google.com:19302" }],
+  "signaling_ws": "wss://api.stratus.lol/cloud/v1/signal/<uuid>",
+  "max_seconds": 900
+}</pre>
+    </div>
+
+    <div class="endpoint">
+      <div><span class="m ws">WS</span><span class="path">/cloud/v1/signal/{uuid}</span></div>
+      <div class="d">WebRTC signaling proxy. Await <code style="font-family:var(--mono)">game_ready</code>, send an SDP offer, apply the answer, trade ICE candidates.</div>
+      <pre>server → { "type": "game_ready" }
+client → { "type": "rtc_offer", "sdp": "…" }
+server → { "type": "rtc_answer", "sdp": "…" }
+both   ↔ { "type": "rtc_candidate", "candidate": {…} }</pre>
+    </div>
+
+    <div class="endpoint">
+      <div><span class="m post">POST</span><span class="path">/cloud/v1/pingSession</span></div>
+      <div class="d">Keepalive every ~30s. Returns session time used and per-window quota.</div>
+      <pre>// body: { "uuid": "…" }
+{
+  "session_time_used_seconds": 42,
+  "session_time_limit_seconds": 900,
+  "quota": { "minute": {"used":3,"limit":30}, "hour": {"used":12,"limit":300}, … }
+}</pre>
+    </div>
+
+    <div class="endpoint">
+      <div><span class="m post">POST</span><span class="path">/cloud/v1/quitSession</span></div>
+      <div class="d">Terminates the session and releases cloud resources.</div>
+      <pre>// body: { "uuid": "…" }  →  {"status":"ok"}</pre>
+    </div>
+  </section>
+
+  <footer>
+    Unofficial demo · Stratus API by <a href="https://github.com/x8rr/stratus-api" target="_blank" rel="noopener">x8rr/stratus-api</a> (AGPL-3.0).
+    This page ships no keys and calls Stratus only in Live mode with a key you provide.
+  </footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const el = {
+    sim: $("#simToggle"), apiKey: $("#apiKey"), gameKey: $("#gameKey"), baseUrl: $("#baseUrl"),
+    play: $("#playBtn"), stop: $("#stopBtn"), modeNote: $("#modeNote"),
+    stage: $("#stage"), hud: $("#hud"), hudGame: $("#hudGame"), hudUuid: $("#hudUuid"),
+    video: $("#video"), canvas: $("#canvas"), overlay: $("#overlay"),
+    spinner: $("#spinner"), stageBig: $("#stageBig"), stageSmall: $("#stageSmall"),
+    steps: $("#steps"), quotaBox: $("#quotaBox"), sessTime: $("#sessTime"), log: $("#log"),
+  };
+
+  let running = false;
+  let session = null;          // { uuid, pc, ws, raf, timers:[], startedAt }
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  // ---------- UI helpers ----------
+  function ts() {
+    const d = new Date();
+    return d.toLocaleTimeString("en-GB", { hour12: false }) + "." + String(d.getMilliseconds()).padStart(3, "0");
+  }
+  function log(kind, text) {
+    const line = document.createElement("div");
+    line.className = "line";
+    line.innerHTML = `<span class="ts">${ts()}</span><span class="${kind}">${text}</span>`;
+    el.log.appendChild(line);
+    el.log.scrollTop = el.log.scrollHeight;
+  }
+  function setStep(name, state) {
+    const li = el.steps.querySelector(`[data-step="${name}"]`);
+    if (!li) return;
+    li.classList.remove("active", "done");
+    if (state) li.classList.add(state);
+  }
+  function resetSteps() {
+    el.steps.querySelectorAll("li").forEach((li) => li.classList.remove("active", "done"));
+  }
+  function stageState({ spinner = false, big = "", small = "" }) {
+    el.spinner.style.display = spinner ? "block" : "none";
+    el.stageBig.textContent = big;
+    el.stageSmall.textContent = small;
+    el.overlay.style.display = big || small || spinner ? "grid" : "none";
+  }
+  function updateQuota(quota) {
+    for (const key of Object.keys(quota)) {
+      const box = el.quotaBox.querySelector(`[data-q="${key}"]`);
+      if (!box) continue;
+      const { used, limit } = quota[key];
+      box.querySelector(".qv").textContent = `${used} / ${limit}`;
+      box.querySelector("i").style.width = Math.min(100, (used / limit) * 100) + "%";
+    }
+  }
+  function updateSessTime(used, limit) {
+    el.sessTime.innerHTML = `session time: <b>${used}s</b> / ${limit}s`;
+  }
+
+  function setModeUI() {
+    const sim = el.sim.checked;
+    el.apiKey.disabled = sim;
+    el.baseUrl.disabled = sim;
+    el.modeNote.style.display = "block";
+    el.modeNote.innerHTML = sim
+      ? `<b>Simulation mode is ON.</b> Events, queue, WebRTC handshake and quota below are generated locally so you can see exactly what a real integration looks like. Turn it off and paste a Stratus key to run against the live API.`
+      : `<b>Live mode.</b> Requests go to <code style="font-family:var(--mono)">${el.baseUrl.value}</code> with your <code style="font-family:var(--mono)">x-api-key</code>. Cross-origin calls require Stratus to allow this origin (CORS).`;
+  }
+  el.sim.addEventListener("change", setModeUI);
+  setModeUI();
+
+  // ---------- The rendered "stream" (canvas game) for simulation ----------
+  function startCanvasStream(gameName) {
+    const cv = el.canvas, ctx = cv.getContext("2d");
+    cv.width = 960; cv.height = 540;
+    cv.style.display = "block";
+    el.video.style.display = "none";
+    const t0 = performance.now();
+    const stars = Array.from({ length: 90 }, () => ({
+      x: Math.random() * cv.width, y: Math.random() * cv.height,
+      z: Math.random() * 2 + 0.3, s: Math.random() * 1.6 + 0.3,
+    }));
+    function frame(now) {
+      const t = (now - t0) / 1000;
+      // sky gradient
+      const g = ctx.createLinearGradient(0, 0, 0, cv.height);
+      g.addColorStop(0, "#0b1030"); g.addColorStop(0.6, "#141a3e"); g.addColorStop(1, "#241535");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, cv.width, cv.height);
+      // moving starfield
+      for (const st of stars) {
+        st.x -= st.z * 1.4;
+        if (st.x < 0) st.x = cv.width;
+        ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 2 + st.y);
+        ctx.fillStyle = "#9fb4ff";
+        ctx.fillRect(st.x, st.y, st.s, st.s);
+      }
+      ctx.globalAlpha = 1;
+      // sun/horizon
+      const cx = cv.width / 2, hy = cv.height * 0.62;
+      const sun = ctx.createRadialGradient(cx, hy, 10, cx, hy, 180);
+      sun.addColorStop(0, "rgba(70,224,192,0.9)"); sun.addColorStop(1, "rgba(70,224,192,0)");
+      ctx.fillStyle = sun; ctx.beginPath(); ctx.arc(cx, hy, 180, 0, Math.PI * 2); ctx.fill();
+      // grid floor
+      ctx.strokeStyle = "rgba(108,140,255,0.35)"; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 16; i++) {
+        const yy = hy + Math.pow(i / 15, 2) * (cv.height - hy);
+        ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(cv.width, yy); ctx.stroke();
+      }
+      const scroll = (t * 60) % 60;
+      for (let i = -10; i <= 10; i++) {
+        ctx.beginPath();
+        const vx = cx + i * 60;
+        ctx.moveTo(cx, hy); ctx.lineTo(vx + (vx - cx) * 4 + scroll * 0, cv.height); ctx.stroke();
+      }
+      // bobbing player ship
+      const px = cx + Math.sin(t * 1.1) * 130;
+      const py = cv.height * 0.8 + Math.sin(t * 2.3) * 12;
+      ctx.fillStyle = "#e6e9f5";
+      ctx.beginPath(); ctx.moveTo(px, py - 16); ctx.lineTo(px - 14, py + 12); ctx.lineTo(px + 14, py + 12); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(255,207,107,0.9)";
+      ctx.beginPath(); ctx.moveTo(px - 6, py + 12); ctx.lineTo(px, py + 12 + (8 + Math.random() * 10)); ctx.lineTo(px + 6, py + 12); ctx.closePath(); ctx.fill();
+      // labels
+      ctx.fillStyle = "rgba(230,233,245,0.9)"; ctx.font = "600 22px Inter, system-ui, sans-serif";
+      ctx.fillText(gameName.toUpperCase(), 24, 40);
+      ctx.fillStyle = "rgba(138,146,178,0.9)"; ctx.font = "13px ui-monospace, monospace";
+      ctx.fillText("streamed via WebRTC · " + (30 + Math.round(Math.sin(t * 3) * 2)) + " fps · " + (12 + Math.round(Math.sin(t) * 4)) + " ms", 24, 62);
+      if (session) session.raf = requestAnimationFrame(frame);
+    }
+    session.raf = requestAnimationFrame(frame);
+  }
+
+  // ---------- Cleanup ----------
+  function teardown() {
+    if (!session) return;
+    (session.timers || []).forEach(clearInterval);
+    if (session.raf) cancelAnimationFrame(session.raf);
+    if (session.ws) { try { session.ws.close(); } catch {} }
+    if (session.pc) { try { session.pc.close(); } catch {} }
+    session = null;
+  }
+  function finish(hard) {
+    teardown();
+    running = false;
+    el.play.disabled = false;
+    el.stop.disabled = true;
+    el.sim.disabled = false;
+    el.hud.style.display = "none";
+    el.canvas.style.display = "none";
+    el.video.style.display = "none";
+    if (hard !== "keep") {
+      stageState({ big: "Session ended", small: "Press “Create session & play” to launch again." });
+    }
+  }
+
+  // ---------- SIMULATION flow ----------
+  async function runSimulation(gameKey) {
+    const uuid = "sess_" + Math.random().toString(36).slice(2, 10);
+    session = { uuid, timers: [], startedAt: Date.now() };
+    el.hudGame.textContent = gameKey;
+    el.hudUuid.textContent = uuid.slice(0, 12);
+
+    log("req", "POST /cloud/v1/createSession  " + JSON.stringify({ game_key: gameKey }));
+    setStep("createSession", "active");
+    stageState({ spinner: true, big: "Provisioning cloud account…", small: "createSession is streaming NDJSON events." });
+    await sleep(500);
+
+    for (const status of ["creating_account", "account_ready", "requesting_game"]) {
+      log("res", "◂ " + JSON.stringify({ status }));
+      if (status === "account_ready") setStep("account", "done"), setStep("createSession", "done");
+      await sleep(650);
+    }
+
+    // queue
+    setStep("queue", "active");
+    let pos = 4;
+    log("res", "◂ " + JSON.stringify({ status: "queue", uuid, queue_pos: pos }));
+    stageState({ spinner: true, big: "In queue…", small: `Position ${pos}. Polling getQueue every 3s.` });
+    while (pos > 0) {
+      await sleep(1400);
+      pos--;
+      log("req", `GET /cloud/v1/getQueue?uuid=${uuid}`);
+      if (pos > 0) {
+        log("res", "◂ " + JSON.stringify({ status: "queue", queue_pos: pos }));
+        stageState({ spinner: true, big: "In queue…", small: `Position ${pos}. Polling getQueue every 3s.` });
+      }
+    }
+    log("res", "◂ " + JSON.stringify({ status: "finished_queue", uuid, fetch_this_within_30s_or_terminate: "/cloud/v1/startGame" }));
+    setStep("queue", "done");
+
+    // startGame
+    setStep("startGame", "active");
+    log("req", "POST /cloud/v1/startGame  " + JSON.stringify({ uuid }));
+    await sleep(700);
+    const startResp = {
+      ice_servers: [{ urls: "stun:stun.l.google.com:19302" }],
+      signaling_ws: `wss://api.stratus.lol/cloud/v1/signal/${uuid}`,
+      max_seconds: 900,
+    };
+    log("res", "◂ " + JSON.stringify(startResp));
+    setStep("startGame", "done");
+
+    // signaling
+    setStep("signal", "active");
+    stageState({ spinner: true, big: "Negotiating WebRTC…", small: "Exchanging SDP offer/answer + ICE candidates." });
+    log("ws", "WS open  " + startResp.signaling_ws);
+    await sleep(500);
+    log("ws", "◂ " + JSON.stringify({ type: "game_ready" }));
+    log("ws", "▸ " + JSON.stringify({ type: "rtc_offer", sdp: "v=0 o=- … (offer)" }));
+    await sleep(450);
+    log("ws", "◂ " + JSON.stringify({ type: "rtc_answer", sdp: "v=0 o=- … (answer)" }));
+    for (let i = 0; i < 3; i++) {
+      await sleep(250);
+      log("ws", (i % 2 ? "▸ " : "◂ ") + JSON.stringify({ type: "rtc_candidate", candidate: { candidate: `candidate:${i} 1 udp …`, sdpMLineIndex: 0 } }));
+    }
+    log("ok", "✓ ICE connected · media flowing");
+    setStep("signal", "done");
+
+    // streaming
+    setStep("streaming", "done");
+    stageState({ big: "", small: "" });
+    el.hud.style.display = "flex";
+    startCanvasStream(gameKey);
+    log("ok", "▶ streaming " + gameKey);
+
+    // ping loop + quota
+    let used = 0;
+    const quota = { minute: { used: 1, limit: 30 }, hour: { used: 4, limit: 300 }, day: { used: 18, limit: 2000 }, month: { used: 137, limit: 20000 } };
+    updateQuota(quota);
+    updateSessTime(0, 900);
+    const ping = setInterval(() => {
+      used += 5;
+      quota.minute.used = Math.min(quota.minute.limit, quota.minute.used + 1);
+      quota.hour.used += 1; quota.day.used += 1; quota.month.used += 1;
+      log("req", `POST /cloud/v1/pingSession  {"uuid":"${uuid}"}`);
+      log("dim", "◂ " + JSON.stringify({ session_time_used_seconds: used, session_time_limit_seconds: 900, quota }));
+      updateQuota(quota);
+      updateSessTime(used, 900);
+    }, 5000);
+    session.timers.push(ping);
+  }
+
+  // ---------- LIVE flow (real Stratus API) ----------
+  async function runLive(gameKey, base, key) {
+    const headers = { "content-type": "application/json", "x-api-key": key };
+    session = { uuid: null, timers: [] };
+
+    // createSession — read NDJSON stream
+    log("req", "POST " + base + "/cloud/v1/createSession  " + JSON.stringify({ game_key: gameKey }));
+    setStep("createSession", "active");
+    stageState({ spinner: true, big: "Provisioning cloud account…", small: "Streaming createSession events." });
+
+    const res = await fetch(base + "/cloud/v1/createSession", {
+      method: "POST", headers, body: JSON.stringify({ game_key: gameKey }),
+    });
+    if (!res.ok || !res.body) throw new Error("createSession HTTP " + res.status);
+
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = "", uuid = null, finishedQueue = false;
+    outer:
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let nl;
+      while ((nl = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, nl).trim(); buf = buf.slice(nl + 1);
+        if (!line) continue;
+        let ev; try { ev = JSON.parse(line); } catch { continue; }
+        log("res", "◂ " + JSON.stringify(ev));
+        if (ev.uuid) { uuid = ev.uuid; session.uuid = uuid; el.hudUuid.textContent = uuid.slice(0, 12); }
+        if (ev.status === "account_ready") { setStep("account", "done"); setStep("createSession", "done"); }
+        if (ev.status === "queue") {
+          setStep("queue", "active");
+          stageState({ spinner: true, big: "In queue…", small: `Position ${ev.queue_pos}.` });
+        }
+        if (ev.status === "finished_queue") { finishedQueue = true; setStep("queue", "done"); break outer; }
+        if (ev.status === "error") throw new Error("createSession: " + ev.error);
+      }
+    }
+
+    // If the stream ended still in queue, poll getQueue
+    while (!finishedQueue) {
+      await sleep(3000);
+      log("req", `GET ${base}/cloud/v1/getQueue?uuid=${uuid}`);
+      const q = await fetch(`${base}/cloud/v1/getQueue?uuid=${encodeURIComponent(uuid)}`, { headers });
+      const qj = await q.json();
+      log("res", "◂ " + JSON.stringify(qj));
+      if (qj.status === "finished_queue") { finishedQueue = true; setStep("queue", "done"); }
+      else if (qj.status === "queue") stageState({ spinner: true, big: "In queue…", small: `Position ${qj.queue_pos}.` });
+    }
+
+    // startGame
+    setStep("startGame", "active");
+    log("req", "POST " + base + "/cloud/v1/startGame  " + JSON.stringify({ uuid }));
+    const sg = await fetch(base + "/cloud/v1/startGame", { method: "POST", headers, body: JSON.stringify({ uuid }) });
+    const start = await sg.json();
+    log("res", "◂ " + JSON.stringify(start));
+    setStep("startGame", "done");
+
+    // WebRTC + signaling
+    setStep("signal", "active");
+    stageState({ spinner: true, big: "Negotiating WebRTC…", small: "SDP offer/answer + ICE." });
+    await negotiate(start);
+  }
+
+  function negotiate(start) {
+    return new Promise((resolve, reject) => {
+      const pc = new RTCPeerConnection({ iceServers: start.ice_servers || [] });
+      session.pc = pc;
+      pc.addTransceiver("video", { direction: "recvonly" });
+      pc.addTransceiver("audio", { direction: "recvonly" });
+
+      pc.ontrack = (e) => {
+        el.video.srcObject = e.streams[0];
+        el.video.style.display = "block";
+        el.canvas.style.display = "none";
+        el.hud.style.display = "flex";
+        stageState({ big: "", small: "" });
+        setStep("signal", "done"); setStep("streaming", "done");
+        log("ok", "▶ media track received");
+        startPing(start.signaling_ws);
+        resolve();
+      };
+      pc.onicecandidate = (e) => {
+        if (e.candidate && session.ws && session.ws.readyState === 1) {
+          session.ws.send(JSON.stringify({ type: "rtc_candidate", candidate: e.candidate }));
+          log("ws", "▸ " + JSON.stringify({ type: "rtc_candidate" }));
+        }
+      };
+      pc.onconnectionstatechange = () => log("dim", "pc: " + pc.connectionState);
+
+      const ws = new WebSocket(start.signaling_ws);
+      session.ws = ws;
+      ws.onopen = () => log("ws", "WS open " + start.signaling_ws);
+      ws.onerror = () => reject(new Error("signaling socket error"));
+      ws.onmessage = async (msg) => {
+        let m; try { m = JSON.parse(msg.data); } catch { return; }
+        log("ws", "◂ " + JSON.stringify(m.type ? { type: m.type } : m));
+        if (m.type === "game_ready") {
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+          ws.send(JSON.stringify({ type: "rtc_offer", sdp: offer.sdp }));
+          log("ws", "▸ " + JSON.stringify({ type: "rtc_offer" }));
+        } else if (m.type === "rtc_answer") {
+          await pc.setRemoteDescription({ type: "answer", sdp: m.sdp });
+        } else if (m.type === "rtc_candidate" && m.candidate) {
+          try { await pc.addIceCandidate(m.candidate); } catch (e) { log("err", "addIceCandidate: " + e.message); }
+        }
+      };
+    });
+  }
+
+  function startPing(base) {
+    // derive https base from the signaling ws url
+    const httpBase = base.replace(/^wss?:/, base.startsWith("wss") ? "https:" : "http:").replace(/\/cloud\/v1\/signal\/.*$/, "");
+    const key = el.apiKey.value.trim();
+    const headers = { "content-type": "application/json", "x-api-key": key };
+    const t = setInterval(async () => {
+      try {
+        const r = await fetch(httpBase + "/cloud/v1/pingSession", { method: "POST", headers, body: JSON.stringify({ uuid: session.uuid }) });
+        const j = await r.json();
+        log("dim", "◂ pingSession " + JSON.stringify(j));
+        if (j.quota) updateQuota(j.quota);
+        if (typeof j.session_time_used_seconds === "number") updateSessTime(j.session_time_used_seconds, j.session_time_limit_seconds || 900);
+      } catch (e) { log("err", "ping failed: " + e.message); }
+    }, 20000);
+    session.timers.push(t);
+  }
+
+  async function quitLive() {
+    if (!session || !session.uuid) return;
+    const base = el.baseUrl.value.trim();
+    try {
+      await fetch(base + "/cloud/v1/quitSession", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-api-key": el.apiKey.value.trim() },
+        body: JSON.stringify({ uuid: session.uuid }),
+      });
+      log("ok", "◂ quitSession {\"status\":\"ok\"}");
+    } catch (e) { log("err", "quitSession failed: " + e.message); }
+  }
+
+  // ---------- Orchestration ----------
+  async function play() {
+    if (running) return;
+    running = true;
+    el.log.innerHTML = "";
+    resetSteps();
+    updateQuota({ minute: { used: 0, limit: 30 }, hour: { used: 0, limit: 300 }, day: { used: 0, limit: 2000 }, month: { used: 0, limit: 20000 } });
+    updateSessTime(0, 900);
+    el.play.disabled = true;
+    el.stop.disabled = false;
+    el.sim.disabled = true;
+
+    const gameKey = el.gameKey.value;
+    el.hudGame.textContent = gameKey;
+
+    try {
+      if (el.sim.checked) {
+        await runSimulation(gameKey);
+      } else {
+        const key = el.apiKey.value.trim();
+        if (!key) { throw new Error("Live mode needs an x-api-key (sk_live_…). Toggle Simulation mode to try without one."); }
+        await runLive(gameKey, el.baseUrl.value.trim().replace(/\/$/, ""), key);
+      }
+    } catch (e) {
+      log("err", "✗ " + e.message);
+      stageState({ big: "Error", small: e.message });
+      finish("keep");
+    }
+  }
+
+  async function stop() {
+    log("req", "quit requested");
+    if (!el.sim.checked) await quitLive();
+    else log("ok", "◂ quitSession {\"status\":\"ok\"}");
+    finish();
+    resetSteps();
+  }
+
+  el.play.addEventListener("click", play);
+  el.stop.addEventListener("click", stop);
+})();
+</script>
+</body>
+</html>
