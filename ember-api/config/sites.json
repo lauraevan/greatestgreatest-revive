@@ -1,0 +1,32 @@
+{
+  "//": "Premium API clients. Each key is an api_key issued to one of your sites/customers.",
+  "//tiers": "Set enabled=false to instantly revoke a key. Limits are rolling windows.",
+
+  "demo-key-change-me": {
+    "label": "Demo / development key",
+    "enabled": true,
+    "tier": "free",
+    "max_concurrent_sessions": 1,
+    "max_session_seconds": 900,
+    "limits": {
+      "minute": 20,
+      "hour": 200,
+      "day": 1000,
+      "month": 10000
+    }
+  },
+
+  "ember_live_example_premium_key": {
+    "label": "Your giant game website (premium)",
+    "enabled": true,
+    "tier": "premium",
+    "max_concurrent_sessions": 25,
+    "max_session_seconds": 1140,
+    "limits": {
+      "minute": 120,
+      "hour": 4000,
+      "day": 60000,
+      "month": 1000000
+    }
+  }
+}

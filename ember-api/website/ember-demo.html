@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Games</title>
+<style>
+  :root{--bg:#0e0e0e;--panel:#1b1b1b;--panel2:#262626;--text:#fff;--muted:rgba(255,255,255,.6);--accent:#5986da}
+  body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;margin:0}
+  header{display:flex;align-items:center;gap:12px;padding:16px 20px}
+  h1{margin:0;font-size:22px}
+  .badge{background:var(--accent);color:#fff;font-size:12px;padding:2px 8px;border-radius:999px}
+  .cfg{margin-left:auto;display:flex;gap:8px}
+  .cfg input{background:var(--panel);border:0;color:var(--text);padding:8px 10px;border-radius:8px;outline:none}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:20px;padding:20px}
+  .game{background:var(--panel);border:0;border-radius:12px;padding:12px;color:var(--text);text-align:center;cursor:pointer}
+  .game:hover{background:var(--panel2);box-shadow:0 0 0 2px var(--accent)}
+  .game img{width:100%;height:120px;object-fit:cover;border-radius:8px;background:#111}
+  .game .n{display:block;margin-top:8px}
+  #msg{padding:0 20px;color:var(--muted)}
+  #player{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:100}
+  #player.open{display:flex}
+  #bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--panel)}
+  #bar button{background:var(--panel2);border:0;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer}
+  #stage{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔥 Ember Games</h1><span class="badge">premium</span>
+  <div class="cfg">
+    <input id="base" placeholder="API base URL" value="http://localhost:8787">
+    <input id="key" placeholder="API key" value="demo-key-change-me">
+    <button onclick="loadGames()" style="background:var(--accent);border:0;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer">Connect</button>
+  </div>
+</header>
+<div id="msg">Enter your Ember host + key and press Connect.</div>
+<div class="grid" id="grid"></div>
+
+<div id="player">
+  <div id="bar"><span id="ptitle"></span><button onclick="closePlayer()">✕ Close</button></div>
+  <div id="stage"></div>
+</div>
+
+<script src="ember-client.js"></script>
+<script>
+let ember, current;
+const grid = document.getElementById("grid");
+const msg = document.getElementById("msg");
+
+async function loadGames(){
+  const base = document.getElementById("base").value.trim();
+  const key = document.getElementById("key").value.trim();
+  ember = new EmberClient({ base, apiKey: key });
+  msg.textContent = "Loading catalog…";
+  grid.innerHTML = "";
+  try{
+    const games = await ember.games();
+    msg.textContent = games.length + " games";
+    for(const g of games){
+      const card = document.createElement("button");
+      card.className = "game";
+      card.innerHTML = `<img src="${g.icon||''}" onerror="this.style.visibility='hidden'"><span class="n">${g.name}</span>`;
+      card.onclick = () => launch(g);
+      grid.appendChild(card);
+    }
+  }catch(e){ msg.textContent = "Error: " + e.message; }
+}
+
+async function launch(g){
+  document.getElementById("ptitle").textContent = g.name;
+  document.getElementById("player").classList.add("open");
+  const stage = document.getElementById("stage");
+  stage.innerHTML = "<div style='color:#fff;padding:24px'>Starting " + g.name + "…</div>";
+  try{
+    current = await ember.play(g.key, stage, { onQueue: (pos) => { stage.firstChild.textContent = "In queue… position " + pos; } });
+  }catch(e){ stage.innerHTML = "<div style='color:#f88;padding:24px'>Failed: " + e.message + "</div>"; }
+}
+
+function closePlayer(){
+  if(current) current.close();
+  current = null;
+  document.getElementById("player").classList.remove("open");
+}
+</script>
+</body>
+</html>

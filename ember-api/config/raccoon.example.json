@@ -1,0 +1,20 @@
+{
+  "//": "Copy this to config/raccoon.json and fill in Raccoon Games' real values.",
+  "//note": "These are the private upstream details Ember cannot invent. Everything else runs without them (PROVIDER=mock).",
+
+  "catalog_url": "https://REPLACE-with-raccoon-game-list-endpoint",
+  "catalog_headers": {},
+
+  "base_url": "https://REPLACE-with-raccoon-api-base",
+  "signaling_url": "wss://REPLACE-with-raccoon-signaling-host",
+
+  "account_mode": "pooled",
+  "tempmail_api": "https://api.mail.tm",
+  "pooled_accounts": [
+    { "email": "you@example.com", "token": "REPLACE-with-a-real-raccoon-token" }
+  ],
+
+  "ice_servers": [
+    { "urls": "stun:stun.l.google.com:19302" }
+  ]
+}

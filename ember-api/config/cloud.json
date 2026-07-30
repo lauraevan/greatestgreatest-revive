@@ -1,0 +1,28 @@
+{
+  "//": "Ember game catalog. This is the equivalent of stratus-api's cloud.json.",
+  "//sync": "Refresh from the upstream provider with:  npm run sync",
+  "generated_at": "seed",
+  "provider": "mock",
+  "games": [
+    {
+      "key": "raccoon-demo-runner",
+      "name": "Ember Demo Runner",
+      "publisher": "Raccoon Games",
+      "genre": "Arcade",
+      "icon": "https://dummyimage.com/300x300/1b1b1b/5986da&text=Ember+Demo",
+      "streamable": false,
+      "play_url": "https://example.com/embeddable-demo-game/",
+      "raccoon_id": null
+    },
+    {
+      "key": "raccoon-cloud-sample",
+      "name": "Cloud Streamed Sample",
+      "publisher": "Raccoon Games",
+      "genre": "Action",
+      "icon": "https://dummyimage.com/300x300/1b1b1b/5986da&text=Cloud+Sample",
+      "streamable": true,
+      "play_url": null,
+      "raccoon_id": "RACCOON_INTERNAL_GAME_ID_HERE"
+    }
+  ]
+}

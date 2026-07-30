@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Player</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  iframe,video{border:0;width:100%;height:100%;background:#000}
+  #status{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:24px}
+  .spinner{width:38px;height:38px;border:4px solid #333;border-top-color:#5986da;border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .muted{color:rgba(255,255,255,.6);font-size:14px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="status"><div class="spinner"></div><div id="msg">Connecting to Ember…</div><div class="muted" id="sub"></div></div>
+<script>
+const params = new URLSearchParams(location.search);
+const token = params.get("token");
+const stage = document.getElementById("stage");
+const statusEl = document.getElementById("status");
+const msg = document.getElementById("msg");
+const sub = document.getElementById("sub");
+
+function setStatus(t, s){ msg.textContent = t; if(s!==undefined) sub.textContent = s; }
+function hideStatus(){ statusEl.style.display = "none"; }
+
+async function poll(){
+  const r = await fetch(`/v1/embed-data?token=${encodeURIComponent(token)}`);
+  if(!r.ok){ setStatus("Session ended.", ""); return; }
+  return r.json();
+}
+
+async function boot(){
+  if(!token){ setStatus("Missing session token.", ""); return; }
+  let data = await poll();
+  while(data && data.status === "queued"){
+    setStatus("Waiting in queue…", `Position: ${data.queue_pos}`);
+    await new Promise(res => setTimeout(res, 1500));
+    data = await poll();
+  }
+  if(!data){ return; }
+  const t = data.transport || {};
+  setStatus("Loading " + (data.game?.name || "game") + "…");
+
+  if(t.kind === "iframe" && t.play_url){
+    const f = document.createElement("iframe");
+    f.allow = "fullscreen; autoplay; gamepad; clipboard-write";
+    f.allowFullscreen = true;
+    f.src = t.play_url;
+    stage.appendChild(f);
+    hideStatus();
+    return;
+  }
+
+  if(t.kind === "stream" && t.signaling_path){
+    startStream(t);
+    return;
+  }
+  setStatus("Nothing to play for this session.", "");
+}
+
+// WebRTC / signaling client. For real Raccoon streams this negotiates a peer
+// connection; for the mock provider it simply renders the demo frames so you
+// can confirm the relay is live.
+function startStream(t){
+  const wsUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + t.signaling_path;
+  const ws = new WebSocket(wsUrl);
+  let pc = null;
+
+  ws.onopen = () => {
+    setStatus("Negotiating stream…");
+    try {
+      pc = new RTCPeerConnection({ iceServers: t.ice_servers || [] });
+      pc.ontrack = (ev) => {
+        let v = document.querySelector("video");
+        if(!v){ v = document.createElement("video"); v.autoplay = true; v.playsInline = true; stage.appendChild(v); }
+        v.srcObject = ev.streams[0];
+        hideStatus();
+      };
+      pc.onicecandidate = (ev) => { if(ev.candidate) ws.send(JSON.stringify({ type:"rtc_candidate", candidate: ev.candidate })); };
+      pc.createOffer().then(o => { pc.setLocalDescription(o); ws.send(JSON.stringify({ type:"rtc_offer", sdp: o })); });
+    } catch(e){ /* RTC unavailable; demo frames path still works below */ }
+  };
+
+  ws.onmessage = (ev) => {
+    let m; try { m = JSON.parse(ev.data); } catch { return; }
+    if(m.type === "rtc_answer" && m.sdp && pc){ pc.setRemoteDescription(m.sdp); }
+    if(m.type === "rtc_candidate" && m.candidate && pc){ try { pc.addIceCandidate(m.candidate); } catch(_){} }
+    if(m.type === "demo_frame"){
+      hideStatus();
+      let d = document.getElementById("demoframe");
+      if(!d){ d = document.createElement("div"); d.id="demoframe"; d.style.cssText="font:20px monospace;text-align:center"; stage.appendChild(d); }
+      d.innerHTML = `<div style="font-size:42px">🔥 Ember</div><div>${(m && m.n!=null)?"streaming demo frame #"+m.n:""}</div><div style="color:#5986da">relay is live</div>`;
+    }
+    if(m.type === "error"){ setStatus("Stream error", m.error); }
+  };
+  ws.onclose = () => setStatus("Stream closed.", "");
+}
+
+boot();
+</script>
+</body>
+</html>

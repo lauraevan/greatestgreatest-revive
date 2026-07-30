@@ -1,0 +1,19 @@
+{
+  "name": "ember-api",
+  "version": "1.0.0",
+  "description": "Ember API - a premium cloud-games API that fetches games from Raccoon Games and streams them so they can be played through the API. Inspired by stratus-api.",
+  "type": "module",
+  "main": "ember.js",
+  "scripts": {
+    "start": "node ember.js",
+    "dev": "node ember.js",
+    "sync": "node scripts/sync-catalog.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "ws": "^8.18.0"
+  },
+  "license": "AGPL-3.0"
+}
