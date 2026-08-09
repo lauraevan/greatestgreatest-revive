@@ -48,13 +48,13 @@ body { background:var(--bg); color:var(--text); font-family:Arial, sans-serif; m
 header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; }
 h1 { margin:0; }
 #search { background:var(--panel); border:none; color:var(--text); padding:8px 12px; border-radius:8px; outline:none; width:220px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:20px; padding:20px; }
-.game { background:var(--panel); border:0; border-radius:12px; padding:12px; color:var(--text); font:inherit; text-align:center; cursor:pointer; min-width:0; content-visibility:auto; contain-intrinsic-size:auto 200px; box-shadow:0 0 0 0 transparent; transition:box-shadow .15s ease, background .15s ease; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:12px; padding:16px; }
+.game { background:var(--panel); border:0; border-radius:8px; overflow:hidden; padding:0; color:var(--text); font:inherit; text-align:center; cursor:pointer; min-width:0; content-visibility:auto; contain-intrinsic-size:auto 190px; box-shadow:0 0 0 0 transparent; transition:box-shadow .15s ease, background .15s ease; }
 .game:hover { background:var(--panel2); box-shadow:0 0 0 2px var(--accent); }
 .game:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
-.game img { width:100%; height:120px; object-fit:cover; border-radius:8px; }
-.game-thumb { width:100%; height:120px; border-radius:8px; box-sizing:border-box; padding:8px; display:flex; align-items:center; justify-content:center; text-align:center; background:#1c1c1c; color:#fff; font-family:monospace; font-weight:700; font-size:15px; line-height:1.2; overflow:hidden; overflow-wrap:anywhere; }
-.game-name { display:block; margin-top:8px; overflow-wrap:anywhere; }
+.game img { width:100%; height:150px; object-fit:cover; display:block; }
+.game-thumb { width:100%; height:150px; box-sizing:border-box; padding:8px; display:flex; align-items:center; justify-content:center; text-align:center; background:#1c1c1c; color:#fff; font-family:monospace; font-weight:700; font-size:15px; line-height:1.2; overflow:hidden; overflow-wrap:anywhere; }
+.game-name { display:block; padding:9px 6px 11px; overflow-wrap:anywhere; }
 #catalogStatus { min-height:20px; padding:0 20px 18px; color:var(--muted); text-align:center; font-size:14px; }
 #catalogSentinel { height:1px; }
 
