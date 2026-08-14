@@ -2,7 +2,7 @@
  * Strategy: stale-while-revalidate for the site's OWN shell only. Games hosted
  * on other repos / CDNs are never intercepted, so nothing about play changes.
  * Bump VERSION to force old caches out. */
-const VERSION = "gg-cache-v4";
+const VERSION = "gg-cache-v5";
 
 // Everything the SW manages lives under the folder this sw.js is served from
 // (e.g. /<user>/<repo>/main/). Games on other paths/origins pass straight through.
