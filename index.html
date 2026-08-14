@@ -48,13 +48,18 @@ body { background:var(--bg); color:var(--text); font-family:Arial, sans-serif; m
 header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; }
 h1 { margin:0; }
 #search { background:var(--panel); border:none; color:var(--text); padding:8px 12px; border-radius:8px; outline:none; width:220px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:12px; padding:16px; }
-.game { background:var(--panel); border:0; border-radius:8px; overflow:hidden; padding:0; color:var(--text); font:inherit; text-align:center; cursor:pointer; min-width:0; content-visibility:auto; contain-intrinsic-size:auto 190px; box-shadow:0 0 0 0 transparent; transition:box-shadow .15s ease, background .15s ease; }
-.game:hover { background:var(--panel2); box-shadow:0 0 0 2px var(--accent); }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(var(--card-min),1fr)); gap:16px; padding:18px; }
+/* Nexora-style art cards: full-bleed cover, title overlaid on a gradient,
+   hover lift + accent glow that follows the pointer. */
+.game { position:relative; background:var(--panel); border:0; border-radius:12px; overflow:hidden; padding:0; color:var(--text); font:inherit; text-align:left; cursor:pointer; min-width:0; aspect-ratio:4/3; content-visibility:auto; contain-intrinsic-size:auto 150px; box-shadow:0 4px 18px rgba(0,0,0,.28); transition:transform .26s cubic-bezier(.2,.9,.2,1), box-shadow .26s cubic-bezier(.2,.9,.2,1); }
+.game img { width:100%; height:100%; object-fit:cover; display:block; }
+.game-thumb { width:100%; height:100%; box-sizing:border-box; padding:10px; display:flex; align-items:center; justify-content:center; text-align:center; background:linear-gradient(150deg,#232323,#141414); color:#fff; font-family:monospace; font-weight:700; font-size:15px; line-height:1.2; overflow:hidden; overflow-wrap:anywhere; }
+.game-name { position:absolute; left:0; right:0; bottom:0; z-index:2; padding:20px 11px 9px; font-size:13.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; background:linear-gradient(to top, rgba(0,0,0,.92), rgba(0,0,0,.4) 55%, transparent); text-shadow:0 1px 3px rgba(0,0,0,.7); }
+.game-thumb ~ .game-name { display:none; }   /* no-icon tile already shows its name */
+.game::before { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:inherit; background:radial-gradient(220px circle at var(--x,50%) var(--y,50%), color-mix(in srgb, var(--accent) 34%, transparent) 0%, transparent 66%); opacity:0; transition:opacity .18s ease; }
+.game:hover { transform:translateY(-6px) scale(1.035); box-shadow:0 22px 54px color-mix(in srgb, var(--accent) 30%, transparent), 0 10px 34px rgba(0,0,0,.5); z-index:3; }
+.game:hover::before { opacity:1; }
 .game:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
-.game img { width:100%; height:150px; object-fit:cover; display:block; }
-.game-thumb { width:100%; height:150px; box-sizing:border-box; padding:8px; display:flex; align-items:center; justify-content:center; text-align:center; background:#1c1c1c; color:#fff; font-family:monospace; font-weight:700; font-size:15px; line-height:1.2; overflow:hidden; overflow-wrap:anywhere; }
-.game-name { display:block; padding:9px 6px 11px; overflow-wrap:anywhere; }
 #catalogStatus { min-height:20px; padding:0 20px 18px; color:var(--muted); text-align:center; font-size:14px; }
 #catalogSentinel { height:1px; }
 
@@ -193,6 +198,23 @@ html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { displ
 #ggrHome.ggr-hidden { opacity:0; pointer-events:none; }
 html.ggr-home-off #ggrHome { display:none; }
 
+/* floating ambient orbs (Nexora-style background effect) */
+.ggr-orb { position:absolute; border-radius:50%; filter:blur(85px); pointer-events:none; z-index:0; }
+.ggr-orb-1 { width:440px; height:440px; top:-90px; left:-70px;
+  background:radial-gradient(circle, rgba(212,85,10,.55), transparent 70%); opacity:.30;
+  animation:ggrOrbFloat 20s ease-in-out infinite; }
+.ggr-orb-2 { width:380px; height:380px; bottom:-110px; right:8%;
+  background:radial-gradient(circle, rgba(255,106,0,.45), transparent 70%); opacity:.24;
+  animation:ggrOrbFloat 24s ease-in-out infinite reverse; }
+.ggr-orb-3 { width:300px; height:300px; top:42%; left:34%;
+  background:radial-gradient(circle, rgba(153,47,5,.55), transparent 70%); opacity:.18;
+  animation:ggrOrbFloat 28s ease-in-out infinite; animation-delay:-8s; }
+@keyframes ggrOrbFloat {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33%     { transform:translate(38px,-46px) scale(1.09); }
+  66%     { transform:translate(-28px,26px) scale(.92); }
+}
+
 .ggr-layout {
   position:relative; width:100%; height:100%; display:flex; align-items:center;
   padding:0 7%; z-index:1; overflow:hidden; pointer-events:none;
@@ -294,7 +316,7 @@ html.ggr-home-off #ggrHome { display:none; }
 @media (prefers-reduced-motion: reduce) {
   #ggrHome .ggr-wordmark, #ggrHome .ggr-title, #ggrHome .ggr-desc,
   #ggrHome .ggr-cta, #ggrHome .ggr-credit { animation:none !important; opacity:1 !important; transform:none !important; }
-  .ggr-track { animation:none !important; }
+  .ggr-track, .ggr-orb { animation:none !important; }
 }
 @media (max-width:820px) {
   .ggr-visuals { display:none; }
@@ -315,6 +337,9 @@ html.ggr-home-off #ggrHome { display:none; }
 
 <!-- ===== GGR HOMEPAGE (landing hero) ===== -->
 <section id="ggrHome" aria-label="GGR home">
+  <div class="ggr-orb ggr-orb-1" aria-hidden="true"></div>
+  <div class="ggr-orb ggr-orb-2" aria-hidden="true"></div>
+  <div class="ggr-orb ggr-orb-3" aria-hidden="true"></div>
   <div class="ggr-visuals" id="ggrVisuals" aria-hidden="true"></div>
   <div class="ggr-layout">
     <div class="ggr-content">
@@ -623,6 +648,21 @@ function prefetchGame(card) {
 }
 grid.addEventListener("pointerover", e => prefetchGame(e.target.closest(".game")), { passive: true });
 grid.addEventListener("pointerdown", e => prefetchGame(e.target.closest(".game")), { passive: true });
+
+/* ---- pointer-follow accent glow on cards (Nexora style) ---- */
+let glowRAF = 0, glowCard = null, glowX = 0, glowY = 0;
+grid.addEventListener("pointermove", e => {
+    const card = e.target.closest(".game");
+    if (!card) return;
+    glowCard = card; glowX = e.clientX; glowY = e.clientY;
+    if (!glowRAF) glowRAF = requestAnimationFrame(() => {
+        glowRAF = 0;
+        if (!glowCard) return;
+        const r = glowCard.getBoundingClientRect();
+        glowCard.style.setProperty("--x", ((glowX - r.left) / r.width * 100) + "%");
+        glowCard.style.setProperty("--y", ((glowY - r.top) / r.height * 100) + "%");
+    });
+}, { passive: true });
 
 /* ---- SEARCH + SOURCE FILTER ---- */
 const SOURCE_ORDER = ["Original", "CKV", "Nexora", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
@@ -1022,25 +1062,32 @@ document.addEventListener("keydown", e => {
     setTimeout(type, 700);
   })();
 
-  /* 2. Scrolling wall of game art, built from our own catalog icons */
+  /* 2. Scrolling wall of real game art — curated to sources with true box-art;
+        any icon that fails to load hides itself so every visible tile has art. */
   (function(){
     var wrap = document.getElementById("ggrVisuals");
+    if (!wrap) return;
     var data = Array.isArray(window.GAME_DATA) ? window.GAME_DATA : [];
-    var imgs = [];
-    for (var i = 0; i < data.length; i++) { if (data[i][2]) imgs.push(data[i][2]); }
-    if (!imgs.length || !wrap) return;
-    for (var j = imgs.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = imgs[j]; imgs[j] = imgs[k]; imgs[k] = t; }
+    var GOOD = { "Nexora":1, "CKV":1, "gn-math":1, "seraph":1, "truffled":1, "Original":1, "selenite":1, "Noah":1 };
+    var pool = [];
+    for (var i = 0; i < data.length; i++) { if (data[i][2] && GOOD[data[i][0]]) pool.push(data[i][2]); }
+    if (pool.length < 60) { pool = []; for (i = 0; i < data.length; i++) { if (data[i][2]) pool.push(data[i][2]); } }
+    if (!pool.length) return;
+    for (var j = pool.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = pool[j]; pool[j] = pool[k]; pool[k] = t; }
     var perCol = 14, cols = 3, idx = 0;
+    function cardFor(src){
+      var card = document.createElement("div"); card.className = "ggr-card";
+      var im = document.createElement("img"); im.loading = "lazy"; im.decoding = "async"; im.alt = "";
+      im.onerror = function(){ card.style.visibility = "hidden"; };   // never show a broken/empty tile
+      im.src = src; card.appendChild(im); return card;
+    }
     for (var c = 0; c < cols; c++) {
       var colEl = document.createElement("div"); colEl.className = "ggr-col";
       var track = document.createElement("div"); track.className = "ggr-track";
-      var set = [];
-      for (var n = 0; n < perCol; n++) { set.push(imgs[idx % imgs.length]); idx++; }
-      set.concat(set).forEach(function(src){          // duplicate so the -50% scroll loops seamlessly
-        var card = document.createElement("div"); card.className = "ggr-card";
-        var im = document.createElement("img"); im.loading = "lazy"; im.decoding = "async"; im.alt = ""; im.src = src;
-        card.appendChild(im); track.appendChild(card);
-      });
+      var srcs = [];
+      for (var n = 0; n < perCol; n++) { srcs.push(pool[idx % pool.length]); idx++; }
+      // render the identical set twice so the -50% scroll loops seamlessly
+      for (var pass = 0; pass < 2; pass++) { srcs.forEach(function(src){ track.appendChild(cardFor(src)); }); }
       colEl.appendChild(track); wrap.appendChild(colEl);
     }
     wrap.addEventListener("mousemove", function(e){
