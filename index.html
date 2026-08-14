@@ -253,6 +253,14 @@ html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { displ
                     <button class="tc-opt opt-btn" data-tc="off">Off</button>
                 </div>
             </div>
+            <div class="s-section">
+                <h3>Games without icons</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Some games have no artwork. They're hidden by default — turn this on to show them as plain name tiles at the bottom.</p>
+                <div class="s-row">
+                    <button class="sni-opt opt-btn" data-sni="on">Show</button>
+                    <button class="sni-opt opt-btn" data-sni="off">Hide</button>
+                </div>
+            </div>
         </div>
         <div class="s-pane" data-pane="stealth" hidden>
             <div class="s-section">
@@ -352,18 +360,24 @@ html.no-touch #padToggle, html.no-touch #gamepad, html.no-touch #padNote { displ
 </div>
 
 <script src="games-data.js"></script>
+<script src="games-noicon.js"></script>
 <script>
 /* ---- LAZY GAME CATALOG (Ultimate Game Stash pinned to the bottom) ---- */
 const grid = document.getElementById("gameGrid");
 const catalogStatus = document.getElementById("catalogStatus");
 const catalogSentinel = document.getElementById("catalogSentinel");
-const catalog = Array.isArray(window.GAME_DATA) ? window.GAME_DATA.slice() : [];
+const BASE_GAMES = Array.isArray(window.GAME_DATA) ? window.GAME_DATA : [];
+const NOICON_GAMES = Array.isArray(window.NOICON_GAMES) ? window.NOICON_GAMES : [];
+// games without artwork are hidden from the main catalog unless this setting is on
+function wantNoIcon() { try { return !!JSON.parse(localStorage.getItem("ggu-settings") || "{}").showNoIcon; } catch (e) { return false; } }
+let catalog = [];
 const UGS = "Ultimate Game Stash";
 const PAGE_SIZE = 160;
 let visibleGames = catalog;
 let renderedGames = 0;
 
-catalog.sort((a, b) => {
+function sortCatalog() {
+    catalog.sort((a, b) => {
         const au = a[0] === UGS ? 1 : 0;
         const bu = b[0] === UGS ? 1 : 0;
         if (au !== bu) return au - bu;              // Ultimate Game Stash stays pinned to the very bottom
@@ -372,6 +386,7 @@ catalog.sort((a, b) => {
         if (ai !== bi) return ai - bi;
         return a[3].localeCompare(b[3], undefined, { sensitivity: "base" });
     });
+}
 
 function createGameCard(game, position) {
     const card = document.createElement("button");
@@ -458,16 +473,29 @@ grid.addEventListener("pointerover", e => prefetchGame(e.target.closest(".game")
 grid.addEventListener("pointerdown", e => prefetchGame(e.target.closest(".game")), { passive: true });
 
 /* ---- SEARCH + SOURCE FILTER ---- */
-const SOURCE_ORDER = ["Original", "chicken", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
-const counts = {};
-catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
-const sources = SOURCE_ORDER.filter(s => counts[s]).concat(Object.keys(counts).filter(s => !SOURCE_ORDER.includes(s)).sort());
-const selected = new Set(sources);
-
+const SOURCE_ORDER = ["Original", "CKV", "gn-math", "truffled", "Noah", "seraph", "selenite", "Strongdog XP", "now.gg", "Ultimate Game Stash", "LuminSDK"];
+let counts = {}, sources = [], selected = new Set();
 const filterList = document.getElementById("filterList");
-filterList.innerHTML = sources.map(s =>
-    `<label><input type="checkbox" class="src-check" value="${s.replace(/"/g, "&quot;")}" checked> ${s} (${counts[s]})</label>`
-).join("");
+
+// (Re)build the catalog + source filter. Called on load and whenever the
+// "show games without icons" setting changes, so toggling it is instant.
+function buildCatalog() {
+    catalog = BASE_GAMES.concat(wantNoIcon() ? NOICON_GAMES : []);
+    sortCatalog();
+    counts = {};
+    catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
+    const newSources = SOURCE_ORDER.filter(s => counts[s]).concat(Object.keys(counts).filter(s => !SOURCE_ORDER.includes(s)).sort());
+    const firstBuild = sources.length === 0, prev = selected;
+    // keep the user's checked/unchecked choices; brand-new sources default to shown
+    selected = new Set(newSources.filter(s => firstBuild || prev.has(s) || !sources.includes(s)));
+    sources = newSources;
+    filterList.innerHTML = sources.map(s =>
+        `<label><input type="checkbox" class="src-check" value="${s.replace(/"/g, "&quot;")}"${selected.has(s) ? " checked" : ""}> ${s} (${counts[s]})</label>`
+    ).join("");
+}
+buildCatalog();
+// exposed so the settings panel can refresh the catalog live when the toggle flips
+window.__rebuildCatalog = function () { buildCatalog(); updateAllBtn(); applyFilters(); };
 
 const searchInput = document.getElementById("search");
 function applyFilters() {
@@ -711,7 +739,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:false };
+    const def = { theme:"default", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"160px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:false, showNoIcon:false };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -769,6 +797,7 @@ document.addEventListener("keydown", e => {
         document.querySelectorAll(".size-opt").forEach(b => b.classList.toggle("active", b.dataset.size === s.cardSize));
         document.querySelectorAll(".fs-opt").forEach(b => b.classList.toggle("active", b.dataset.fs === (s.autoFullscreen ? "on" : "off")));
         document.querySelectorAll(".tc-opt").forEach(b => b.classList.toggle("active", b.dataset.tc === (s.touchControls === false ? "off" : "on")));
+        document.querySelectorAll(".sni-opt").forEach(b => b.classList.toggle("active", b.dataset.sni === (s.showNoIcon ? "on" : "off")));
         document.getElementById("cloakTitle").value = s.tabTitle || "";
         document.getElementById("panicKey").value = s.panicKey || "";
         document.getElementById("panicUrl").value = s.panicUrl || "";
@@ -779,12 +808,13 @@ document.addEventListener("keydown", e => {
     document.querySelectorAll(".size-opt").forEach(b => b.addEventListener("click", () => { s.cardSize = b.dataset.size; save(); applyCardSize(); refresh(); }));
     document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
     document.querySelectorAll(".tc-opt").forEach(b => b.addEventListener("click", () => { s.touchControls = b.dataset.tc === "on"; save(); applyTouchControls(); refresh(); }));
+    document.querySelectorAll(".sni-opt").forEach(b => b.addEventListener("click", () => { s.showNoIcon = b.dataset.sni === "on"; save(); if (window.__rebuildCatalog) window.__rebuildCatalog(); refresh(); }));
     document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
     document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
     document.querySelectorAll(".fx-opt").forEach(b => b.addEventListener("click", () => { s.effect = b.dataset.fx; save(); applyEffect(); refresh(); }));
     document.querySelectorAll(".cloak-preset").forEach(b => b.addEventListener("click", () => { const c = CLOAKS[+b.dataset.i]; s.tabTitle = c[1]; s.favicon = c[2]; save(); applyCloak(); refresh(); }));
     document.getElementById("cloakTitle").addEventListener("input", e => { s.tabTitle = e.target.value; save(); applyCloak(); });
-    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); applyTouchControls(); refresh(); });
+    document.getElementById("settingsReset").addEventListener("click", () => { s = Object.assign({}, def); save(); applyTheme(); applyCloak(); applyCardSize(); applyEffect(); applyTouchControls(); if (window.__rebuildCatalog) window.__rebuildCatalog(); refresh(); });
 
     /* ---- settings tabs ---- */
     document.querySelectorAll(".s-tab").forEach(tab => tab.addEventListener("click", () => {
