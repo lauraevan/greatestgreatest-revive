@@ -2,7 +2,7 @@
  * Strategy: stale-while-revalidate for the site's OWN shell only. Games hosted
  * on other repos / CDNs are never intercepted, so nothing about play changes.
  * Bump VERSION to force old caches out. */
-const VERSION = "gg-cache-v7";
+const VERSION = "gg-cache-v8";
 
 // Everything the SW manages lives under the folder this sw.js is served from
 // (e.g. /<user>/<repo>/main/). Games on other paths/origins pass straight through.
@@ -47,6 +47,22 @@ self.addEventListener("fetch", event => {
 
   event.respondWith((async () => {
     const cache = await caches.open(VERSION);
+    // The page shell + the game lists change often, so fetch those FRESH first
+    // (falling back to cache when offline) — this way new games/features show up
+    // on the very next load instead of a reload later. Everything else (icons,
+    // static assets) stays cache-first for instant repeat loads.
+    const fresh = req.mode === "navigate" ||
+                  /\/(index\.html)?$/.test(url.pathname) ||
+                  /(games-data|games-noicon)\.js$/.test(url.pathname);
+    if (fresh) {
+      try {
+        const res = await fetch(req);
+        if (res && res.ok && res.type === "basic") cache.put(req, res.clone());
+        return res;
+      } catch (e) {
+        return (await cache.match(req, { ignoreSearch: true })) || Response.error();
+      }
+    }
     const cached = await cache.match(req, { ignoreSearch: true });
     const network = fetch(req).then(res => {
       if (res && res.ok && res.type === "basic") cache.put(req, res.clone());
