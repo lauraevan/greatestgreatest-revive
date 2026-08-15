@@ -1475,7 +1475,6 @@ window.GAME_DATA = [
     ["seraph", "library/papa-louie-3.html", "icons/papa-louie-3.webp", "Papa Louie 3"],
     ["seraph", "library/steak-and-jake.html", "icons/steak-and-jake.webp", "Steak And Jake"],
     ["seraph", "library/steak-and-jake-midnight.html", "icons/steak-and-jake-midnight.webp", "Steak And Jake Midnight"],
-    ["LuminSDK", "library/lumin.html", "icons/lumin.webp", "LuminSDK"],
     ["Ultimate Game Stash", "library/100in1nes.html", "icons/100in1nes.webp", "100in1nes"],
     ["Ultimate Game Stash", "library/100roomsofenemies.html", "icons/100roomsofenemies.webp", "100RoomsOfEnemies"],
     ["Ultimate Game Stash", "library/10bullets.html", "icons/10bullets.webp", "10bullets"],

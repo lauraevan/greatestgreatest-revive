@@ -87,6 +87,11 @@ h1 { margin:0; }
 #playerBar button { background:var(--panel2); border:none; color:var(--text); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; }
 #playerBar button:hover { background:var(--panel3); }
 #playerFrame { border:0; flex:1; width:100%; background:#000; }
+#playerFrame[hidden] { display:none; }
+#luminHost { position:fixed; left:-99999px; top:0; width:1px; height:1px; overflow:hidden; pointer-events:none; opacity:0; }
+#luminPlayHost { flex:1; width:100%; background:#000; overflow:hidden; position:relative; }
+#luminPlayHost[hidden] { display:none; }
+#luminPlayHost iframe, #luminPlayHost canvas, #luminPlayHost > * { width:100%; height:100%; border:0; }
 /* ---- on-screen touch controller (for keyboard games on mobile) ---- */
 #padToggle { position:absolute; top:52px; left:10px; z-index:6; width:40px; height:40px; padding:0;
     border:0; border-radius:10px; background:rgba(30,30,30,.6); color:#fff; font-size:18px; line-height:1; cursor:pointer; opacity:.75; }
@@ -462,10 +467,10 @@ body.hide-hero #storeHero, body.hide-hero #storeTrendWrap { display:none; }
 .gg-sidebar {
   position:fixed; top:12px; left:12px; height:calc(100vh - 24px); width:64px; box-sizing:border-box;
   display:none; flex-direction:column; padding:16px 0 14px; z-index:1400; overflow:visible;
-  background:color-mix(in srgb, var(--panel) 52%, transparent);
-  backdrop-filter:blur(20px) saturate(160%); -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border:1px solid rgba(255,255,255,.07); border-radius:20px; color:var(--text);
-  box-shadow:0 8px 32px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.03);
+  background:color-mix(in srgb, var(--panel) 8%, transparent);
+  backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%);
+  border:1px solid color-mix(in srgb, var(--text) 12%, transparent); border-radius:20px; color:var(--text);
+  box-shadow:0 8px 32px rgba(0,0,0,.28);
   transition:width .3s cubic-bezier(.4,0,.2,1); --x:50%; --y:50%;
 }
 html.ggr-home-off .gg-sidebar { display:flex; }
@@ -482,21 +487,21 @@ html.ggr-home-off .gg-sidebar { display:flex; }
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite:exclude; opacity:0; transition:opacity .2s ease; }
 .gg-sidebar:hover::after { opacity:.55; }
 .gg-sb-title { display:flex; align-items:center; gap:12px; padding:4px 0 16px 16px; position:relative; z-index:2; }
-.gg-sb-logo { width:34px; height:34px; flex:none; border-radius:10px; display:grid; place-items:center; font-weight:800; font-size:15px; color:#fff;
-  background:linear-gradient(135deg, var(--accent), var(--accent-deep)); box-shadow:0 4px 16px color-mix(in srgb, var(--accent) 50%, transparent); transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+.gg-sb-logo { width:34px; height:34px; flex:none; border-radius:10px; display:grid; place-items:center; font-weight:800; font-size:15px; color:var(--accent);
+  background:transparent; border:1.5px solid var(--accent); box-shadow:0 0 14px color-mix(in srgb, var(--accent) 45%, transparent), inset 0 0 10px color-mix(in srgb, var(--accent) 18%, transparent); transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
 .gg-sidebar:hover .gg-sb-logo { transform:rotate(-8deg) scale(1.06); }
 .gg-sb-title span { font-weight:800; font-size:19px; letter-spacing:.08em; white-space:nowrap; opacity:0; max-width:0; overflow:hidden; transition:opacity .25s ease .06s, max-width .3s cubic-bezier(.4,0,.2,1);
   background:linear-gradient(90deg, var(--accent), color-mix(in srgb,var(--accent) 50%, #fff)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
 .gg-sidebar:hover .gg-sb-title span { opacity:1; max-width:160px; }
 .gg-sb-nav { display:flex; flex-direction:column; gap:5px; padding:0 11px; position:relative; z-index:2; }
 .gg-sb-spacer { flex:1; }
-.gg-sb-item { display:flex; align-items:center; gap:15px; padding:12px; border-radius:12px; cursor:pointer; color:var(--muted); background:transparent; border:0; font:inherit; font-weight:600; font-size:14.5px; text-align:left; white-space:nowrap; position:relative; overflow:hidden; text-decoration:none; transition:background .2s ease, color .2s ease, transform .2s ease; }
+.gg-sb-item { display:flex; align-items:center; gap:15px; padding:11px; border-radius:12px; cursor:pointer; color:var(--muted); background:transparent; border:1px solid color-mix(in srgb, var(--text) 15%, transparent); font:inherit; font-weight:600; font-size:14.5px; text-align:left; white-space:nowrap; position:relative; overflow:hidden; text-decoration:none; transition:background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .gg-sb-item svg { width:21px; height:21px; flex:none; transition:transform .25s cubic-bezier(.34,1.56,.64,1); }
 .gg-sb-item span { opacity:0; max-width:0; overflow:hidden; transition:opacity .25s ease .04s, max-width .3s cubic-bezier(.4,0,.2,1); }
 .gg-sidebar:hover .gg-sb-item span { opacity:1; max-width:160px; }
-.gg-sb-item:hover { color:var(--text); background:color-mix(in srgb, var(--accent) 14%, transparent); transform:translateX(2px); }
+.gg-sb-item:hover { color:var(--text); border-color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent); box-shadow:0 0 16px color-mix(in srgb, var(--accent) 25%, transparent), inset 0 0 12px color-mix(in srgb, var(--accent) 8%, transparent); transform:translateX(2px); }
 .gg-sb-item:hover svg { transform:scale(1.14); }
-.gg-sb-item.active { color:var(--text); background:color-mix(in srgb, var(--accent) 20%, transparent); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent); }
+.gg-sb-item.active { color:var(--text); border-color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); box-shadow:0 0 16px color-mix(in srgb, var(--accent) 28%, transparent); }
 .gg-sb-item::after { content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:0; border-radius:0 3px 3px 0; background:var(--accent); box-shadow:0 0 12px var(--accent); transition:height .25s ease; }
 .gg-sb-item:hover::after, .gg-sb-item.active::after { height:58%; }
 @media (min-width:821px){ html.ggr-home-off body { padding-left:88px; } }
@@ -754,6 +759,7 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
     <pre class="dev-pane" id="devRaw" hidden></pre>
 </div>
 
+<div id="luminHost" aria-hidden="true"></div>
 <div id="player">
     <div id="playerBar">
         <span id="playerTitle"></span>
@@ -764,6 +770,7 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
         </span>
     </div>
     <iframe id="playerFrame" allow="fullscreen; autoplay; gamepad; clipboard-write" allowfullscreen></iframe>
+    <div id="luminPlayHost" hidden></div>
     <button id="padToggle" type="button" title="Touch controls (keyboard for mobile)" aria-label="Toggle touch controls">⌨</button>
     <div id="gamepad" hidden aria-hidden="true">
         <div class="pad-dir">
@@ -960,7 +967,8 @@ const filterList = document.getElementById("filterList");
 // (Re)build the catalog + source filter. Called on load and whenever the
 // "show games without icons" setting changes, so toggling it is instant.
 function buildCatalog() {
-    catalog = BASE_GAMES.concat(wantNoIcon() ? NOICON_GAMES : []);
+    var lumin = Array.isArray(window.LUMIN_GAMES) ? window.LUMIN_GAMES : [];
+    catalog = BASE_GAMES.concat(lumin).concat(wantNoIcon() ? NOICON_GAMES : []);
     sortCatalog();
     counts = {};
     catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
@@ -1051,23 +1059,66 @@ const player = document.getElementById("player");
 const playerFrame = document.getElementById("playerFrame");
 const playerTitle = document.getElementById("playerTitle");
 
+const luminPlayHost = document.getElementById("luminPlayHost");
+let luminActive = false;
+
+function openPlayerShell(title) {
+    playerTitle.textContent = title;
+    player.classList.add("open");
+    document.documentElement.classList.add("playing");
+    document.body.style.overflow = "hidden";
+}
+
 function launch(path, title = "", opensDirectly = false) {
+    // LuminSDK games render through the SDK into a host div (not a plain iframe)
+    if (typeof path === "string" && path.indexOf("lumin:") === 0) {
+        launchLumin(path.slice(6), title);
+        return;
+    }
     if (opensDirectly || (window.__ggSettings && window.__ggSettings.launchMode === "newtab")) {
         window.open(path, "_blank", "noopener");
         return;
     }
     currentGamePath = path;
-    playerTitle.textContent = title;
+    playerFrame.hidden = false;
+    if (luminPlayHost) luminPlayHost.hidden = true;
+    openPlayerShell(title);
     playerFrame.src = path;
-    player.classList.add("open");
-    document.documentElement.classList.add("playing");
-    document.body.style.overflow = "hidden";
+    if (window.__ggSettings && window.__ggSettings.autoFullscreen) fullscreenGame();
+}
+
+function launchLumin(key, title) {
+    var g = window.__luminMap && window.__luminMap[key];
+    var L = window.Lumin;
+    if (!g || !L) { return; }
+    currentGamePath = "lumin:" + key;
+    // try a direct game URL first (plays in the normal iframe); otherwise render via the SDK
+    var url = null;
+    try { url = L.getGameUrl(g); } catch (e) {}
+    if (url && typeof url === "string" && /^https?:/.test(url)) {
+        playerFrame.hidden = false;
+        if (luminPlayHost) luminPlayHost.hidden = true;
+        openPlayerShell(title);
+        playerFrame.src = url;
+    } else if (luminPlayHost) {
+        playerFrame.hidden = true;
+        luminPlayHost.hidden = false;
+        luminPlayHost.innerHTML = "";
+        openPlayerShell(title);
+        luminActive = true;
+        try { L.loadGame(g, { container: "#luminPlayHost" }); }
+        catch (e) { try { L.loadGame(g.id || g.slug || g, { container: "#luminPlayHost" }); } catch (e2) {} }
+    }
     if (window.__ggSettings && window.__ggSettings.autoFullscreen) fullscreenGame();
 }
 
 function closeGame() {
     player.classList.remove("open");
     document.documentElement.classList.remove("playing");
+    if (luminActive && window.Lumin && typeof window.Lumin.endGame === "function") { try { window.Lumin.endGame(); } catch (e) {} }
+    luminActive = false;
+    if (luminPlayHost) { luminPlayHost.innerHTML = ""; luminPlayHost.hidden = true; }
+    playerFrame.hidden = false;
     playerFrame.src = "about:blank";
     document.body.style.overflow = "";
     currentGamePath = null;
@@ -1553,6 +1604,36 @@ document.addEventListener("keydown", e => {
   document.addEventListener("mouseleave", function(){ dot.style.opacity = "0"; ring.style.opacity = "0"; });
   document.addEventListener("mouseenter", function(){ dot.style.opacity = ""; ring.style.opacity = ""; });
   (function loop(){ rx += (mx-rx)*0.2; ry += (my-ry)*0.2; ring.style.transform = "translate(" + rx + "px," + ry + "px)"; requestAnimationFrame(loop); })();
+})();
+
+/* ===== LuminSDK: load the LIVE catalog from Lumin's CDN and add each game as a card ===== */
+(function(){
+  window.__luminMap = {};
+  var s = document.createElement("script");
+  s.src = "https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js";
+  s.async = true;
+  s.onload = function(){
+    if (!window.Lumin || typeof window.Lumin.init !== "function") return;
+    try { window.Lumin.init({ container: "#luminHost" }); } catch (e) { return; }
+    var got; try { got = window.Lumin.getGames(); } catch (e) { return; }
+    Promise.resolve(got).then(function(games){
+      if (!Array.isArray(games) || !games.length) return;
+      var entries = [];
+      games.forEach(function(g, i){
+        var key = "L" + i;
+        window.__luminMap[key] = g;
+        var name = g.name || g.title || g.slug || g.id || ("Game " + (i + 1));
+        var img = "";
+        try { img = window.Lumin.getImageUrl(g) || ""; } catch (e) {}
+        if (!img) img = g.image || g.thumbnail || g.cover || g.icon || "";
+        entries.push(["LuminSDK", "lumin:" + key, img, name]);
+      });
+      window.LUMIN_GAMES = entries;
+      if (window.__rebuildCatalog) window.__rebuildCatalog();
+    }).catch(function(){});
+  };
+  s.onerror = function(){ /* Lumin CDN blocked on this network — the source just won't appear */ };
+  document.head.appendChild(s);
 })();
 </script>
 
