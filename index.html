@@ -467,11 +467,12 @@ body.hide-hero #storeHero, body.hide-hero #storeTrendWrap { display:none; }
 .gg-sidebar {
   position:fixed; top:12px; left:12px; height:calc(100vh - 24px); width:64px; box-sizing:border-box;
   display:none; flex-direction:column; padding:16px 0 14px; z-index:1400; overflow:visible;
-  background:color-mix(in srgb, var(--panel) 8%, transparent);
-  backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%);
+  background:color-mix(in srgb, var(--panel) 10%, transparent);
+  backdrop-filter:blur(14px) saturate(150%); -webkit-backdrop-filter:blur(14px) saturate(150%);
   border:1px solid color-mix(in srgb, var(--text) 12%, transparent); border-radius:20px; color:var(--text);
   box-shadow:0 8px 32px rgba(0,0,0,.28);
-  transition:width .3s cubic-bezier(.4,0,.2,1); --x:50%; --y:50%;
+  transition:width .32s cubic-bezier(.4,0,.2,1); --x:50%; --y:50%;
+  will-change:width; transform:translateZ(0); backface-visibility:hidden;
 }
 html.ggr-home-off .gg-sidebar { display:flex; }
 .gg-sidebar:hover { width:238px; }
@@ -504,7 +505,8 @@ html.ggr-home-off .gg-sidebar { display:flex; }
 .gg-sb-item.active { color:var(--text); border-color:var(--accent); background:color-mix(in srgb, var(--accent) 14%, transparent); box-shadow:0 0 16px color-mix(in srgb, var(--accent) 28%, transparent); }
 .gg-sb-item::after { content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:0; border-radius:0 3px 3px 0; background:var(--accent); box-shadow:0 0 12px var(--accent); transition:height .25s ease; }
 .gg-sb-item:hover::after, .gg-sb-item.active::after { height:58%; }
-@media (min-width:821px){ html.ggr-home-off body { padding-left:88px; } }
+/* reserve the rail's space at all times so the app never jumps when the sidebar appears */
+@media (min-width:821px){ body { padding-left:88px; } }
 @media (max-width:820px){ .gg-sidebar { display:none !important; } }
 
 /* ===== custom PC cursor ===== */
@@ -680,6 +682,14 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
                     <button class="sni-opt opt-btn" data-sni="off">Hide</button>
                 </div>
             </div>
+            <div class="s-section">
+                <h3>No duplicates</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Show only one card per game — the same game across sources is merged, keeping the highest-quality version (gn-math → Noah → LuminSDK → CKV → …). Every game keeps its icon.</p>
+                <div class="s-row">
+                    <button class="ndup-opt opt-btn" data-ndup="on">On</button>
+                    <button class="ndup-opt opt-btn" data-ndup="off">Off</button>
+                </div>
+            </div>
         </div>
         <div class="s-pane" data-pane="stealth" hidden>
             <div class="s-section">
@@ -801,6 +811,22 @@ const BASE_GAMES = Array.isArray(window.GAME_DATA) ? window.GAME_DATA : [];
 const NOICON_GAMES = Array.isArray(window.NOICON_GAMES) ? window.NOICON_GAMES : [];
 // games without artwork are hidden from the main catalog unless this setting is on
 function wantNoIcon() { try { return !!JSON.parse(localStorage.getItem("ggu-settings") || "{}").showNoIcon; } catch (e) { return false; } }
+// "No duplicates" mode: one card per game, keeping the highest-quality source
+function wantNoDup() { try { return !!JSON.parse(localStorage.getItem("ggu-settings") || "{}").noDuplicates; } catch (e) { return false; } }
+const DEDUP_PRIORITY = { "gn-math":1, "Noah":2, "LuminSDK":3, "CKV":4, "Nexora":5, "duckmath":6, "seraph":7, "truffled":8, "selenite":9, "Original":10, "Strongdog XP":11, "Ultimate Game Stash":12, "now.gg":13 };
+function dedupeKey(name) { return (name || "").toLowerCase().replace(/[^a-z0-9]+/g, ""); }
+function dedupeCatalog(list) {
+    const best = new Map();
+    for (let i = 0; i < list.length; i++) {
+        const g = list[i];
+        if (!g[2] || !g[2].trim()) continue;          // must have an icon
+        const k = dedupeKey(g[3]); if (!k) continue;
+        const pr = DEDUP_PRIORITY[g[0]] || 99;
+        const cur = best.get(k);
+        if (!cur || pr < cur.pr) best.set(k, { g: g, pr: pr });
+    }
+    const out = []; best.forEach(v => out.push(v.g)); return out;
+}
 let catalog = [];
 const UGS = "Ultimate Game Stash";
 const PAGE_SIZE = 160;
@@ -969,6 +995,7 @@ const filterList = document.getElementById("filterList");
 function buildCatalog() {
     var lumin = Array.isArray(window.LUMIN_GAMES) ? window.LUMIN_GAMES : [];
     catalog = BASE_GAMES.concat(lumin).concat(wantNoIcon() ? NOICON_GAMES : []);
+    if (wantNoDup()) catalog = dedupeCatalog(catalog);   // one card per game, best source wins
     sortCatalog();
     counts = {};
     catalog.forEach(game => { const source = game[0] || "Original"; counts[source] = (counts[source] || 0) + 1; });
@@ -1305,7 +1332,7 @@ document.addEventListener("keydown", e => {
     const DEFAULT_TITLE = "Home";
     const THEMES = [["midnight-amber","Midnight Amber","#d4550a"],["midnight-blueberry","Midnight Blueberry","#6ea8fe"],["midnight-grape","Midnight Grape","#b388ff"],["default","Default","#5986da"],["arctic","Arctic","#56b6e0"],["blossom","Blossom","#ff7eb0"],["monochrome","Monochrome","#9e9e9e"],["blood","Blood","#d63030"],["sunset","Sunset","#ff8a5b"],["beach","Beach","#25b0a0"],["autumn","Autumn","#e08a3c"],["midnight","Midnight","#6c8cff"],["forest","Forest","#4caf6a"],["grape","Grape","#a06cff"],["ocean","Ocean","#3bb6d6"],["cyber","Cyber","#ff3df0"],["coffee","Coffee","#c98b4b"],["mint","Mint","#3ed6a5"],["rose","Rose","#ff5c8a"],["lavender","Lavender","#b7a6ff"],["gold","Gold","#e0b83c"]];
     const CLOAKS = [["Default","",""],["Google","Google","https://www.google.com/favicon.ico"],["Classroom","Classes","https://ssl.gstatic.com/classroom/favicon.png"],["Docs","Untitled document - Google Docs","https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"],["Drive","My Drive - Google Drive","https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png"]];
-    const def = { theme:"midnight-amber", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"150px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:false, showNoIcon:false };
+    const def = { theme:"midnight-amber", launchMode:"iframe", tabTitle:"", favicon:"", cardSize:"150px", autoFullscreen:false, panicKey:"", panicUrl:"", effect:"none", touchControls:false, showNoIcon:false, noDuplicates:false };
     let s; try { s = Object.assign({}, def, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { s = Object.assign({}, def); }
     window.__ggSettings = s;
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); window.__ggSettings = s; }
@@ -1364,6 +1391,7 @@ document.addEventListener("keydown", e => {
         document.querySelectorAll(".fs-opt").forEach(b => b.classList.toggle("active", b.dataset.fs === (s.autoFullscreen ? "on" : "off")));
         document.querySelectorAll(".tc-opt").forEach(b => b.classList.toggle("active", b.dataset.tc === (s.touchControls === false ? "off" : "on")));
         document.querySelectorAll(".sni-opt").forEach(b => b.classList.toggle("active", b.dataset.sni === (s.showNoIcon ? "on" : "off")));
+        document.querySelectorAll(".ndup-opt").forEach(b => b.classList.toggle("active", b.dataset.ndup === (s.noDuplicates ? "on" : "off")));
         document.getElementById("cloakTitle").value = s.tabTitle || "";
         document.getElementById("panicKey").value = s.panicKey || "";
         document.getElementById("panicUrl").value = s.panicUrl || "";
@@ -1375,6 +1403,7 @@ document.addEventListener("keydown", e => {
     document.querySelectorAll(".fs-opt").forEach(b => b.addEventListener("click", () => { s.autoFullscreen = b.dataset.fs === "on"; save(); refresh(); }));
     document.querySelectorAll(".tc-opt").forEach(b => b.addEventListener("click", () => { s.touchControls = b.dataset.tc === "on"; save(); applyTouchControls(); refresh(); }));
     document.querySelectorAll(".sni-opt").forEach(b => b.addEventListener("click", () => { s.showNoIcon = b.dataset.sni === "on"; save(); if (window.__rebuildCatalog) window.__rebuildCatalog(); refresh(); }));
+    document.querySelectorAll(".ndup-opt").forEach(b => b.addEventListener("click", () => { s.noDuplicates = b.dataset.ndup === "on"; save(); if (window.__rebuildCatalog) window.__rebuildCatalog(); refresh(); }));
     document.getElementById("panicKey").addEventListener("input", e => { s.panicKey = e.target.value; save(); });
     document.getElementById("panicUrl").addEventListener("input", e => { s.panicUrl = e.target.value; save(); });
     document.querySelectorAll(".fx-opt").forEach(b => b.addEventListener("click", () => { s.effect = b.dataset.fx; save(); applyEffect(); refresh(); }));
@@ -1567,10 +1596,13 @@ document.addEventListener("keydown", e => {
 /* ===== SIDEBAR: cursor-follow glow + actions ===== */
 (function(){
   var sb = document.querySelector(".gg-sidebar"); if (!sb) return;
+  // rAF-throttle the glow so it can't trigger a repaint on every mouse event
+  var gx = 50, gy = 50, gRAF = 0;
   sb.addEventListener("pointermove", function(e){
     var r = sb.getBoundingClientRect();
-    sb.style.setProperty("--x", ((e.clientX - r.left) / r.width * 100) + "%");
-    sb.style.setProperty("--y", ((e.clientY - r.top) / r.height * 100) + "%");
+    gx = (e.clientX - r.left) / r.width * 100;
+    gy = (e.clientY - r.top) / r.height * 100;
+    if (!gRAF) gRAF = requestAnimationFrame(function(){ gRAF = 0; sb.style.setProperty("--x", gx + "%"); sb.style.setProperty("--y", gy + "%"); });
   }, { passive: true });
   var items = sb.querySelectorAll(".gg-sb-item");
   function setActive(el){ items.forEach(function(x){ x.classList.toggle("active", x === el); }); }
