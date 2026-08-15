@@ -3,139 +3,170 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GGR — Link Checker & Mirrors</title>
+<title>GGR — Link Status</title>
 <style>
-  :root{ --bg:#0a0b10; --panel:#14161d; --panel2:#1b1e27; --text:#eef1f7; --muted:#9aa3b2; --accent:#5986da; --ok:#3ecf7a; --bad:#ec5b5b; --warn:#e0b83c; }
+  /* theme-aware: default midnight-amber, overridden from saved settings below */
+  :root{
+    --bg:#0a0605; --panel:#1a100d; --panel2:#1f1410; --text:#f8e7e0; --muted:#c9a08a;
+    --accent:#d4550a; --accent-deep:#992f05; --ok:#3ecf7a; --bad:#ec5b5b; --warn:#e6b23c;
+  }
   *{ box-sizing:border-box; }
-  body{ margin:0; background:
-      radial-gradient(900px 480px at 8% -4%, rgba(89,134,218,.16), transparent 60%),
-      var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; min-height:100vh; }
-  .wrap{ max-width:920px; margin:0 auto; padding:38px 20px 60px; }
-  h1{ font-size:clamp(1.7rem,4vw,2.5rem); font-weight:800; letter-spacing:-.02em; margin:0 0 4px;
-      background:linear-gradient(90deg,var(--accent),#a9c2ff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-  .sub{ color:var(--muted); margin:0 0 26px; }
-  .bar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:22px; }
-  .btn{ background:linear-gradient(135deg,var(--accent),#3f66b8); color:#fff; border:0; border-radius:100px; padding:11px 22px; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(89,134,218,.4); transition:transform .2s, box-shadow .2s, filter .2s; }
-  .btn:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 28px rgba(89,134,218,.5); }
-  .btn.ghost{ background:color-mix(in srgb,var(--panel2) 70%, transparent); color:var(--text); border:1px solid rgba(255,255,255,.08); box-shadow:none; }
-  .sum{ color:var(--muted); font-size:14px; margin-left:auto; }
-  h2{ font-size:13px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:26px 0 12px; padding-left:12px; position:relative; }
-  h2::before{ content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:14px; border-radius:4px; background:linear-gradient(180deg,var(--accent),#2f4f8f); box-shadow:0 0 10px rgba(89,134,218,.6); }
-  .row{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
-        background:linear-gradient(150deg,color-mix(in srgb,var(--panel2) 90%,transparent),color-mix(in srgb,var(--panel) 92%,transparent));
-        border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:14px 16px; margin-bottom:10px; transition:border-color .25s, box-shadow .25s; }
-  .row:hover{ border-color:color-mix(in srgb,var(--accent) 30%, transparent); box-shadow:0 8px 26px rgba(0,0,0,.35); }
-  .rowmain{ min-width:0; }
-  .name{ font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; }
-  .url{ display:block; color:var(--muted); font-size:12.5px; font-family:ui-monospace,Menlo,Consolas,monospace; text-decoration:none; word-break:break-all; margin-top:3px; }
+  html.cursoron, html.cursoron *{ cursor:none !important; }
+  body{ margin:0; min-height:100vh; color:var(--text); overflow-x:hidden;
+    font-family:'Poppins',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:
+      radial-gradient(900px 500px at 6% -6%, color-mix(in srgb,var(--accent) 16%, transparent), transparent 60%),
+      radial-gradient(800px 460px at 100% 100%, color-mix(in srgb,var(--accent) 10%, transparent), transparent 60%),
+      var(--bg); }
+  .orb{ position:fixed; border-radius:50%; filter:blur(70px); mix-blend-mode:screen; pointer-events:none; z-index:0; }
+  .orb1{ width:440px; height:440px; top:-90px; left:-60px; background:radial-gradient(circle,color-mix(in srgb,var(--accent) 75%,transparent),transparent 68%); opacity:.5; animation:float1 17s ease-in-out infinite; }
+  .orb2{ width:380px; height:380px; bottom:-100px; right:8%; background:radial-gradient(circle,color-mix(in srgb,var(--accent-deep) 80%,transparent),transparent 68%); opacity:.4; animation:float1 23s ease-in-out infinite reverse; }
+  @keyframes float1{ 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(50px,-40px) scale(1.1)} 66%{transform:translate(-30px,30px) scale(.92)} }
+  #stars{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+  .wrap{ position:relative; z-index:2; max-width:960px; margin:0 auto; padding:44px 22px 70px; }
+  .top{ display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:6px;
+    animation:inUp .7s cubic-bezier(.16,1,.3,1) both; }
+  h1{ font-size:clamp(2rem,5vw,3.2rem); font-weight:800; letter-spacing:-.03em; margin:0; line-height:1;
+    background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%,#fff)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 22px color-mix(in srgb,var(--accent) 40%,transparent)); }
+  .ring{ position:relative; width:78px; height:78px; flex:none; }
+  .ring svg{ transform:rotate(-90deg); }
+  .ring .track{ stroke:color-mix(in srgb,var(--text) 12%,transparent); }
+  .ring .fill{ stroke:var(--accent); stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.16,1,.3,1); filter:drop-shadow(0 0 6px color-mix(in srgb,var(--accent) 70%,transparent)); }
+  .ring .val{ position:absolute; inset:0; display:grid; place-items:center; font-weight:800; font-size:18px; }
+  .sub{ color:var(--muted); margin:6px 0 24px; animation:inUp .7s .05s cubic-bezier(.16,1,.3,1) both; }
+  .bar{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:26px; animation:inUp .7s .1s cubic-bezier(.16,1,.3,1) both; }
+  .btn{ position:relative; overflow:hidden; background:linear-gradient(135deg,var(--accent),var(--accent-deep)); color:#fff; border:0; border-radius:100px; padding:12px 24px; font:inherit; font-weight:700; cursor:pointer;
+    box-shadow:0 6px 22px color-mix(in srgb,var(--accent) 45%,transparent); transition:transform .2s,box-shadow .2s,filter .2s; }
+  .btn:hover{ transform:translateY(-2px); filter:brightness(1.07); box-shadow:0 12px 30px color-mix(in srgb,var(--accent) 55%,transparent); }
+  .btn:active{ transform:translateY(0) scale(.97); }
+  .btn.ghost{ background:color-mix(in srgb,var(--panel2) 70%,transparent); color:var(--text); border:1px solid rgba(255,255,255,.09); box-shadow:none; }
+  h2{ font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:28px 0 12px; padding-left:13px; position:relative; }
+  h2::before{ content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:15px; border-radius:4px; background:linear-gradient(180deg,var(--accent),var(--accent-deep)); box-shadow:0 0 12px color-mix(in srgb,var(--accent) 65%,transparent); }
+  .row{ position:relative; display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; overflow:hidden;
+    background:linear-gradient(150deg,color-mix(in srgb,var(--panel2) 92%,transparent),color-mix(in srgb,var(--panel) 94%,transparent));
+    border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:15px 17px; margin-bottom:11px;
+    transition:border-color .3s,box-shadow .3s,transform .3s; animation:inUp .6s cubic-bezier(.16,1,.3,1) both; }
+  .row::before{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .3s;
+    background:radial-gradient(320px circle at var(--x,50%) var(--y,50%), color-mix(in srgb,var(--accent) 13%,transparent), transparent 60%); }
+  .row:hover::before{ opacity:1; }
+  .row:hover{ border-color:color-mix(in srgb,var(--accent) 35%,transparent); transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,0,0,.4); }
+  .name{ font-weight:700; font-size:15px; position:relative; z-index:1; }
+  .url{ display:block; color:var(--muted); font-size:12.5px; font-family:ui-monospace,Menlo,Consolas,monospace; text-decoration:none; word-break:break-all; margin-top:3px; position:relative; z-index:1; }
   .url:hover{ color:var(--accent); }
-  .right{ display:flex; align-items:center; gap:10px; }
-  .badge{ font-weight:800; font-size:12px; padding:6px 12px; border-radius:100px; white-space:nowrap; letter-spacing:.03em; }
-  .badge.checking{ background:rgba(224,184,60,.14); color:var(--warn); }
-  .badge.up{ background:rgba(62,207,122,.14); color:var(--ok); }
-  .badge.down{ background:rgba(236,91,91,.15); color:var(--bad); }
-  .ms{ color:var(--muted); font-size:12px; min-width:52px; text-align:right; font-variant-numeric:tabular-nums; }
-  .copy{ background:color-mix(in srgb,var(--panel2) 80%,transparent); border:1px solid rgba(255,255,255,.08); color:var(--muted); width:34px; height:34px; border-radius:10px; cursor:pointer; font-size:14px; transition:all .2s; flex:none; }
-  .copy:hover{ color:#fff; background:var(--accent); border-color:var(--accent); }
-  .note{ color:var(--muted); font-size:12.5px; margin-top:18px; line-height:1.6; }
-  a.home{ color:var(--accent); text-decoration:none; font-weight:600; }
+  .right{ display:flex; align-items:center; gap:12px; position:relative; z-index:1; }
+  .ms{ color:var(--muted); font-size:12px; min-width:54px; text-align:right; font-variant-numeric:tabular-nums; }
+  .badge{ font-weight:800; font-size:12px; padding:7px 13px; border-radius:100px; white-space:nowrap; letter-spacing:.03em; display:inline-flex; align-items:center; gap:7px; }
+  .dot{ width:8px; height:8px; border-radius:50%; }
+  .badge.checking{ background:color-mix(in srgb,var(--warn) 15%,transparent); color:var(--warn); }
+  .badge.checking .dot{ background:var(--warn); animation:pulse 1s ease-in-out infinite; }
+  .badge.up{ background:color-mix(in srgb,var(--ok) 15%,transparent); color:var(--ok); }
+  .badge.up .dot{ background:var(--ok); box-shadow:0 0 10px var(--ok); }
+  .badge.down{ background:color-mix(in srgb,var(--bad) 16%,transparent); color:var(--bad); }
+  .badge.down .dot{ background:var(--bad); }
+  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.6);opacity:.5} }
+  .copy{ background:color-mix(in srgb,var(--panel2) 80%,transparent); border:1px solid rgba(255,255,255,.08); color:var(--muted); width:36px; height:36px; border-radius:11px; cursor:pointer; font-size:14px; transition:all .2s; flex:none; }
+  .copy:hover{ color:#fff; background:var(--accent); border-color:var(--accent); transform:translateY(-1px); box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 45%,transparent); }
+  .note{ color:var(--muted); font-size:12.5px; margin-top:20px; line-height:1.65; }
+  @keyframes inUp{ from{opacity:0; transform:translateY(26px)} to{opacity:1; transform:none} }
+  #curDot,#curRing{ position:fixed; top:0; left:0; pointer-events:none; z-index:99999; border-radius:50%; opacity:0; will-change:transform; }
+  html.cursoron #curDot,html.cursoron #curRing{ opacity:1; }
+  #curDot{ width:7px; height:7px; margin:-3.5px 0 0 -3.5px; background:var(--accent); box-shadow:0 0 12px var(--accent); transition:width .18s,height .18s,opacity .3s; }
+  #curRing{ width:34px; height:34px; margin:-17px 0 0 -17px; border:2px solid color-mix(in srgb,var(--accent) 65%,transparent); transition:width .22s cubic-bezier(.2,.9,.2,1),height .22s cubic-bezier(.2,.9,.2,1),border-color .2s,background .2s,opacity .3s; }
+  html.cursoron.hot #curRing{ width:54px; height:54px; margin:-27px 0 0 -27px; background:color-mix(in srgb,var(--accent) 13%,transparent); border-color:var(--accent); }
+  html.cursoron.hot #curDot{ width:0; height:0; }
+  @media (prefers-reduced-motion:reduce){ .orb,.badge.checking .dot{ animation:none; } }
 </style>
 </head>
 <body>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+<canvas id="stars"></canvas>
+<div id="curDot"></div><div id="curRing"></div>
 <div class="wrap">
-  <h1>Link Checker &amp; Mirrors</h1>
+  <div class="top">
+    <div>
+      <h1>Link Status</h1>
+    </div>
+    <div class="ring" title="Mirrors up">
+      <svg width="78" height="78"><circle class="track" cx="39" cy="39" r="33" fill="none" stroke-width="7"/><circle class="fill" id="ringFill" cx="39" cy="39" r="33" fill="none" stroke-width="7" stroke-dasharray="207.3" stroke-dashoffset="207.3"/></svg>
+      <div class="val" id="ringVal">0/0</div>
+    </div>
+  </div>
   <p class="sub">Live status of every place GGR is served from, plus the game-source hosts. Click a URL to open it, or copy it.</p>
   <div class="bar">
     <button class="btn" id="recheck">↻ Re-check all</button>
     <a class="btn ghost" href="index.html">← Back to games</a>
-    <span class="sum" id="summary">Checking…</span>
   </div>
-
   <h2>Site mirrors</h2>
   <div id="mirrors"></div>
-
   <h2>Game sources</h2>
   <div id="sources"></div>
-
-  <p class="note">
-    “Up” means the host answered (reachable). Cross-origin responses are opaque, so this is a reachability check, not an exact HTTP status —
-    a mirror can be “up” but still serve a slightly cached copy for a few minutes after a deploy. The <b>rawcdn.githack</b> and pinned
-    <b>@commit</b> links are immutable/cache-safe when you need a guaranteed-fresh view. Some hosts block background checks and may show
-    “down” here yet still open fine in a tab.
-  </p>
+  <p class="note">“Up” means the host answered (reachable). Cross-origin responses are opaque, so this is a reachability check, not an exact HTTP status — a mirror can be “up” yet serve a slightly cached copy for a few minutes after a deploy. The <b>rawcdn.githack</b> and pinned <b>@commit</b> links are cache-safe when you need a guaranteed-fresh view. Some hosts block background checks and may read “down” here yet still open fine in a tab.</p>
 </div>
-
 <script>
-const REPO = "lauraevan/greatestgreatest-revive";
-const MIRRORS = [
-  ["GitHack — main (primary)",        "https://raw.githack.com/"+REPO+"/main/index.html"],
-  ["GitHack — rawcdn (immutable)",    "https://rawcdn.githack.com/"+REPO+"/main/index.html"],
-  ["jsDelivr (gh)",                    "https://cdn.jsdelivr.net/gh/"+REPO.replace("/","/")+"@main/index.html".replace(REPO,REPO)],
-  ["jsDelivr — Fastly mirror",         "https://fastly.jsdelivr.net/gh/"+REPO+"@main/index.html"],
-  ["GitHub Pages",                     "https://lauraevan.github.io/greatestgreatest-revive/"],
-  ["GitHub Raw",                       "https://raw.githubusercontent.com/"+REPO+"/main/index.html"],
-];
-// fix the jsDelivr entry cleanly
-MIRRORS[2][1] = "https://cdn.jsdelivr.net/gh/"+REPO+"@main/index.html";
+/* theme-aware accent from saved settings */
+(function(){
+  var MAP={ "midnight-amber":["#d4550a","#992f05","#0a0605","#1a100d","#1f1410","#f8e7e0","#c9a08a"],
+    "midnight-blueberry":["#6ea8fe","#3f78d1","#071026","#0d1b2a","#112534","#dbe9ff","#9fb7d6"],
+    "midnight-grape":["#b388ff","#7a4ed1","#0a0812","#171024","#211428","#efe7ff","#cdb9e8"],
+    "default":["#5986da","#37589a","#0e0e0e","#1b1b1b","#262626","#ffffff","rgba(255,255,255,.6)"] };
+  try{ var t=(JSON.parse(localStorage.getItem("ggu-settings")||"{}").theme)||"midnight-amber"; var m=MAP[t]; if(m){ var r=document.documentElement.style;
+    r.setProperty("--accent",m[0]); r.setProperty("--accent-deep",m[1]); r.setProperty("--bg",m[2]); r.setProperty("--panel",m[3]); r.setProperty("--panel2",m[4]); r.setProperty("--text",m[5]); r.setProperty("--muted",m[6]); } }catch(e){}
+})();
+/* starfield */
+(function(){ var c=document.getElementById("stars"),x=c.getContext("2d"),W,H,d=[]; function sz(){W=c.width=innerWidth;H=c.height=innerHeight;} addEventListener("resize",sz); sz();
+  for(var i=0;i<70;i++)d.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.3,s:Math.random()*.3+.1,o:Math.random()*.5+.2});
+  (function loop(){ x.clearRect(0,0,W,H); for(var i=0;i<d.length;i++){var p=d[i];p.y-=p.s;if(p.y<-3){p.y=H+3;p.x=Math.random()*W;}x.globalAlpha=p.o;x.fillStyle="#fff";x.beginPath();x.arc(p.x,p.y,p.r,0,6.283);x.fill();}x.globalAlpha=1;requestAnimationFrame(loop);})(); })();
+/* custom cursor */
+(function(){ if(!matchMedia("(pointer:fine)").matches)return; var dot=document.getElementById("curDot"),ring=document.getElementById("curRing"),root=document.documentElement,mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my; root.classList.add("cursoron");
+  addEventListener("pointermove",function(e){mx=e.clientX;my=e.clientY;dot.style.transform="translate("+mx+"px,"+my+"px)";root.classList.toggle("hot",!!(e.target.closest&&e.target.closest("a,button,.row,.copy")));},{passive:true});
+  (function loop(){rx+=(mx-rx)*.2;ry+=(my-ry)*.2;ring.style.transform="translate("+rx+"px,"+ry+"px)";requestAnimationFrame(loop);})(); })();
 
-const SOURCES = [
-  ["CKV — Chicken Kings Vault",  "https://raw.githack.com/carbonicality/ChickenKingsVault/main/gamefiles/index.html"],
-  ["Nexora — game assets",       "https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets@main/games/"],
-  ["duckmath",                   "https://duckmath.org/"],
-  ["Strongdog XP",               "https://raw.githack.com/IAmNotTechnoblade/strongdogxp/master/index.html"],
-  ["Ultimate Game Stash",        "https://raw.githack.com/bubbls/ugs-singlefile/main/"],
-  ["seraph",                     "https://raw.githack.com/a456pur/seraph/main/"],
-  ["now.gg (Roblox)",            "https://216.ip.nowgg.fun/"],
+const REPO="lauraevan/greatestgreatest-revive";
+const MIRRORS=[
+  ["GitHack — main (primary)","https://raw.githack.com/"+REPO+"/main/index.html"],
+  ["GitHack — rawcdn (immutable)","https://rawcdn.githack.com/"+REPO+"/main/index.html"],
+  ["jsDelivr (gh)","https://cdn.jsdelivr.net/gh/"+REPO+"@main/index.html"],
+  ["jsDelivr — Fastly mirror","https://fastly.jsdelivr.net/gh/"+REPO+"@main/index.html"],
+  ["GitHub Pages","https://lauraevan.github.io/greatestgreatest-revive/"],
+  ["GitHub Raw","https://raw.githubusercontent.com/"+REPO+"/main/index.html"],
 ];
-
-function rowHTML(name, url){
-  return `<div class="rowmain">
-      <div class="name">${name}</div>
-      <a class="url" href="${url}" target="_blank" rel="noopener">${url}</a>
-    </div>
-    <div class="right">
-      <span class="ms"></span>
-      <span class="badge checking">checking…</span>
-      <button class="copy" title="Copy link">⧉</button>
-    </div>`;
-}
-function build(listEl, items){
-  listEl.innerHTML = "";
-  items.forEach(([name,url])=>{
-    const row=document.createElement("div"); row.className="row"; row.dataset.url=url;
-    row.innerHTML=rowHTML(name,url);
-    row.querySelector(".copy").addEventListener("click", async ()=>{
-      try{ await navigator.clipboard.writeText(url); const b=row.querySelector(".copy"); b.textContent="✓"; setTimeout(()=>b.textContent="⧉",1200);}catch(e){}
-    });
-    listEl.appendChild(row);
+const SOURCES=[
+  ["CKV — Chicken Kings Vault","https://raw.githack.com/carbonicality/ChickenKingsVault/main/gamefiles/index.html"],
+  ["Nexora — game assets","https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets@main/games/"],
+  ["duckmath","https://duckmath.org/"],
+  ["Strongdog XP","https://raw.githack.com/IAmNotTechnoblade/strongdogxp/master/index.html"],
+  ["Ultimate Game Stash","https://raw.githack.com/bubbls/ugs-singlefile/main/"],
+  ["seraph","https://raw.githack.com/a456pur/seraph/main/"],
+  ["now.gg (Roblox)","https://216.ip.nowgg.fun/"],
+];
+function build(el,items,base){ el.innerHTML="";
+  items.forEach(function(pair,i){ var name=pair[0],url=pair[1];
+    var row=document.createElement("div"); row.className="row"; row.dataset.url=url; row.style.animationDelay=(base+i*0.05)+"s";
+    row.innerHTML='<div><div class="name">'+name+'</div><a class="url" href="'+url+'" target="_blank" rel="noopener">'+url+'</a></div>'+
+      '<div class="right"><span class="ms"></span><span class="badge checking"><span class="dot"></span>checking</span><button class="copy" title="Copy">⧉</button></div>';
+    row.addEventListener("pointermove",function(e){var r=row.getBoundingClientRect();row.style.setProperty("--x",((e.clientX-r.left)/r.width*100)+"%");row.style.setProperty("--y",((e.clientY-r.top)/r.height*100)+"%");},{passive:true});
+    row.querySelector(".copy").addEventListener("click",async function(){try{await navigator.clipboard.writeText(url);var b=row.querySelector(".copy");b.textContent="✓";setTimeout(function(){b.textContent="⧉";},1200);}catch(e){}});
+    el.appendChild(row);
   });
 }
-async function checkOne(row){
-  const url=row.dataset.url, badge=row.querySelector(".badge"), ms=row.querySelector(".ms");
-  badge.className="badge checking"; badge.textContent="checking…"; ms.textContent="";
-  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 9000);
-  const t0=performance.now();
-  try{
-    await fetch(url, {mode:"no-cors", cache:"no-store", signal:ctrl.signal});
-    clearTimeout(to);
-    badge.className="badge up"; badge.textContent="up";
-    ms.textContent=Math.round(performance.now()-t0)+" ms";
-  }catch(e){
-    clearTimeout(to);
-    badge.className="badge down"; badge.textContent="down";
-    ms.textContent="—";
-  }
+async function checkOne(row){ var url=row.dataset.url,badge=row.querySelector(".badge"),ms=row.querySelector(".ms");
+  badge.className="badge checking"; badge.innerHTML='<span class="dot"></span>checking'; ms.textContent="";
+  var ctrl=new AbortController(),to=setTimeout(function(){ctrl.abort();},9000),t0=performance.now();
+  try{ await fetch(url,{mode:"no-cors",cache:"no-store",signal:ctrl.signal}); clearTimeout(to);
+    badge.className="badge up"; badge.innerHTML='<span class="dot"></span>up'; ms.textContent=Math.round(performance.now()-t0)+" ms"; return true;
+  }catch(e){ clearTimeout(to); badge.className="badge down"; badge.innerHTML='<span class="dot"></span>down'; ms.textContent="—"; return false; }
 }
-async function checkAll(){
-  const rows=[...document.querySelectorAll(".row")];
-  document.getElementById("summary").textContent="Checking "+rows.length+"…";
-  await Promise.all(rows.map(checkOne));
-  const up=document.querySelectorAll(".badge.up").length;
-  document.getElementById("summary").textContent=up+" / "+rows.length+" up";
+function setRing(up,total){ var C=207.3; document.getElementById("ringFill").style.strokeDashoffset=C-(total?up/total:0)*C; document.getElementById("ringVal").textContent=up+"/"+total; }
+async function checkAll(){ var rows=[].slice.call(document.querySelectorAll(".row")); var mirrorRows=[].slice.call(document.querySelectorAll("#mirrors .row"));
+  setRing(0,mirrorRows.length);
+  var results=await Promise.all(rows.map(checkOne));
+  var mUp=mirrorRows.filter(function(r){return r.querySelector(".badge").classList.contains("up");}).length;
+  setRing(mUp,mirrorRows.length);
 }
-build(document.getElementById("mirrors"), MIRRORS);
-build(document.getElementById("sources"), SOURCES);
-document.getElementById("recheck").addEventListener("click", checkAll);
+build(document.getElementById("mirrors"),MIRRORS,0.15);
+build(document.getElementById("sources"),SOURCES,0.4);
+document.getElementById("recheck").addEventListener("click",checkAll);
 checkAll();
 </script>
 </body>
