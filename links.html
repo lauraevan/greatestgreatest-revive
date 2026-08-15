@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GGR — Link Checker & Mirrors</title>
+<style>
+  :root{ --bg:#0a0b10; --panel:#14161d; --panel2:#1b1e27; --text:#eef1f7; --muted:#9aa3b2; --accent:#5986da; --ok:#3ecf7a; --bad:#ec5b5b; --warn:#e0b83c; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:
+      radial-gradient(900px 480px at 8% -4%, rgba(89,134,218,.16), transparent 60%),
+      var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; min-height:100vh; }
+  .wrap{ max-width:920px; margin:0 auto; padding:38px 20px 60px; }
+  h1{ font-size:clamp(1.7rem,4vw,2.5rem); font-weight:800; letter-spacing:-.02em; margin:0 0 4px;
+      background:linear-gradient(90deg,var(--accent),#a9c2ff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .sub{ color:var(--muted); margin:0 0 26px; }
+  .bar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:22px; }
+  .btn{ background:linear-gradient(135deg,var(--accent),#3f66b8); color:#fff; border:0; border-radius:100px; padding:11px 22px; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(89,134,218,.4); transition:transform .2s, box-shadow .2s, filter .2s; }
+  .btn:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 28px rgba(89,134,218,.5); }
+  .btn.ghost{ background:color-mix(in srgb,var(--panel2) 70%, transparent); color:var(--text); border:1px solid rgba(255,255,255,.08); box-shadow:none; }
+  .sum{ color:var(--muted); font-size:14px; margin-left:auto; }
+  h2{ font-size:13px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:26px 0 12px; padding-left:12px; position:relative; }
+  h2::before{ content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:14px; border-radius:4px; background:linear-gradient(180deg,var(--accent),#2f4f8f); box-shadow:0 0 10px rgba(89,134,218,.6); }
+  .row{ display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+        background:linear-gradient(150deg,color-mix(in srgb,var(--panel2) 90%,transparent),color-mix(in srgb,var(--panel) 92%,transparent));
+        border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:14px 16px; margin-bottom:10px; transition:border-color .25s, box-shadow .25s; }
+  .row:hover{ border-color:color-mix(in srgb,var(--accent) 30%, transparent); box-shadow:0 8px 26px rgba(0,0,0,.35); }
+  .rowmain{ min-width:0; }
+  .name{ font-weight:700; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .url{ display:block; color:var(--muted); font-size:12.5px; font-family:ui-monospace,Menlo,Consolas,monospace; text-decoration:none; word-break:break-all; margin-top:3px; }
+  .url:hover{ color:var(--accent); }
+  .right{ display:flex; align-items:center; gap:10px; }
+  .badge{ font-weight:800; font-size:12px; padding:6px 12px; border-radius:100px; white-space:nowrap; letter-spacing:.03em; }
+  .badge.checking{ background:rgba(224,184,60,.14); color:var(--warn); }
+  .badge.up{ background:rgba(62,207,122,.14); color:var(--ok); }
+  .badge.down{ background:rgba(236,91,91,.15); color:var(--bad); }
+  .ms{ color:var(--muted); font-size:12px; min-width:52px; text-align:right; font-variant-numeric:tabular-nums; }
+  .copy{ background:color-mix(in srgb,var(--panel2) 80%,transparent); border:1px solid rgba(255,255,255,.08); color:var(--muted); width:34px; height:34px; border-radius:10px; cursor:pointer; font-size:14px; transition:all .2s; flex:none; }
+  .copy:hover{ color:#fff; background:var(--accent); border-color:var(--accent); }
+  .note{ color:var(--muted); font-size:12.5px; margin-top:18px; line-height:1.6; }
+  a.home{ color:var(--accent); text-decoration:none; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Link Checker &amp; Mirrors</h1>
+  <p class="sub">Live status of every place GGR is served from, plus the game-source hosts. Click a URL to open it, or copy it.</p>
+  <div class="bar">
+    <button class="btn" id="recheck">↻ Re-check all</button>
+    <a class="btn ghost" href="index.html">← Back to games</a>
+    <span class="sum" id="summary">Checking…</span>
+  </div>
+
+  <h2>Site mirrors</h2>
+  <div id="mirrors"></div>
+
+  <h2>Game sources</h2>
+  <div id="sources"></div>
+
+  <p class="note">
+    “Up” means the host answered (reachable). Cross-origin responses are opaque, so this is a reachability check, not an exact HTTP status —
+    a mirror can be “up” but still serve a slightly cached copy for a few minutes after a deploy. The <b>rawcdn.githack</b> and pinned
+    <b>@commit</b> links are immutable/cache-safe when you need a guaranteed-fresh view. Some hosts block background checks and may show
+    “down” here yet still open fine in a tab.
+  </p>
+</div>
+
+<script>
+const REPO = "lauraevan/greatestgreatest-revive";
+const MIRRORS = [
+  ["GitHack — main (primary)",        "https://raw.githack.com/"+REPO+"/main/index.html"],
+  ["GitHack — rawcdn (immutable)",    "https://rawcdn.githack.com/"+REPO+"/main/index.html"],
+  ["jsDelivr (gh)",                    "https://cdn.jsdelivr.net/gh/"+REPO.replace("/","/")+"@main/index.html".replace(REPO,REPO)],
+  ["jsDelivr — Fastly mirror",         "https://fastly.jsdelivr.net/gh/"+REPO+"@main/index.html"],
+  ["GitHub Pages",                     "https://lauraevan.github.io/greatestgreatest-revive/"],
+  ["GitHub Raw",                       "https://raw.githubusercontent.com/"+REPO+"/main/index.html"],
+];
+// fix the jsDelivr entry cleanly
+MIRRORS[2][1] = "https://cdn.jsdelivr.net/gh/"+REPO+"@main/index.html";
+
+const SOURCES = [
+  ["CKV — Chicken Kings Vault",  "https://raw.githack.com/carbonicality/ChickenKingsVault/main/gamefiles/index.html"],
+  ["Nexora — game assets",       "https://cdn.jsdelivr.net/gh/nexora240-lgtm/Nexora-Assets@main/games/"],
+  ["duckmath",                   "https://duckmath.org/"],
+  ["Strongdog XP",               "https://raw.githack.com/IAmNotTechnoblade/strongdogxp/master/index.html"],
+  ["Ultimate Game Stash",        "https://raw.githack.com/bubbls/ugs-singlefile/main/"],
+  ["seraph",                     "https://raw.githack.com/a456pur/seraph/main/"],
+  ["now.gg (Roblox)",            "https://216.ip.nowgg.fun/"],
+];
+
+function rowHTML(name, url){
+  return `<div class="rowmain">
+      <div class="name">${name}</div>
+      <a class="url" href="${url}" target="_blank" rel="noopener">${url}</a>
+    </div>
+    <div class="right">
+      <span class="ms"></span>
+      <span class="badge checking">checking…</span>
+      <button class="copy" title="Copy link">⧉</button>
+    </div>`;
+}
+function build(listEl, items){
+  listEl.innerHTML = "";
+  items.forEach(([name,url])=>{
+    const row=document.createElement("div"); row.className="row"; row.dataset.url=url;
+    row.innerHTML=rowHTML(name,url);
+    row.querySelector(".copy").addEventListener("click", async ()=>{
+      try{ await navigator.clipboard.writeText(url); const b=row.querySelector(".copy"); b.textContent="✓"; setTimeout(()=>b.textContent="⧉",1200);}catch(e){}
+    });
+    listEl.appendChild(row);
+  });
+}
+async function checkOne(row){
+  const url=row.dataset.url, badge=row.querySelector(".badge"), ms=row.querySelector(".ms");
+  badge.className="badge checking"; badge.textContent="checking…"; ms.textContent="";
+  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(), 9000);
+  const t0=performance.now();
+  try{
+    await fetch(url, {mode:"no-cors", cache:"no-store", signal:ctrl.signal});
+    clearTimeout(to);
+    badge.className="badge up"; badge.textContent="up";
+    ms.textContent=Math.round(performance.now()-t0)+" ms";
+  }catch(e){
+    clearTimeout(to);
+    badge.className="badge down"; badge.textContent="down";
+    ms.textContent="—";
+  }
+}
+async function checkAll(){
+  const rows=[...document.querySelectorAll(".row")];
+  document.getElementById("summary").textContent="Checking "+rows.length+"…";
+  await Promise.all(rows.map(checkOne));
+  const up=document.querySelectorAll(".badge.up").length;
+  document.getElementById("summary").textContent=up+" / "+rows.length+" up";
+}
+build(document.getElementById("mirrors"), MIRRORS);
+build(document.getElementById("sources"), SOURCES);
+document.getElementById("recheck").addEventListener("click", checkAll);
+checkAll();
+</script>
+</body>
+</html>

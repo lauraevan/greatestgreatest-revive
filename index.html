@@ -383,8 +383,8 @@ html.ggr-home-off #ggrHome { display:none; }
 .store-top { display:grid; grid-template-columns:1.85fr 1fr; gap:22px; }
 @media (max-width:860px){ .store-top { grid-template-columns:1fr; } }
 
-.feat-card, .rand-card { position:relative; display:block; border-radius:20px; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text); min-height:384px; box-shadow:0 16px 50px rgba(0,0,0,.44); isolation:isolate; }
-@media (max-width:860px){ .feat-card,.rand-card { min-height:250px; } }
+.feat-card, .rand-card { position:relative; display:block; border-radius:20px; overflow:hidden; cursor:pointer; text-decoration:none; color:var(--text); min-height:clamp(270px, 42vh, 384px); box-shadow:0 16px 50px rgba(0,0,0,.44); isolation:isolate; }
+@media (max-width:860px){ .feat-card,.rand-card { min-height:230px; } }
 .feat-bg, .rand-bg { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; transform:scale(1.03); transition:transform 6s ease, opacity .6s ease; }
 .feat-card:hover .feat-bg, .rand-card:hover .rand-bg { transform:scale(1.1); }
 .feat-bg::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(6,7,10,.92) 0%, rgba(6,7,10,.55) 42%, transparent 78%), linear-gradient(0deg, rgba(6,7,10,.85), transparent 55%); }
@@ -423,7 +423,7 @@ html.ggr-home-off #ggrHome { display:none; }
 .trend-card:hover .trend-get { background:var(--accent); color:#fff; }
 
 /* hide the store showcase while actively searching, so results lead */
-body.searching #storeHero, body.searching #storeTrendWrap { display:none; }
+body.hide-hero #storeHero, body.hide-hero #storeTrendWrap { display:none; }
 
 /* extra motion: featured light-sweep + trending entrance stagger */
 .feat-card::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(105deg, transparent 42%, rgba(255,255,255,.07) 50%, transparent 58%); transform:translateX(-120%); animation:featSweep 7s ease-in-out infinite; }
@@ -617,6 +617,11 @@ body.searching #storeHero, body.searching #storeTrendWrap { display:none; }
                 <h3>Developer tools</h3>
                 <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Inspect the current game's rendered HTML and the raw response it returns.</p>
                 <button id="devToolsBtn" class="opt-btn">Open developer tools</button>
+            </div>
+            <div class="s-section">
+                <h3>Mirrors &amp; link checker</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">All the places GGR is served from (GitHack, jsDelivr, Fastly…) with a live up/down check for each.</p>
+                <a href="links.html" target="_blank" rel="noopener" class="opt-btn" style="display:inline-block;text-decoration:none;">Open link checker</a>
             </div>
             <div class="s-section">
                 <h3>Reset</h3>
@@ -869,7 +874,10 @@ window.__rebuildCatalog = function () { buildCatalog(); updateAllBtn(); applyFil
 const searchInput = document.getElementById("search");
 function applyFilters() {
     const query = searchInput.value.trim().toLocaleLowerCase();
-    document.body.classList.toggle("searching", !!query);   // hide store showcase while searching
+    // The store hero is a browse-everything showcase: only show it when EVERY
+    // source is selected and nothing is being searched. The moment you filter to
+    // a subset (or search), it disappears so sorting/browsing is cleaner.
+    document.body.classList.toggle("hide-hero", !!query || selected.size !== sources.length);
     const games = catalog.filter(game =>
         selected.has(game[0]) &&
         (!query || game[3].toLocaleLowerCase().includes(query))
