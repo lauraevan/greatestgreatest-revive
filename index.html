@@ -262,7 +262,7 @@ html.ggr-home-off #ggrHome { display:none; }
   position:relative; width:100%; height:100%; display:flex; align-items:center;
   padding:0 7%; z-index:1; overflow:hidden; pointer-events:none;
 }
-.ggr-content { display:flex; flex-direction:column; max-width:560px; z-index:5; pointer-events:auto; }
+.ggr-content { display:flex; flex-direction:column; max-width:clamp(560px, 44vw, 940px); z-index:5; pointer-events:auto; }
 
 @keyframes ggrFadeIn { from{opacity:0; transform:translateY(18px)} to{opacity:1; transform:translateY(0)} }
 @keyframes ggrFadeOp { from{opacity:0} to{opacity:1} }
@@ -275,13 +275,13 @@ html.ggr-home-off #ggrHome { display:none; }
 @keyframes ggrScrollUp   { 0%{transform:translateY(-50%)} 100%{transform:translateY(0)} }
 
 .ggr-wordmark {
-  font-size:.95rem; font-weight:800; letter-spacing:.42em; text-transform:uppercase;
-  color:var(--g-primary); margin:0 0 14px 2px; opacity:0;
+  font-size:clamp(.95rem, 1vw, 1.5rem); font-weight:800; letter-spacing:.42em; text-transform:uppercase;
+  color:var(--g-primary); margin:0 0 clamp(14px,1.2vw,22px) 2px; opacity:0;
   animation:ggrFadeIn .6s .05s ease-out forwards;
   filter:drop-shadow(0 0 10px var(--g-shadow));
 }
 .ggr-title {
-  font-size:clamp(2.2rem, 6vw, 4.6rem); line-height:1; font-weight:800; margin:0 0 18px;
+  font-size:clamp(2.4rem, 6.6vw, 7rem); line-height:1; font-weight:800; margin:0 0 clamp(18px,1.5vw,28px);
   letter-spacing:-.04em; white-space:nowrap; width:max-content; max-width:100%;
   background:var(--g-grad); -webkit-background-clip:text; background-clip:text;
   -webkit-text-fill-color:transparent; color:transparent;
@@ -291,19 +291,19 @@ html.ggr-home-off #ggrHome { display:none; }
 #ggrTyped { -webkit-text-fill-color:#fff; color:#fff; filter:drop-shadow(0 0 12px rgba(255,255,255,.5)); }
 .ggr-cursor { -webkit-text-fill-color:#fff; color:#fff; font-weight:200; animation:ggrBlink .75s step-end infinite; }
 .ggr-desc {
-  font-size:1.06rem; color:var(--g-muted); line-height:1.65; max-width:440px; margin:0 0 30px;
+  font-size:clamp(1.06rem, 1.35vw, 1.75rem); color:var(--g-muted); line-height:1.62; max-width:clamp(440px, 34vw, 680px); margin:0 0 clamp(30px,2.4vw,44px);
   opacity:0; animation:ggrFadeIn .7s .2s ease-out forwards;
 }
 .ggr-cta-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
 .ggr-cta {
   display:inline-flex; align-items:center; gap:10px; background:var(--g-grad); color:#fff0e8;
-  border:none; padding:15px 34px; border-radius:14px; font:inherit; font-size:1.02rem; font-weight:700;
+  border:none; padding:clamp(15px,1.1vw,22px) clamp(34px,2.4vw,54px); border-radius:14px; font:inherit; font-size:clamp(1.02rem,1.15vw,1.45rem); font-weight:700;
   letter-spacing:.3px; cursor:pointer; position:relative; overflow:hidden; align-self:flex-start;
   box-shadow:0 4px 24px var(--g-shadow); opacity:0;
   transition:transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s ease, filter .25s ease;
   animation:ggrFadeOp .7s .35s ease-out forwards, ggrPulse 4s 1.5s ease-in-out infinite;
 }
-.ggr-cta svg { width:18px; height:18px; }
+.ggr-cta svg { width:clamp(18px,1.2vw,26px); height:clamp(18px,1.2vw,26px); }
 .ggr-cta::before {
   content:''; position:absolute; inset:0;
   background:linear-gradient(105deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
@@ -321,6 +321,24 @@ html.ggr-home-off #ggrHome { display:none; }
 .ggr-credit a { color:var(--g-primary); text-decoration:none; font-weight:600; }
 .ggr-credit a:hover { text-decoration:underline; }
 .ggr-credit strong { color:var(--g-text); }
+
+/* ===== large-screen / big-monitor compatibility ===== */
+@media (min-width:1500px) {
+  header h1 { font-size:26px; }
+  .feat-title { font-size:clamp(2.2rem, 2.6vw, 3.6rem); }
+  .rand-head { font-size:1.9rem; }
+  .feat-label { font-size:13px; }
+  .feat-meta, .rand-sub { font-size:15.5px; }
+  .store-head h3 { font-size:1.8rem; }
+  .trend-card { width:220px; }
+  .trend-card img { height:172px; }
+}
+@media (min-width:2100px) {
+  header h1 { font-size:30px; }
+  .store-head h3 { font-size:2.1rem; }
+  .trend-card { width:250px; }
+  .trend-card img { height:194px; }
+}
 
 /* right-side scrolling wall of game art */
 .ggr-visuals {
@@ -622,6 +640,11 @@ body.hide-hero #storeHero, body.hide-hero #storeTrendWrap { display:none; }
                 <h3>Mirrors &amp; link checker</h3>
                 <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">All the places GGR is served from (GitHack, jsDelivr, Fastly…) with a live up/down check for each.</p>
                 <a href="links.html" target="_blank" rel="noopener" class="opt-btn" style="display:inline-block;text-decoration:none;">Open link checker</a>
+            </div>
+            <div class="s-section">
+                <h3>Download</h3>
+                <p style="color:var(--muted);font-size:12px;margin:0 0 8px;">Save GGR as one portable HTML file — open it anywhere, no install. Games still stream from their hosts.</p>
+                <button id="dlSingle" class="opt-btn">⬇ Download single file</button>
             </div>
             <div class="s-section">
                 <h3>Reset</h3>
@@ -1094,6 +1117,35 @@ function openGameTab() {
     }
     function closeDev() { dt.hidden = true; }
     document.getElementById("devToolsBtn").addEventListener("click", openDev);
+
+    /* ---- download GGR as a single portable HTML file ---- */
+    document.getElementById("dlSingle").addEventListener("click", async e => {
+        const btn = e.currentTarget, label = btn.textContent;
+        btn.textContent = "Building…"; btn.disabled = true;
+        try {
+            const bust = "?_=" + Date.now();
+            const [html, gd, gni] = await Promise.all([
+                fetch("index.html" + bust).then(r => r.text()),
+                fetch("games-data.js" + bust).then(r => r.text()),
+                fetch("games-noicon.js" + bust).then(r => r.text()).catch(() => "")
+            ]);
+            // neutralize any literal close-script sequence in the data so inlining is safe
+            const safe = s => s.replace(/<\/(script)/gi, "<\\/$1");
+            const openTag = "<scr" + "ipt>\n", closeTag = "\n<\/scr" + "ipt>";
+            const out = html
+                .replace(/<script src="games-data\.js[^"]*"><\/script>/, openTag + safe(gd) + closeTag)
+                .replace(/<script src="games-noicon\.js[^"]*"><\/script>/, openTag + safe(gni) + closeTag);
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([out], { type: "text/html" }));
+            a.download = "GGR.html";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 6000);
+            btn.textContent = "Downloaded ✓";
+        } catch (err) {
+            btn.textContent = "Failed — try again";
+        }
+        setTimeout(() => { btn.textContent = label; btn.disabled = false; }, 2200);
+    });
     document.getElementById("devRefreshBtn").addEventListener("click", refresh);
     document.getElementById("devCloseBtn").addEventListener("click", closeDev);
     dt.querySelectorAll(".dev-tab").forEach(tab => tab.addEventListener("click", () => {
