@@ -9,6 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="GGR">
 <link rel="apple-touch-icon" href="icons/app-192.png">
 <title>Home</title>
 <script>
@@ -1144,6 +1145,20 @@ function tryNextSource() {
     playInFrame(v[1], v[3] + " · source " + (currentVariantIdx + 1) + "/" + currentVariants.length);
 }
 
+function newTabGameUrl(path, title = "") {
+    var rows = (typeof catalog !== "undefined" && Array.isArray(catalog))
+        ? catalog
+        : (Array.isArray(window.GAME_DATA) ? window.GAME_DATA : []);
+    var row = rows.find(function (g) { return g && g[1] === path; })
+        || rows.find(function (g) { return g && g[3] === title; });
+    var icon = (row && row[2]) ? row[2] : "icons/app-192.png";
+    var params = new URLSearchParams();
+    params.set("game", path);
+    params.set("title", title || "Game");
+    params.set("icon", icon);
+    return "launch.html?" + params.toString();
+}
+
 function launch(path, title = "", opensDirectly = false) {
     // LuminSDK games render through the SDK into a host div (not a plain iframe)
     if (typeof path === "string" && path.indexOf("lumin:") === 0) {
@@ -1151,7 +1166,7 @@ function launch(path, title = "", opensDirectly = false) {
         return;
     }
     if (opensDirectly || (window.__ggSettings && window.__ggSettings.launchMode === "newtab")) {
-        window.open(path, "_blank", "noopener");
+        window.open(newTabGameUrl(path, title), "_blank", "noopener");
         return;
     }
     // no-dup mode: keep the game's other sources as load-fallbacks

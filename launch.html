@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
+  <title>Game</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+    #game{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000}
+    #missing{display:none;box-sizing:border-box;min-height:100%;padding:32px;color:#fff;background:#0e0e0e;font:16px system-ui,-apple-system,sans-serif;align-items:center;justify-content:center;text-align:center}
+  </style>
+</head>
+<body>
+  <iframe id="game" allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write" allowfullscreen></iframe>
+  <div id="missing">This game link is missing.</div>
+  <script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var game = q.get("game") || "";
+    var title = q.get("title") || "Game";
+    var icon = q.get("icon") || "icons/app-192.png";
+    document.title = title;
+
+    var appTitle = document.createElement("meta");
+    appTitle.name = "apple-mobile-web-app-title";
+    appTitle.content = title;
+    document.head.appendChild(appTitle);
+
+    var iconUrl;
+    try { iconUrl = new URL(icon, location.href).href; }
+    catch (e) { iconUrl = new URL("icons/app-192.png", location.href).href; }
+
+    var fav = document.createElement("link");
+    fav.rel = "icon";
+    fav.href = iconUrl;
+    document.head.appendChild(fav);
+
+    var touch = document.createElement("link");
+    touch.rel = "apple-touch-icon";
+    touch.href = iconUrl;
+    document.head.appendChild(touch);
+
+    if (!game) {
+      document.getElementById("game").remove();
+      document.getElementById("missing").style.display = "flex";
+      return;
+    }
+
+    try { document.getElementById("game").src = new URL(game, location.href).href; }
+    catch (e) { document.getElementById("game").src = game; }
+  })();
+  </script>
+</body>
+</html>
