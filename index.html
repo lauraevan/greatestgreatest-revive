@@ -802,7 +802,6 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
 
 <script src="games-data.js"></script>
 <script src="games-noicon.js"></script>
-<script src="launch-map.js"></script>
 <script>
 /* ---- LAZY GAME CATALOG (Ultimate Game Stash pinned to the bottom) ---- */
 const grid = document.getElementById("gameGrid");
@@ -1145,20 +1144,9 @@ function tryNextSource() {
 }
 
 function newTabGameUrl(path, title = "") {
-    if (window.GGR_LAUNCH_MAP && window.GGR_LAUNCH_MAP[path]) {
-        return window.GGR_LAUNCH_MAP[path];
-    }
-    var rows = (typeof catalog !== "undefined" && Array.isArray(catalog))
-        ? catalog
-        : (Array.isArray(window.GAME_DATA) ? window.GAME_DATA : []);
-    var row = rows.find(function (g) { return g && g[1] === path; })
-        || rows.find(function (g) { return g && g[3] === title; });
-    var icon = (row && row[2]) ? row[2] : "icons/app-192.png";
-    var params = new URLSearchParams();
-    params.set("game", path);
-    params.set("title", title || "Game");
-    params.set("icon", icon);
-    return "launch.html?" + params.toString();
+    // Open the real game page directly. Each local game page already
+    // carries its own Apple Home Screen icon metadata.
+    return path;
 }
 
 function launch(path, title = "", opensDirectly = false) {
