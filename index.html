@@ -775,8 +775,6 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
     <div id="playerBar">
         <span id="playerTitle"></span>
         <span class="btns">
-            <button onclick="fullscreenGame()">⛶ Fullscreen</button>
-            <button onclick="openGameTab()">↗ New Tab</button>
             <button id="srcNextBtn" type="button" hidden onclick="tryNextSource()">⟳ Another source</button>
             <button onclick="closeGame()">✕ Close</button>
         </span>
@@ -804,6 +802,7 @@ html.playing #curDot, html.playing #curRing { opacity:0 !important; }
 
 <script src="games-data.js"></script>
 <script src="games-noicon.js"></script>
+<script src="launch-map.js"></script>
 <script>
 /* ---- LAZY GAME CATALOG (Ultimate Game Stash pinned to the bottom) ---- */
 const grid = document.getElementById("gameGrid");
@@ -1146,6 +1145,9 @@ function tryNextSource() {
 }
 
 function newTabGameUrl(path, title = "") {
+    if (window.GGR_LAUNCH_MAP && window.GGR_LAUNCH_MAP[path]) {
+        return window.GGR_LAUNCH_MAP[path];
+    }
     var rows = (typeof catalog !== "undefined" && Array.isArray(catalog))
         ? catalog
         : (Array.isArray(window.GAME_DATA) ? window.GAME_DATA : []);
