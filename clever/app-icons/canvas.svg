@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Instructure">
+  <title>Instructure</title>
+  <rect width="128" height="128" fill="#2a7ba0"/>
+  <g transform="translate(26.88 26.88) scale(3.09333)">
+    <path d="m11.996 0-5.11 2.878L12 5.76l5.115-2.878ZM6.032 3.36.918 6.237 6.036 9.12l5.115-2.879Zm11.929 0-5.112 2.878 5.115 2.882 5.118-2.879zM12 11.52.918 17.76 12 24l11.082-6.241Z" fill="#ffffff"/>
+  </g>
+</svg>

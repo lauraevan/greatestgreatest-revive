@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Adventure Academy">
+  <title>Adventure Academy</title>
+  <rect width="128" height="128" fill="#2d3a8c"/>
+    <text x="64" y="53.20" fill="#ffffff" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="0" text-anchor="middle" dominant-baseline="central">Adventure</text>
+    <text x="64" y="74.80" fill="#ffffff" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="0" text-anchor="middle" dominant-baseline="central">Academy</text>
+</svg>

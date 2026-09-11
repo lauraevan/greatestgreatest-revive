@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Studies Weekly">
+  <title>Studies Weekly</title>
+  <rect width="128" height="128" fill="#f58220"/>
+    <text x="64" y="48.88" fill="#ffffff" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="0" text-anchor="middle" dominant-baseline="central">Studies</text>
+    <text x="64" y="79.12" fill="#ffffff" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="0" text-anchor="middle" dominant-baseline="central">Weekly</text>
+</svg>

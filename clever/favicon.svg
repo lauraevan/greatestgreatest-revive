@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Clever">
+  <rect width="64" height="64" rx="10" fill="#436cf2"/>
+  <svg x="16" y="14" width="32" height="36" viewBox="0 0 48.31 55.78">
+    <path transform="translate(-0.23 -0.93)" fill="#fff" fill-rule="evenodd" d="M27.02 54.85C11.65 54.85.23 43 .23 28.04v-.15C.23 13.07 11.43.93 27.47.93c9.85 0 15.75 3.28 20.6 8.04l-7.31 8.42c-4.03-3.65-8.14-5.88-13.36-5.88-8.81 0-15.15 7.3-15.15 16.23v.15c0 8.93 6.2 16.38 15.15 16.38 5.97 0 9.62-2.38 13.73-6.1l7.31 7.37c-5.37 5.73-11.34 9.3-21.42 9.3"/>
+  </svg>
+</svg>
