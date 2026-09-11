@@ -1,0 +1,185 @@
+name: GGR Home Screen icon migration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ggr-home-icons.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add per-game Home Screen icons
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import base64
+
+          # --- GGR main page: preserve the selected game's cover/icon in new-tab mode ---
+          index = Path("index.html")
+          text = index.read_text(encoding="utf-8")
+
+          if 'name="apple-mobile-web-app-title"' not in text:
+              needle = '<meta name="apple-mobile-web-app-status-bar-style" content="black">'
+              if needle not in text:
+                  raise SystemExit("Could not find GGR iOS meta block")
+              text = text.replace(
+                  needle,
+                  needle + '\n<meta name="apple-mobile-web-app-title" content="GGR">',
+                  1,
+              )
+
+          old_sig = 'function launch(path, title = "", opensDirectly = false) {'
+          helper = '''function newTabGameUrl(path, title = "") {
+              var rows = (typeof catalog !== "undefined" && Array.isArray(catalog))
+                  ? catalog
+                  : (Array.isArray(window.GAME_DATA) ? window.GAME_DATA : []);
+              var row = rows.find(function (g) { return g && g[1] === path; })
+                  || rows.find(function (g) { return g && g[3] === title; });
+              var icon = (row && row[2]) ? row[2] : "icons/app-192.png";
+              var params = new URLSearchParams();
+              params.set("game", path);
+              params.set("title", title || "Game");
+              params.set("icon", icon);
+              return "launch.html?" + params.toString();
+          }
+
+          function launch(path, title = "", opensDirectly = false) {'''
+          if 'function newTabGameUrl(' not in text:
+              if old_sig not in text:
+                  raise SystemExit("Could not find launch()")
+              text = text.replace(old_sig, helper, 1)
+
+          old_open = '''    if (opensDirectly || (window.__ggSettings && window.__ggSettings.launchMode === "newtab")) {
+                  window.open(path, "_blank", "noopener");
+                  return;
+              }'''
+          new_open = '''    if (opensDirectly || (window.__ggSettings && window.__ggSettings.launchMode === "newtab")) {
+                  window.open(newTabGameUrl(path, title), "_blank", "noopener");
+                  return;
+              }'''
+          if old_open in text:
+              text = text.replace(old_open, new_open, 1)
+          elif 'window.open(newTabGameUrl(path, title)' not in text:
+              raise SystemExit("Could not find new-tab launch block")
+
+          index.write_text(text, encoding="utf-8")
+
+          # --- Full-screen top-level page used by new-tab launches. Keeping this page as
+          # the top document lets iOS read a per-game apple-touch-icon when Add to Home Screen is used. ---
+          Path("launch.html").write_text(r'''<!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+            <meta name="mobile-web-app-capable" content="yes">
+            <meta name="apple-mobile-web-app-capable" content="yes">
+            <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+            <meta name="theme-color" content="#000000">
+            <title>Game</title>
+            <style>
+              html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
+              #game{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000}
+              #missing{display:none;box-sizing:border-box;min-height:100%;padding:32px;color:#fff;background:#0e0e0e;font:16px system-ui,-apple-system,sans-serif;align-items:center;justify-content:center;text-align:center}
+            </style>
+          </head>
+          <body>
+            <iframe id="game" allow="autoplay; fullscreen; gamepad; clipboard-read; clipboard-write" allowfullscreen></iframe>
+            <div id="missing">This game link is missing.</div>
+            <script>
+            (function () {
+              var q = new URLSearchParams(location.search);
+              var game = q.get("game") || "";
+              var title = q.get("title") || "Game";
+              var icon = q.get("icon") || "icons/app-192.png";
+              document.title = title;
+
+              var appTitle = document.createElement("meta");
+              appTitle.name = "apple-mobile-web-app-title";
+              appTitle.content = title;
+              document.head.appendChild(appTitle);
+
+              var iconUrl;
+              try { iconUrl = new URL(icon, location.href).href; }
+              catch (e) { iconUrl = new URL("icons/app-192.png", location.href).href; }
+
+              var fav = document.createElement("link");
+              fav.rel = "icon";
+              fav.href = iconUrl;
+              document.head.appendChild(fav);
+
+              var touch = document.createElement("link");
+              touch.rel = "apple-touch-icon";
+              touch.href = iconUrl;
+              document.head.appendChild(touch);
+
+              if (!game) {
+                document.getElementById("game").remove();
+                document.getElementById("missing").style.display = "flex";
+                return;
+              }
+
+              try { document.getElementById("game").src = new URL(game, location.href).href; }
+              catch (e) { document.getElementById("game").src = game; }
+            })();
+            </script>
+          </body>
+          </html>
+          ''', encoding="utf-8")
+
+          # --- Clever: correct relative favicon + native iOS Home Screen metadata ---
+          clever = Path("clever/index.html")
+          c = clever.read_text(encoding="utf-8")
+          anchor = '    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />'
+          block = '''    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+              <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+              <link rel="manifest" href="./manifest.webmanifest" />
+              <meta name="theme-color" content="#436cf2" />
+              <meta name="mobile-web-app-capable" content="yes" />
+              <meta name="apple-mobile-web-app-capable" content="yes" />
+              <meta name="apple-mobile-web-app-title" content="Clever" />
+              <meta name="apple-mobile-web-app-status-bar-style" content="default" />'''
+          if 'href="./apple-touch-icon.png"' not in c:
+              if anchor not in c:
+                  raise SystemExit("Could not find Clever favicon line")
+              c = c.replace(anchor, block, 1)
+          clever.write_text(c, encoding="utf-8")
+
+          Path("clever/manifest.webmanifest").write_text('''{
+            "name": "Clever",
+            "short_name": "Clever",
+            "start_url": "./",
+            "scope": "./",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#436cf2",
+            "icons": [
+              { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+            ]
+          }
+          ''', encoding="utf-8")
+
+          # 180x180 PNG rendered from the existing Clever favicon.svg for iOS.
+          clever_png_b64 = "iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAABmJLR0QA/wD/AP+gvaeTAAARoElEQVR4nO3de3BUZZrH8e97Tl+SDgmXEC7DTQEBAUHiiDPFRSQIYulqjTqOOrK6WzrKRdfbKKO7lXEcUcYqBxVEHJ0BpnZQqB2VFRwgiKCyKKAooKxc5Z4LBEKSvp3z7h8Bl1sg6fRJ9zn9fKqoIp1O99PpX95+z3ve876KJCsu1sYnpdUDbNMajq36Ar1QdAVaAyEgK9nPKdKZqgF9BKgEtij0Bgu1Xtvh5StmtDuW9GdLxoPccos2DxUcvRpl/BKlrwHyk/G4wtPCwIdK6Xl+8t5a/LKKJONBmxTosZMq8mLaP17DJOBHyShIZKRSrfUsf4AX//Fiy0NNeaCEAn1LsQ4cqqh6VGke1XVdCSGaTMFhrfh9gNxXEm2xGx3oogeqrsLSr6LoncgTCtEAm23DHvfhS63WNfYHGxzoEcXaZ5RX/U7B4435OSESFENRXPJy7hRQuqE/1KBgFk04mo/BO2iGJl6fEAnQLDCza+5a8kKH6obc/byBHj2+potlxP8BXNzk4oRIiFpvRfWYFbPyys97z3N9sy7M1seguyavOCES8rUZV6OWzMwtPded6g100YSj+ShWIS2zSBMaNto+a9iKP7aurO8+xtluHFGsfSj+joRZpBEF/Q3LWHDZvdpf333OGmijvOp3wDDHKhMiQUqrotaBoy/V+/3Tbyh6oOoqbL2MesIuRFpQ6paSl3MXnHHzyV+MnaSDUbtqg5w0EelOwWHD9g1cMiO0++TbT2mFo1Q9ImEWbqChtWXEp51++w8t9PGJRjtlboZwE6X0dctebvn+ia9/aKGPz5qTMAtX0VpNLS7WP+TYgLr5zMengArhNn1Xlh+76cQXBsDh9kdHIfOZhUsp7Mkn/m8AaG3cmbpyhGgqNaho/JHLAYziYm0cv2xKCPdS6l8B1KhJhwdpba5PdT1CNIWGsuFtczsYGkNOcQvXU1Dw0aEjgwylZQKS8AZlG1cZGtUn1YUIkQyGYoABdEt1IUIkg9a6v4EiN9WFCJEcqr2BlkALr1CtDCCY6jKESA4dkkn8wlMk0MJTJNDCUyTQwlMk0MJTJNDCUyTQwlMk0MJTJNDCUyTQwlN8qS7Ay5SCdq0NOhUo2rcxyA4qAn5oka3ICoLfrFsWpapGE41DNKaprtXE4lBxVLOvzObgIZu4leIX4iIS6CTxmdC7m8nAnia9upp0bmfQqcDA38TfsG1D6WGbfeWafeU23+yw+Hqbxb5yOzmFe4wqmni0wftXiFN162Aw7FIfA3v66HuhQTDQfFvPlFdqvtoa5+ttFqs3ximvlLcRJNCNlt9SceUgP8MH+ejf3Ux1OQBoDZt2WCz9LMaHa+PURDL3LZVAN9DAi0x+MSrAZX18GGl8KB2OalZ9GWf+8ijb92Zet0QCfQ5KwU/6+bhtdIC+F6ZHa9xQWsOaTXHmfhBly67MOaqUQNejsLfJ+JuyuKBjGjfHDaA1/M+mOK+/G+H7A95vsSXQp2mTp7jnhiBXD653Gw9XiluwYHmU2YsixOKprsY5EujjDAN+NiLAuGsDhILe3Sh390GbF+eF+WqrN7shEmjqWuXJ47IZ1Ntd/eREaQ3zlkb58/sRbI/1QtzdQUyCgReZzHw8J2PCDHUHu7eNDvDCpBBt8rz1aZTRgb5jTIA/TPTem9pQA3qazHgsh34uG8E5l4wMtFJw/8+C3H1dMK3HlJtD21aKFx4IceUgb8yC8MaraASfCU+My2ZEYca99Hr5ffDkXdnkhsL89yexVJfTJBnVPgUDimfukzCfjWHAg7dmcceYQKpLaZKMCbRhwORxWfy4j4S5PkpBtsuHLDMm0BNuymLoQAnzuXz0RZw3FkZSXUaTZESgx40NcMNwb535S7aN2yyen1uLdvlZCc8H+spCH3eOlfUoz2VPqc1/vF5L1N3Hg4DHRzk6tDF46BdZqDTpFpZVavaX2xw5pglHNdEYBAN1/dZQUNE+X9Ex32jWeo8c0zw5s5aj1S5vmo/zbKBNAybflUWL7NSk2bZh806L9Vss1m+Js32vTU34/KEJ+qFLe4NeXU0uv9hHYW+THIdeQyQG/z6rlr1l3jn/7dlAj7s2mJIzYAcqbBavjrFkTYyyBC6LisRg6x6brXtsFn0awzTg0l4+rv2pnyEDffiS9JK0hufn1LJ5h7cmKXky0D06Gdx2dfOOp+4vt5n7QZSSz2NYSWzwLBvWfRtn3bdxWucqrhvq56arAk3+5Hn93Qgrv/TePFLPBVopmHBzVrOd0o7GYM7iCAuWRx1fbuBwlWbu4ijvfBTj1lEBbrzST1YCF+a+tyrG2yVRBypMPc8FekShjwE9m6ersWWXxXNzw+w+2Lx90KoazZ/ei7Dw4xgP3hpkcN+Gv41rNsV5ZUHYwepSy1PDdlkBxb03ZjXLcy1ZE+OhaTXNHuaTHTxk85tXa5kyO9ygUYrvdls88+ew5+ZAn8xTgf6nYX4KWjk/qvHmwghT/xpOm3HbkrUxfvV8NZvOcYBXetjmyZm11Hp8iQPPBNpn1l1C5bRZ70T4zyXp1/8sO6x5ZFoNb5dEzzjbV12r+c2rtRzKgIuTPBPoUZf7aetw6zxncTStD6biVt0f3HNzwj9cCBu34Ldv1LJzv4f7GSfxxEGhUnDzSGdb5483xJm72B0Td0rWxthfYfP0Pdn85f0I67d4a6z5XDwR6Mt6+xxdP2PXAZspc8KumrizeYfF3c9UU1XjoqKTwBNdjqLLnfu7tGyY+tcwkaj7gpFpYQYPBDrohyEDnAv028syayktt3N9oH/S30coy5mDwcoqzd/ScERD1M/1gR5R6NzE/dmLIhm9NK0buTrQhoFjC8RUHNEsXp0mZ05Eg7k60D06mY7Nd35vlfOTjUTyuTrQTk1Ciluw6FNpnd3I1YG+pIczgf7yf+McrpK+sxu5OtD9HNrjZNUG7018zxSuDXSLbEXrXGf6z6u/lkC7lWsD3amdM6XvLbMzYlaaV7k30AXOlO61i0YzjYsD7Ux3Y1sGboXmJa4NdPs2zpQuWw67m2sD7dQqmfs8tOhKJnJxoJ15XBl/djcXB9qZFjosk5FczcWBTv5jag1RGYJ2NdcG2u9Lfgtta1x1mZU4k2sDHY0lP3mmQdIWQxSp4dpA1zp0AXYia8WJ9OHiQDvTN2gRkkC7mWsDHXaohe7QRgLtZq4NdHUDVsNPRMe2rv2VCFwc6AMVzpzR69Letb8SgYsD7dS+IH0vkGEON3NtoPc4FOheXU0ZunMx1wZ6X5l25CRIwO/cpV3Cea4NdG1EU1bpTCstWyi7l2sDDXXb+Tph6AB/2mzWKRrH1YH+aqszgS5orfjxxdJKu5G7A+1QCw1wwzDZ7N6NXB3o3QdtxybkX9HPRxeHriwXznH1O6Y1rP3GmQnMSsHd1zt0WYxwjKsDDVCy1rkZ+cMG+ujdTYbw3MT1gf5ii3Pr0CkFD9+WJSdaXMT1gbZs+OgL51YK7dHJ4NZRzu9/KJLD9YEGKPnc2QsB7xwbpN+F7mumC3ub/PGhEK0cWgMwHXki0N/stNi43bkhPJ8JxfdkN8u2y8ky5go/z94fon93kxcfDNEmzz21N4UnAg11u1U5qXWu4ul7s8lN8ytalIJ/uT7IY7/8/75/l/YGz40P0bJFeteeDJ4J9OqNcce3/72oi8kfJqVvqHNDiin3Z3P76DP7/N07GUyd6P1QeybQWsP8ZtiHu2fnulCnW/ejTzeTV38dOucp+x6dDKZOCKXtH2QyeCbQAMs+j7G9GVYP7dnZZPpjOfRNgwNFnwl3Xxdk2sMhOuSf/+3s0dlg6sT0/ZRpKrP74MnFqS4iWbSu25d79BXOz5bLDiquHuzH71Ns3GZhp2CBmv49TJ6+J8SVg3wYjXi9+S0NCvuYrPwiTtRjeyN5KtAABw9purY3ufBHzn/4GEbdTlxDBvjZV67Z30xL8XYqMHjk9izuvTFI6wRHL/JbGgzqdTzUHlr+TBVN9N7+CwWtFG8+lePYgo712fCdxdzFETZstRy5mmZAT5MbhgcYMsCXtLOX3+6yeHx6LdW13oiBJwMNMPanfh65PSslz723zGbx6hirvow36WJepepGVgb3NRlR6OeCjs586nyz0+KJGd4ItWcDDfDU3dmMKEztRP0Dh2zWf2uxfa/N9wct9pRqqsP6lPC0yFZkByE3R9G1vcEFHU26djC4pIfp2E5fp9u8oy7UNQ6td9JcPB3onGzFzF+H0nbxmHBUp9Vaept2WEyeXkuNi9fITs93OkmqazW//0uYWJoe9KRTmAH6XWjy7PjsZj/2SCZPBxrqDnqem1Mr6z43UP/uJldd5t7rKT0faICPvojz0tvhVJfhCm8ti7LoU/cOTmdEoAEWfhxj3lLnT4272bylUV5/16FlXZuJez9bEvDGwgg+E24eKRP2Tzd3cZTZi9wdZsigFhrqTo3P/HuEP70XkT71cbYNr/5XxBNhhgxroU+YtzRKxRHNo3dkYWbUn/SpaiOaKbPDfPp1mg4DJSAjAw2w9LMYR45pHr8zy/NzhM+mrFLz1Gs1bNvjrZ1zM7h9gs82x7lvarWjl2+low3fWUx8odpzYQaPnylsKNOAO64Jcuc1AU8v0hiLw+xFEd4uiWJ7L8uABPoUvbqaPPjzoCcXl9m532bKnFpPtsonk0CfxjTghuEB/vnaADnZ7m+uI1HN35ZGeWtZNG2nACSTBLoebfIU464NMuYKP34XHjrbNpSsjfHmwghllZnzFkugzyO/peLmkQGuG+J3xaSdEytJzV0cZfdBb3cvzkYC3UB5OYrrh/q5erCfzmm4zO6ho5ola2K8uzKaUS3y6STQCejTzaToch8jCv3NNgH/bKpqNGs2xVm+Ns66b+NYmdcgn0EC3QSGURfuAT1NLr3IpF9309FuSSQGW3ZZfLXVYv2WOBu3W54dfkuUBDqJTKNu6O+CjgadCgw6t6v716nAaPCBpdZwuEpTetjmYIVmf4XN9n02u/Zb7DpgE8+sc0CN5sLj9/Rl2XUXnH6z88zUBQOKrACEshQ5WZAVVESPz2a1tKYmDFXVmmMeuFA1lSTQzSQS1USicOSYBNZJ6Xe4LkQTSKCFp0ighadIoIWnSKCFp0ighadIoIWnSKCFp0ighadIoIWnSKCFp0ighadIoIWnGEBtqosQIknCBnAk1VUIkSRHDdAHUl2FEElSZaCNTamuQohk0ErvNFD6q1QXIkQyKM0WA1t/mOpChEgKbWw2hrXLWweUproWIZpKKbXSKC5WtoZ3U12MEE1UuuyVnI0GgNb6jVRXI0QTfQBKGwAfTm+5BtiQ4oKESJhSxlw45dS3mpKqYoRooj1D83OWw0mBHta2xXwNG1NXkxCJ0TCtuFjZcFKgi4uVrWz9WOrKEiIhFZFQ5LUTX5wy265kRssPgHeavSQhEqThuU+mFlSd+PqM6aPKjD8IVDZrVUIkZvORaO60k284I9DLprX5XqPubb6ahEiIrbW6f90sFTv5xrNO8F/+Su58NK+d7XtCpAOt9bPLp+euPP32eq9YqYzlTtJKlzhblhAJWZFfmld8tm/UG+h1s1TMNu2bZShPpJlNPr++af58dda9DM67Icjo+6raWT69DLgk6aUJ0Sjqe0uZQ1a8HNpT3z3Oe5Hskpm5pVaUkaDWJ7c4IRpls2mbQ88VZmjgVd8rZuWVm1nVw9EsSE5tQjTKCp9fD1syI7T7fHds5B5kWhVNqHoCxW8Bf4LFCdFQttb62fzSvOL6+synS2hTvZETKguVMuYA/RL5eSEaYLPW6v6zDc2dS0ILzSyf3mp9m7a5hQr9MHAokccQoh4VGh6rjOZe2tgwQ4It9MnGPHSkTTzGv4H6FdCuqY8nMtYeDdNsOzxzxYx2xxJ9kKTt4zt2kg5G7KM/V0rdChQBWcl6bOFZpcAHShlzh+bnLD8xBbQpHNmYevSjB3LikdBItCoEPUBBb6A1qFagQ048p0hbYRTHlKbSVnqX0mxBG5uVUiuXvZKzEVRSdyL9Pxhg1tUVx4cSAAAAAElFTkSuQmCC"
+          Path("clever/apple-touch-icon.png").write_bytes(base64.b64decode(clever_png_b64))
+          PY
+
+      - name: Commit migration and remove temporary workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/ggr-home-icons.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add per-game Home Screen icons"
+          git push origin HEAD:main
